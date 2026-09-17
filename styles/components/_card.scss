@@ -1,0 +1,193 @@
+@use '../global/config' as *;
+@use '../global/mixins' as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: $card;
+  color: $ink;
+  border-radius: rem(24px);
+  box-shadow: 0 0 0 1px color-mix(in srgb, $ink 8%, transparent);
+  transition:
+    transform $transition,
+    box-shadow $transition;
+
+  &__header,
+  &__content,
+  &__footer {
+    padding: rem(20px);
+  }
+
+  &__header {
+    display: grid;
+    gap: rem(4px);
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: rem(20px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  &__description {
+    color: $muted;
+    font-size: rem(14px);
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+    border-top: 1px solid color-mix(in srgb, $ink 6%, transparent);
+    background: color-mix(in srgb, $border 35%, transparent);
+  }
+
+  &__media {
+    position: relative;
+    height: rem(192px);
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s $transition-timing-function;
+    }
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: rem(12px);
+  }
+
+  &__person {
+    display: flex;
+    align-items: center;
+    gap: rem(12px);
+  }
+
+  &_elevated {
+    box-shadow: 0 rem(24px) rem(60px) rem(-28px) color-mix(in srgb, $ink 38%, transparent);
+  }
+
+  &_glass {
+    background: color-mix(in srgb, $card 60%, transparent);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 0 0 1px color-mix(in srgb, $white 60%, transparent);
+  }
+
+  &_outline {
+    background: transparent;
+  }
+
+  &_muted {
+    background: color-mix(in srgb, $border 40%, $sand);
+    box-shadow: none;
+  }
+
+  &_dark {
+    background: $ink;
+    color: $sand;
+    box-shadow: none;
+
+    .card__description {
+      color: color-mix(in srgb, $sand 65%, transparent);
+    }
+  }
+
+  &_interactive {
+    @include hover() {
+      transform: translateY(rem(-6px));
+      box-shadow: 0 rem(28px) rem(70px) rem(-30px) color-mix(in srgb, $ink 50%, transparent);
+
+      .card__media img {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  &_flush {
+    .card__header,
+    .card__content {
+      padding-top: rem(20px);
+    }
+  }
+
+  &_sm {
+    .card__header,
+    .card__content,
+    .card__footer {
+      padding: rem(14px);
+    }
+  }
+}
+
+.avatar {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  width: rem(32px);
+  height: rem(32px);
+  border-radius: 50%;
+  background: color-mix(in srgb, $border 60%, $sand);
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__fallback {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: rem(12px);
+    color: $muted;
+  }
+
+  &_lg {
+    width: rem(40px);
+    height: rem(40px);
+  }
+}
+
+.alert {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: rem(8px) rem(10px);
+  padding: rem(12px) rem(14px);
+  border: 1px solid $border;
+  border-radius: rem(16px);
+  background: $card;
+  font-size: rem(14px);
+
+  svg {
+    width: rem(16px);
+    height: rem(16px);
+    margin-top: rem(2px);
+  }
+
+  &__title {
+    font-weight: 600;
+  }
+
+  &__description {
+    grid-column: 2;
+    color: $muted;
+  }
+
+  &_destructive {
+    color: $danger;
+    border-color: color-mix(in srgb, $danger 25%, transparent);
+
+    .alert__description {
+      color: color-mix(in srgb, $danger 80%, transparent);
+    }
+  }
+}

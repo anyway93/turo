@@ -1,0 +1,350 @@
+@use '../global/config' as *;
+@use '../global/mixins' as *;
+
+.home {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: rem(80px) rem(24px);
+  text-align: center;
+
+  &__glow {
+    pointer-events: none;
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(rem(64px));
+
+    &_cta {
+      top: rem(-96px);
+      right: -10%;
+      width: rem(420px);
+      height: rem(420px);
+      background: color-mix(in srgb, $sunset 18%, transparent);
+    }
+
+    &_ocean {
+      bottom: -12%;
+      left: -8%;
+      width: rem(380px);
+      height: rem(380px);
+      background: color-mix(in srgb, $ocean 16%, transparent);
+    }
+  }
+
+  .title_variant_12 {
+    margin-bottom: rem(16px);
+  }
+
+  .text {
+    margin-top: rem(20px);
+    max-width: rem(512px);
+  }
+
+  .button {
+    margin-top: rem(32px);
+  }
+
+  .title_variant_60 {
+    max-width: rem(720px);
+  }
+}
+
+.kit {
+  position: relative;
+  min-height: 100%;
+  overflow-x: hidden;
+
+  &__glow {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+
+    span {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(rem(72px));
+    }
+
+    span:first-child {
+      top: rem(-96px);
+      right: -10%;
+      width: rem(520px);
+      height: rem(520px);
+      background: color-mix(in srgb, $sunset 14%, transparent);
+    }
+
+    span:last-child {
+      top: rem(160px);
+      left: -8%;
+      width: rem(420px);
+      height: rem(420px);
+      background: color-mix(in srgb, $ocean 16%, transparent);
+    }
+  }
+
+  &__header {
+    position: sticky;
+    top: rem(16px);
+    z-index: 40;
+    width: calc(100% - rem(24px));
+    max-width: rem(1152px);
+    margin: 0 auto;
+  }
+
+  &__bar {
+    display: flex;
+    height: rem(64px);
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 rem(12px);
+    border: 1px solid color-mix(in srgb, $white 50%, transparent);
+    border-radius: rem(999px);
+    background: color-mix(in srgb, $card 70%, transparent);
+    box-shadow: 0 rem(12px) rem(40px) rem(-24px) color-mix(in srgb, $ink 45%, transparent);
+    backdrop-filter: blur(18px);
+
+    @media #{media('>=', m)} {
+      padding: 0 rem(20px);
+    }
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: rem(8px);
+    padding-left: rem(4px);
+    font-family: $font-display;
+    font-size: rem(20px);
+    font-weight: 600;
+  }
+
+  &__mark {
+    display: grid;
+    width: rem(36px);
+    height: rem(36px);
+    place-items: center;
+    border-radius: 50%;
+    background: $ocean;
+    color: $sand;
+
+    svg {
+      width: rem(16px);
+      height: rem(16px);
+    }
+  }
+
+  &__nav {
+    display: none;
+    align-items: center;
+    gap: rem(28px);
+    font-size: rem(14px);
+    color: $muted;
+
+    @media #{media('>=', t)} {
+      display: flex;
+    }
+
+    a:hover {
+      color: $ink;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: rem(6px);
+  }
+
+  &__layout {
+    display: grid;
+    max-width: rem(1152px);
+    gap: rem(48px);
+    margin: 0 auto;
+    padding: rem(48px) rem(16px) rem(96px);
+
+    @media #{media('>=', d)} {
+      grid-template-columns: rem(180px) 1fr;
+    }
+  }
+
+  &__aside {
+    display: none;
+
+    @media #{media('>=', d)} {
+      display: block;
+    }
+  }
+
+  &__toc {
+    position: sticky;
+    top: rem(112px);
+
+    a {
+      display: block;
+      padding: rem(8px) rem(12px);
+      border-radius: rem(999px);
+      font-size: rem(14px);
+      color: $muted;
+      transition:
+        color $transition,
+        background-color $transition;
+
+      @include hover() {
+        background: color-mix(in srgb, $border 50%, $sand);
+        color: $ink;
+      }
+    }
+  }
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: rem(96px);
+  }
+
+  &__hero {
+    display: flex;
+    flex-direction: column;
+    gap: rem(20px);
+    padding-top: rem(16px);
+
+    .title_variant_60,
+    .text_variant_20 {
+      max-width: rem(720px);
+    }
+  }
+
+  &__section {
+    scroll-margin-top: rem(112px);
+    display: flex;
+    flex-direction: column;
+    gap: rem(32px);
+  }
+
+  &__intro {
+    display: flex;
+    max-width: rem(640px);
+    flex-direction: column;
+    gap: rem(8px);
+  }
+
+  &__stack {
+    display: flex;
+    flex-direction: column;
+    gap: rem(20px);
+  }
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(8px);
+    align-items: center;
+  }
+
+  &__grid {
+    display: grid;
+    gap: rem(16px);
+
+    &_2 {
+      @media #{media('>=', m)} {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    &_3 {
+      @media #{media('>=', m)} {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    &_4 {
+      @media #{media('>=', t)} {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    &_palette {
+      grid-template-columns: repeat(2, 1fr);
+
+      @media #{media('>=', s)} {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      @media #{media('>=', t)} {
+        grid-template-columns: repeat(6, 1fr);
+      }
+    }
+  }
+
+  &__swatch {
+    overflow: hidden;
+    border-radius: rem(24px);
+    box-shadow: 0 0 0 1px color-mix(in srgb, $ink 8%, transparent);
+    transition: transform $transition;
+
+    @include hover() {
+      transform: translateY(rem(-4px));
+    }
+
+    &-tone {
+      height: rem(80px);
+    }
+
+    &-meta {
+      padding: rem(10px) rem(12px);
+      background: $card;
+    }
+  }
+
+  &__rating {
+    display: inline-flex;
+    align-items: center;
+    gap: rem(4px);
+    font-weight: 500;
+
+    svg {
+      width: rem(14px);
+      height: rem(14px);
+      fill: $gold;
+      color: $gold;
+    }
+  }
+
+  &__place {
+    display: flex;
+    align-items: center;
+    gap: rem(4px);
+  }
+}
+
+.tone {
+  &_background {
+    background: $sand;
+  }
+
+  &_foreground {
+    background: $ink;
+  }
+
+  &_primary {
+    background: $ocean;
+  }
+
+  &_cta {
+    background: $sunset;
+  }
+
+  &_gold {
+    background: $gold;
+  }
+
+  &_muted {
+    background: color-mix(in srgb, $border 70%, $sand);
+  }
+}

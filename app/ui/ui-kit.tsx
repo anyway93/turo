@@ -108,23 +108,16 @@ import {
 import { Text, Title } from "@/components/ui/typography";
 
 const palette = [
-  { name: "Sand", token: "background", className: "bg-background" },
-  { name: "Ink", token: "foreground", className: "bg-foreground" },
-  { name: "Ocean", token: "primary", className: "bg-primary" },
-  { name: "Sunset", token: "cta", className: "bg-cta" },
-  { name: "Gold", token: "gold", className: "bg-gold" },
-  { name: "Muted", token: "muted", className: "bg-muted" },
+  { name: "Sand", token: "background", tone: "background" },
+  { name: "Ink", token: "foreground", tone: "foreground" },
+  { name: "Ocean", token: "primary", tone: "primary" },
+  { name: "Sunset", token: "cta", tone: "cta" },
+  { name: "Gold", token: "gold", tone: "gold" },
+  { name: "Muted", token: "muted", tone: "muted" },
 ];
 
 const typeSizes = [60, 48, 32, 20, 16, 14, 12] as const;
-const typeColors = [
-  "default",
-  "muted",
-  "primary",
-  "cta",
-  "gold",
-  "destructive",
-] as const;
+const typeColors = ["default", "muted", "primary", "cta", "gold", "destructive"] as const;
 
 const tours = [
   {
@@ -187,8 +180,8 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-28 space-y-8">
-      <div className="max-w-2xl space-y-2">
+    <section id={id} className="kit__section">
+      <div className="kit__intro">
         <Title variant={12} color="primary">
           {kicker}
         </Title>
@@ -204,53 +197,47 @@ function Section({
 
 export function UiKit() {
   return (
-    <div className="min-h-full overflow-x-hidden bg-background">
-      <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute -top-24 right-[-10%] h-[520px] w-[520px] rounded-full bg-cta/10 blur-3xl" />
-        <div className="absolute top-40 left-[-8%] h-[420px] w-[420px] rounded-full bg-primary/12 blur-3xl" />
+    <div className="kit">
+      <div className="kit__glow">
+        <span />
+        <span />
       </div>
 
-      <header className="sticky top-4 z-40 mx-auto w-[calc(100%-1.5rem)] max-w-6xl">
-        <div className="flex h-16 items-center justify-between rounded-full border border-white/50 bg-card/70 px-3 shadow-[0_12px_40px_-24px_oklch(0.24_0.03_185/_0.45)] backdrop-blur-xl sm:px-5">
-          <Link href="/" className="flex items-center gap-2 pl-1">
-            <span className="grid size-9 place-items-center rounded-full bg-primary text-primary-foreground">
-              <Compass className="size-4" />
+      <header className="kit__header">
+        <div className="kit__bar">
+          <Link href="/" className="kit__logo">
+            <span className="kit__mark">
+              <Compass />
             </span>
-            <span className="font-display text-xl font-semibold">Turo</span>
+            Turo
           </Link>
-          <nav className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
-            <a href="#catalog" className="hover:text-foreground">
-              Туры
-            </a>
-            <a href="#search" className="hover:text-foreground">
-              Направления
-            </a>
-            <a href="#content" className="hover:text-foreground">
-              FAQ
-            </a>
+          <nav className="kit__nav">
+            <a href="#catalog">Туры</a>
+            <a href="#search">Направления</a>
+            <a href="#content">FAQ</a>
           </nav>
-          <div className="flex items-center gap-1.5">
+          <div className="kit__actions">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
+                <Button variant="ghost" size="icon" className="button_hidden-desktop">
                   <Menu />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left">
+              <SheetContent>
                 <SheetHeader>
                   <SheetTitle>Меню</SheetTitle>
                   <SheetDescription>Разделы витрины</SheetDescription>
                 </SheetHeader>
-                <div className="flex flex-col gap-3 px-4">
+                <div className="sheet__body">
                   {sections.map((item) => (
-                    <a key={item.id} href={`#${item.id}`} className="text-sm">
+                    <a key={item.id} href={`#${item.id}`}>
                       {item.label}
                     </a>
                   ))}
                 </div>
               </SheetContent>
             </Sheet>
-            <Button variant="ghost" className="hidden sm:inline-flex">
+            <Button variant="ghost" className="button_hidden-mobile">
               Войти
             </Button>
             <Button variant="cta">Найти тур</Button>
@@ -258,30 +245,23 @@ export function UiKit() {
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-6xl gap-12 px-4 py-12 lg:grid-cols-[180px_1fr]">
-        <aside className="hidden lg:block">
-          <nav className="sticky top-28 space-y-1">
+      <div className="kit__layout">
+        <aside className="kit__aside">
+          <nav className="kit__toc">
             {sections.map((item) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                className="block rounded-full px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              >
+              <a key={item.id} href={`#${item.id}`}>
                 {item.label}
               </a>
             ))}
           </nav>
         </aside>
 
-        <div className="space-y-24 pb-24">
-          <div className="space-y-6 pt-4">
+        <div className="kit__main">
+          <div className="kit__hero">
             <Badge variant="soft">UI kit · Turo</Badge>
-            <Title variant={60} className="max-w-3xl">
-              Интерфейс, в который хочется уехать
-            </Title>
-            <Text variant={20} color="muted" className="max-w-2xl">
-              Плавные кнопки, мягкие карточки и типографика с размерами 60 → 12.
-              Собирайте каталог туров без подчёркиваний и шума.
+            <Title variant={60}>Интерфейс, в который хочется уехать</Title>
+            <Text variant={20} color="muted">
+              Стили на SCSS: `rem(20px)` как в finval-front. Без Tailwind.
             </Text>
             <Breadcrumb>
               <BreadcrumbList>
@@ -300,24 +280,24 @@ export function UiKit() {
             id="type"
             kicker="Typography"
             title="Title и Text"
-            hint="variant={60 | 48 | 32 | 20 | 16 | 14 | 12}, color='primary' | 'muted' | 'cta' | 'gold'…"
+            hint="variant={60 | 48 | 32 | 20 | 16 | 14 | 12}, размеры через rem()."
           >
             <Card variant="elevated">
-              <CardContent className="space-y-5 pt-1">
+              <CardContent className="kit__stack">
                 {typeSizes.map((size) => (
-                  <div key={size} className="space-y-1">
+                  <div key={size}>
                     <Text variant={12} color="muted">
-                      Title · {size}
+                      Title · {size} · rem({size}px)
                     </Text>
                     <Title variant={size}>Уехать. Увидеть. Запомнить.</Title>
                   </div>
                 ))}
               </CardContent>
             </Card>
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="kit__grid kit__grid_2">
               {typeColors.map((color) => (
                 <Card key={color} variant="muted" size="sm">
-                  <CardContent className="space-y-1 pt-1">
+                  <CardContent>
                     <Text variant={12} color="muted">
                       Text color={color}
                     </Text>
@@ -330,20 +310,12 @@ export function UiKit() {
             </div>
           </Section>
 
-          <Section
-            id="palette"
-            kicker="Color"
-            title="Палитра"
-            hint="Песок, океан и терракота заката — один тон на весь продукт."
-          >
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
+          <Section id="palette" kicker="Color" title="Палитра" hint="Песок, океан и терракота.">
+            <div className="kit__grid kit__grid_palette">
               {palette.map((swatch) => (
-                <div
-                  key={swatch.token}
-                  className="overflow-hidden rounded-3xl ring-1 ring-foreground/8 transition-transform duration-500 hover:-translate-y-1"
-                >
-                  <div className={`h-20 ${swatch.className}`} />
-                  <div className="bg-card px-3 py-2.5">
+                <div key={swatch.token} className="kit__swatch">
+                  <div className={`kit__swatch-tone tone_${swatch.tone}`} />
+                  <div className="kit__swatch-meta">
                     <Title variant={14}>{swatch.name}</Title>
                     <Text variant={12} color="muted">
                       --{swatch.token}
@@ -354,13 +326,8 @@ export function UiKit() {
             </div>
           </Section>
 
-          <Section
-            id="buttons"
-            kicker="Actions"
-            title="Кнопки"
-            hint="default, cta, gold, soft, glass, inverse, outline, ghost, text — и размеры xs → xl."
-          >
-            <div className="flex flex-wrap gap-2">
+          <Section id="buttons" kicker="Actions" title="Кнопки" hint="Варианты и размеры на SCSS.">
+            <div className="kit__row">
               <Button>Смотреть туры</Button>
               <Button variant="cta">Забронировать</Button>
               <Button variant="gold">Premium</Button>
@@ -372,14 +339,14 @@ export function UiKit() {
               <Button variant="ghost">Подробнее</Button>
               <Button variant="text">
                 Все направления
-                <ArrowUpRight data-icon="inline-end" />
+                <ArrowUpRight />
               </Button>
               <Button variant="destructive">Отменить</Button>
               <Button size="icon" variant="outline">
                 <Heart />
               </Button>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="kit__row">
               <Button size="xs">XS</Button>
               <Button size="sm">SM</Button>
               <Button size="default">MD</Button>
@@ -388,7 +355,7 @@ export function UiKit() {
                 XL · Найти тур
               </Button>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="kit__row">
               <Badge>7 дней</Badge>
               <Badge variant="secondary">Всё включено</Badge>
               <Badge variant="outline">Группа 12</Badge>
@@ -398,13 +365,8 @@ export function UiKit() {
             </div>
           </Section>
 
-          <Section
-            id="inputs"
-            kicker="Forms"
-            title="Инпуты"
-            hint="default, filled, soft, ghost, glass и размеры sm / default / lg / xl."
-          >
-            <div className="grid gap-4 md:grid-cols-2">
+          <Section id="inputs" kicker="Forms" title="Инпуты" hint="Варианты полей и размеры.">
+            <div className="kit__grid kit__grid_2">
               <Field>
                 <FieldLabel>Default</FieldLabel>
                 <Input placeholder="Куда едем?" />
@@ -433,13 +395,8 @@ export function UiKit() {
             <Textarea variant="filled" placeholder="Расскажите, какой отдых хотите…" />
           </Section>
 
-          <Section
-            id="cards"
-            kicker="Surfaces"
-            title="Карточки"
-            hint="default, elevated, glass, outline, muted, dark, interactive."
-          >
-            <div className="grid gap-4 md:grid-cols-2">
+          <Section id="cards" kicker="Surfaces" title="Карточки" hint="Поверхности каталога.">
+            <div className="kit__grid kit__grid_2">
               <Card variant="elevated">
                 <CardHeader>
                   <CardTitle>Elevated</CardTitle>
@@ -449,50 +406,45 @@ export function UiKit() {
               <Card variant="glass">
                 <CardHeader>
                   <CardTitle>Glass</CardTitle>
-                  <CardDescription>Стекло для героя и оверлеев.</CardDescription>
+                  <CardDescription>Стекло для героя.</CardDescription>
                 </CardHeader>
               </Card>
               <Card variant="outline">
                 <CardHeader>
                   <CardTitle>Outline</CardTitle>
-                  <CardDescription>Лёгкий контур без заливки.</CardDescription>
+                  <CardDescription>Контур без заливки.</CardDescription>
                 </CardHeader>
               </Card>
               <Card variant="muted">
                 <CardHeader>
                   <CardTitle>Muted</CardTitle>
-                  <CardDescription>Тихая подложка для фильтров.</CardDescription>
+                  <CardDescription>Подложка фильтров.</CardDescription>
                 </CardHeader>
               </Card>
               <Card variant="dark">
                 <CardHeader>
                   <CardTitle>Dark</CardTitle>
-                  <CardDescription>Для баннеров и ночных городов.</CardDescription>
+                  <CardDescription>Ночные баннеры.</CardDescription>
                 </CardHeader>
               </Card>
               <Card variant="interactive">
                 <CardHeader>
                   <CardTitle>Interactive</CardTitle>
-                  <CardDescription>Наведите — карточка всплывёт.</CardDescription>
+                  <CardDescription>Наведите — всплывёт.</CardDescription>
                 </CardHeader>
               </Card>
             </div>
           </Section>
 
-          <Section
-            id="search"
-            kicker="Hero"
-            title="Поиск тура"
-            hint="Главный блок: направление, даты, гости — одной стеклянной панелью."
-          >
-            <Card variant="glass" className="shadow-[0_30px_80px_-40px_oklch(0.24_0.03_185/_0.45)]">
+          <Section id="search" kicker="Hero" title="Поиск тура" hint="Направление, даты, гости.">
+            <Card variant="glass">
               <CardHeader>
                 <CardTitle>Куда отправимся?</CardTitle>
                 <CardDescription>Маршрут за несколько секунд.</CardDescription>
               </CardHeader>
               <CardContent>
                 <form
-                  className="grid gap-3 md:grid-cols-4"
+                  className="kit__grid kit__grid_4"
                   onSubmit={(event) => {
                     event.preventDefault();
                     toast.success("Нашли 18 туров на ваши даты");
@@ -501,7 +453,7 @@ export function UiKit() {
                   <Field>
                     <FieldLabel>Направление</FieldLabel>
                     <Select defaultValue="greece">
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -514,22 +466,22 @@ export function UiKit() {
                   </Field>
                   <Field>
                     <FieldLabel>Даты</FieldLabel>
-                    <div className="relative">
-                      <CalendarDays className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input className="pl-10" defaultValue="12–19 окт" />
+                    <div className="input-wrap">
+                      <CalendarDays className="input-wrap__icon" />
+                      <Input className="input_icon" defaultValue="12–19 окт" />
                     </div>
                   </Field>
                   <Field>
                     <FieldLabel>Гости</FieldLabel>
-                    <div className="relative">
-                      <Users className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input className="pl-10" defaultValue="2 взрослых" />
+                    <div className="input-wrap">
+                      <Users className="input-wrap__icon" />
+                      <Input className="input_icon" defaultValue="2 взрослых" />
                     </div>
                   </Field>
-                  <Field className="justify-end">
-                    <FieldLabel className="opacity-0">Поиск</FieldLabel>
-                    <Button type="submit" variant="cta" size="lg" className="w-full">
-                      <Search data-icon="inline-start" />
+                  <Field className="field_end field_hidden-label">
+                    <FieldLabel>Поиск</FieldLabel>
+                    <Button type="submit" variant="cta" size="lg" className="button_full">
+                      <Search />
                       Найти
                     </Button>
                   </Field>
@@ -538,12 +490,7 @@ export function UiKit() {
             </Card>
           </Section>
 
-          <Section
-            id="catalog"
-            kicker="Catalog"
-            title="Карточки туров"
-            hint="Фото с плавным зумом, рейтинг, цена и бронь."
-          >
+          <Section id="catalog" kicker="Catalog" title="Карточки туров" hint="Фото, рейтинг и бронь.">
             <Tabs defaultValue="all">
               <TabsList>
                 <TabsTrigger value="all">Все</TabsTrigger>
@@ -551,39 +498,38 @@ export function UiKit() {
                 <TabsTrigger value="hike">Походы</TabsTrigger>
                 <TabsTrigger value="city">Города</TabsTrigger>
               </TabsList>
-              <TabsContent value="all" className="mt-6">
-                <div className="grid gap-5 md:grid-cols-3">
+              <TabsContent value="all">
+                <div className="kit__grid kit__grid_3">
                   {tours.map((tour) => (
-                    <Card key={tour.title} variant="interactive" className="py-0">
-                      <div className="relative h-48 overflow-hidden">
+                    <Card key={tour.title} variant="interactive" className="card_flush">
+                      <div className="card__media">
                         <Image
                           src={tour.image}
                           alt={tour.title}
                           fill
-                          className="object-cover transition-transform duration-700 ease-out group-hover/card:scale-105"
                           sizes="(min-width: 768px) 33vw, 100vw"
                         />
-                        <Badge className="absolute top-3 left-3 bg-background/90 text-foreground backdrop-blur-md">
-                          {tour.tag}
-                        </Badge>
+                        <Badge className="badge_overlay">{tour.tag}</Badge>
                       </div>
-                      <CardHeader className="pt-5">
+                      <CardHeader>
                         <CardTitle>{tour.title}</CardTitle>
-                        <CardDescription className="flex items-center gap-1">
-                          <MapPin className="size-3.5" />
-                          {tour.place}
+                        <CardDescription>
+                          <span className="kit__place">
+                            <MapPin />
+                            {tour.place}
+                          </span>
                         </CardDescription>
                       </CardHeader>
-                      <CardContent className="flex items-center justify-between">
+                      <CardContent className="card__row">
                         <Text variant={14} color="muted">
                           {tour.days} дней
                         </Text>
-                        <span className="inline-flex items-center gap-1 font-medium">
-                          <Star className="size-3.5 fill-gold text-gold" />
+                        <span className="kit__rating">
+                          <Star />
                           {tour.rating}
                         </span>
                       </CardContent>
-                      <CardFooter className="justify-between">
+                      <CardFooter className="card__row">
                         <Title variant={20}>{tour.price}</Title>
                         <Dialog>
                           <DialogTrigger asChild>
@@ -591,7 +537,7 @@ export function UiKit() {
                               Бронь
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="sm:max-w-md">
+                          <DialogContent>
                             <DialogHeader>
                               <DialogTitle>Бронирование</DialogTitle>
                               <DialogDescription>
@@ -623,13 +569,13 @@ export function UiKit() {
                   ))}
                 </div>
               </TabsContent>
-              <TabsContent value="sea" className="mt-6">
+              <TabsContent value="sea">
                 <Text variant={14}>Морские направления появятся в каталоге.</Text>
               </TabsContent>
-              <TabsContent value="hike" className="mt-6">
+              <TabsContent value="hike">
                 <Text variant={14}>Пешие маршруты появятся в каталоге.</Text>
               </TabsContent>
-              <TabsContent value="city" className="mt-6">
+              <TabsContent value="city">
                 <Text variant={14}>Городские туры появятся в каталоге.</Text>
               </TabsContent>
             </Tabs>
@@ -656,18 +602,13 @@ export function UiKit() {
             </Pagination>
           </Section>
 
-          <Section
-            id="forms"
-            kicker="Filters"
-            title="Фильтры"
-            hint="Бюджет, тип отдыха и удобства для сайдбара каталога."
-          >
-            <div className="grid gap-4 lg:grid-cols-2">
+          <Section id="forms" kicker="Filters" title="Фильтры" hint="Бюджет, тип отдыха, удобства.">
+            <div className="kit__grid kit__grid_2">
               <Card variant="muted">
                 <CardHeader>
                   <CardTitle>Фильтры</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-5">
+                <CardContent className="kit__stack">
                   <Field>
                     <FieldLabel>Бюджет, тыс. ₽</FieldLabel>
                     <Slider defaultValue={[40, 180]} max={300} min={20} />
@@ -675,34 +616,32 @@ export function UiKit() {
                   <Field>
                     <FieldLabel>Тип отдыха</FieldLabel>
                     <RadioGroup defaultValue="any">
-                      <Label className="flex items-center gap-2">
+                      <Label>
                         <RadioGroupItem value="any" />
                         Любой
                       </Label>
-                      <Label className="flex items-center gap-2">
+                      <Label>
                         <RadioGroupItem value="beach" />
                         Пляж
                       </Label>
-                      <Label className="flex items-center gap-2">
+                      <Label>
                         <RadioGroupItem value="active" />
                         Активный
                       </Label>
                     </RadioGroup>
                   </Field>
-                  <div className="space-y-3">
-                    <Label className="flex items-center gap-2">
-                      <Checkbox defaultChecked />
-                      Завтраки включены
-                    </Label>
-                    <Label className="flex items-center gap-2">
-                      <Checkbox />
-                      Прямой перелёт
-                    </Label>
-                    <Label className="flex items-center justify-between gap-2">
-                      Только туры с гидом
-                      <Switch defaultChecked />
-                    </Label>
-                  </div>
+                  <Label>
+                    <Checkbox defaultChecked />
+                    Завтраки включены
+                  </Label>
+                  <Label>
+                    <Checkbox />
+                    Прямой перелёт
+                  </Label>
+                  <Label className="label_between">
+                    Только туры с гидом
+                    <Switch defaultChecked />
+                  </Label>
                 </CardContent>
               </Card>
               <Card variant="elevated">
@@ -720,12 +659,8 @@ export function UiKit() {
                       <FieldLabel>Пожелания</FieldLabel>
                       <Textarea placeholder="Тихий залив и ужин на крыше..." />
                     </Field>
-                    <Button
-                      onClick={() =>
-                        toast.info("Сообщение сохранено как черновик")
-                      }
-                    >
-                      <Plane data-icon="inline-start" />
+                    <Button onClick={() => toast.info("Сообщение сохранено как черновик")}>
+                      <Plane />
                       Отправить
                     </Button>
                   </FieldGroup>
@@ -734,13 +669,8 @@ export function UiKit() {
             </div>
           </Section>
 
-          <Section
-            id="feedback"
-            kicker="Feedback"
-            title="Состояния"
-            hint="Остаток мест, ошибка оплаты, тосты."
-          >
-            <div className="space-y-3">
+          <Section id="feedback" kicker="Feedback" title="Состояния" hint="Алерты и тосты.">
+            <div className="kit__stack">
               <Alert>
                 <Info />
                 <AlertTitle>Осталось 3 места</AlertTitle>
@@ -755,30 +685,22 @@ export function UiKit() {
                   Попробуйте другую карту или оформите заявку без оплаты.
                 </AlertDescription>
               </Alert>
-              <div className="flex flex-wrap gap-2">
+              <div className="kit__row">
                 <Button
                   variant="outline"
                   onClick={() => toast.success("Тур добавлен в избранное")}
                 >
                   Toast: избранное
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => toast.error("Даты заняты")}
-                >
+                <Button variant="outline" onClick={() => toast.error("Даты заняты")}>
                   Toast: ошибка
                 </Button>
               </div>
             </div>
           </Section>
 
-          <Section
-            id="overlays"
-            kicker="Overlay"
-            title="Меню и подсказки"
-            hint="Аккаунт, состав тура, избранное."
-          >
-            <div className="flex flex-wrap gap-2">
+          <Section id="overlays" kicker="Overlay" title="Меню и подсказки" hint="Аккаунт и состав тура.">
+            <div className="kit__row">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline">Аккаунт</Button>
@@ -815,16 +737,11 @@ export function UiKit() {
             </div>
           </Section>
 
-          <Section
-            id="content"
-            kicker="Trust"
-            title="Отзывы и FAQ"
-            hint="Социальное доказательство до оплаты."
-          >
-            <div className="grid gap-4 md:grid-cols-2">
+          <Section id="content" kicker="Trust" title="Отзывы и FAQ" hint="Доверие до оплаты.">
+            <div className="kit__grid kit__grid_2">
               <Card variant="elevated">
                 <CardHeader>
-                  <div className="flex items-center gap-3">
+                  <div className="card__person">
                     <Avatar size="lg">
                       <AvatarImage src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80" />
                       <AvatarFallback>АК</AvatarFallback>
@@ -837,8 +754,7 @@ export function UiKit() {
                 </CardHeader>
                 <CardContent>
                   <Text variant={16} color="default">
-                    Гид встретил как старого друга. Закат с Ои — лучший вечер за
-                    год. Организация без суеты.
+                    Гид встретил как старого друга. Закат с Ои — лучший вечер за год.
                   </Text>
                 </CardContent>
               </Card>
@@ -846,8 +762,7 @@ export function UiKit() {
                 <AccordionItem value="visa">
                   <AccordionTrigger>Нужна ли виза?</AccordionTrigger>
                   <AccordionContent>
-                    Для Шенгена помогаем собрать документы. Для Бали виза по
-                    прибытии.
+                    Для Шенгена помогаем собрать документы. Для Бали виза по прибытии.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="pay">
@@ -859,8 +774,7 @@ export function UiKit() {
                 <AccordionItem value="cancel">
                   <AccordionTrigger>Можно ли отменить?</AccordionTrigger>
                   <AccordionContent>
-                    Бесплатная отмена за 21 день до вылета, дальше — по тарифу
-                    авиакомпании.
+                    Бесплатная отмена за 21 день до вылета.
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>

@@ -1,0 +1,195 @@
+@use '../global/config' as *;
+@use '../global/mixins' as *;
+
+.title {
+  width: fit-content;
+  max-width: 100%;
+  font-family: $font-display;
+  font-weight: 600;
+  text-wrap: balance;
+  transition: color $transition;
+
+  &_variant {
+    &_60 {
+      font-size: rem(60px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+
+      @media #{media('<', d)} {
+        font-size: rem(40px);
+      }
+    }
+
+    &_48 {
+      font-size: rem(48px);
+      line-height: 1.08;
+      letter-spacing: -0.028em;
+
+      @media #{media('<', d)} {
+        font-size: rem(36px);
+      }
+    }
+
+    &_32 {
+      font-size: rem(32px);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+
+      @media #{media('<', d)} {
+        font-size: rem(28px);
+      }
+    }
+
+    &_20 {
+      font-size: rem(20px);
+      line-height: 1.25;
+    }
+
+    &_16 {
+      font-family: $font;
+      font-size: rem(16px);
+      line-height: 1.35;
+    }
+
+    &_14 {
+      font-family: $font;
+      font-size: rem(14px);
+      line-height: 1.35;
+    }
+
+    &_12 {
+      font-family: $font;
+      font-size: rem(12px);
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+  }
+
+  &_color {
+    &_default {
+      color: $ink;
+    }
+
+    &_muted {
+      color: $muted;
+    }
+
+    &_primary {
+      color: $ocean;
+    }
+
+    &_cta {
+      color: $sunset;
+    }
+
+    &_gold {
+      color: $gold;
+    }
+
+    &_inverse {
+      color: $sand;
+    }
+
+    &_white {
+      color: $white;
+    }
+
+    &_destructive {
+      color: $danger;
+    }
+
+    &_secondary {
+      color: $ink;
+    }
+  }
+}
+
+.text {
+  max-width: 100%;
+  font-family: $font;
+  text-wrap: pretty;
+  transition: color $transition;
+
+  &_variant {
+    &_60 {
+      font-family: $font-display;
+      font-size: rem(60px);
+      font-weight: 500;
+      line-height: 1.08;
+    }
+
+    &_48 {
+      font-family: $font-display;
+      font-size: rem(48px);
+      font-weight: 500;
+      line-height: 1.12;
+    }
+
+    &_32 {
+      font-family: $font-display;
+      font-size: rem(32px);
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    &_20 {
+      font-size: rem(20px);
+      line-height: 1.55;
+    }
+
+    &_16 {
+      font-size: rem(16px);
+      line-height: 1.6;
+    }
+
+    &_14 {
+      font-size: rem(14px);
+      line-height: 1.55;
+    }
+
+    &_12 {
+      font-size: rem(12px);
+      font-weight: 500;
+      line-height: 1.5;
+    }
+  }
+
+  &_color {
+    &_default {
+      color: $ink;
+    }
+
+    &_muted {
+      color: $muted;
+    }
+
+    &_primary {
+      color: $ocean;
+    }
+
+    &_cta {
+      color: $sunset;
+    }
+
+    &_gold {
+      color: $gold;
+    }
+
+    &_inverse {
+      color: $sand;
+    }
+
+    &_white {
+      color: $white;
+    }
+
+    &_destructive {
+      color: $danger;
+    }
+
+    &_secondary {
+      color: $ink;
+    }
+  }
+}

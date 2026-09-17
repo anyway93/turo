@@ -1,0 +1,196 @@
+@use '../global/config' as *;
+@use '../global/mixins' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: color-mix(in srgb, $ink 18%, transparent);
+  backdrop-filter: blur(6px);
+  animation: fade-in 0.25s $transition-timing-function;
+}
+
+.dialog {
+  position: fixed;
+  z-index: 51;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: min(100% - rem(32px), rem(420px));
+  gap: rem(16px);
+  padding: rem(20px);
+  border-radius: rem(24px);
+  background: $card;
+  box-shadow: 0 rem(24px) rem(60px) rem(-24px) color-mix(in srgb, $ink 40%, transparent);
+  animation: scale-in 0.28s $transition-timing-function;
+  outline: none;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: rem(6px);
+    padding-right: rem(32px);
+  }
+
+  &__title {
+    font-size: rem(18px);
+    font-weight: 600;
+  }
+
+  &__description {
+    font-size: rem(14px);
+    color: $muted;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: rem(8px);
+    padding-top: rem(8px);
+  }
+
+  &__close {
+    position: absolute;
+    top: rem(12px);
+    right: rem(12px);
+  }
+}
+
+.sheet {
+  position: fixed;
+  z-index: 51;
+  top: 0;
+  left: 0;
+  display: flex;
+  height: 100%;
+  width: min(85vw, rem(320px));
+  flex-direction: column;
+  gap: rem(16px);
+  background: $card;
+  box-shadow: rem(16px) 0 rem(40px) rem(-24px) color-mix(in srgb, $ink 35%, transparent);
+  animation: fade-in 0.25s $transition-timing-function;
+
+  &__header {
+    padding: rem(20px) rem(20px) 0;
+  }
+
+  &__title {
+    font-size: rem(18px);
+    font-weight: 600;
+  }
+
+  &__description {
+    margin-top: rem(4px);
+    font-size: rem(14px);
+    color: $muted;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: rem(12px);
+    padding: 0 rem(20px) rem(20px);
+  }
+}
+
+.dropdown,
+.popover,
+.tooltip {
+  z-index: 50;
+  min-width: rem(160px);
+  padding: rem(8px);
+  border-radius: rem(16px);
+  background: $card;
+  box-shadow: 0 rem(16px) rem(40px) rem(-20px) color-mix(in srgb, $ink 35%, transparent);
+  animation: fade-in 0.2s $transition-timing-function;
+}
+
+.tooltip {
+  min-width: 0;
+  padding: rem(6px) rem(10px);
+  background: $ink;
+  color: $sand;
+  font-size: rem(12px);
+}
+
+.dropdown {
+  &__label {
+    padding: rem(6px) rem(8px);
+    font-size: rem(12px);
+    color: $muted;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    padding: rem(8px);
+    border-radius: rem(10px);
+    font-size: rem(14px);
+    cursor: pointer;
+    outline: none;
+    transition: background-color $transition;
+
+    &[data-highlighted] {
+      background: color-mix(in srgb, $ocean 8%, transparent);
+    }
+  }
+
+  &__sep {
+    height: 1px;
+    margin: rem(6px) 0;
+    background: $border;
+  }
+}
+
+.popover {
+  width: rem(280px);
+  padding: rem(12px);
+
+  &__title {
+    font-weight: 600;
+    font-size: rem(14px);
+  }
+
+  &__description {
+    margin-top: rem(4px);
+    font-size: rem(13px);
+    color: $muted;
+  }
+}
+
+.breadcrumb {
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: rem(6px);
+    font-size: rem(14px);
+    color: $muted;
+  }
+
+  &__page {
+    color: $ink;
+  }
+
+  &__sep {
+    opacity: 0.5;
+  }
+}
+
+.pagination {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+
+  &__list {
+    display: flex;
+    align-items: center;
+    gap: rem(4px);
+  }
+}
+
+.separator {
+  height: 1px;
+  width: 100%;
+  background: $border;
+}
