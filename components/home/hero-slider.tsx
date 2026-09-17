@@ -215,64 +215,68 @@ export function HeroSlider() {
         <div className="hero__veil" />
       </div>
 
-      <div className="hero__content">
-        <div className={cx("hero__copy", dir === 1 ? "is-next" : "is-prev")} key={slide.id}>
-          <p className="hero__kicker">
-            Популярное · 0{popularTours.indexOf(slide) + 1} / 0{count}
-          </p>
-          <h1 className="hero__title">{slide.title}</h1>
-          <p className="hero__meta">
-            {slide.place}
-            <span />
-            {slide.days}
-            <span />
-            {slide.price}
-          </p>
-          <div className="hero__cta">
-            <Button asChild size="lg" variant="cta">
-              <Link href="#tours">Записаться</Link>
-            </Button>
-            <Button asChild size="lg" variant="glass">
-              <Link href="#tours">Смотреть все</Link>
-            </Button>
+      <div className="hero__shell">
+        <div className="hero__content">
+          <div className={cx("hero__copy", dir === 1 ? "is-next" : "is-prev")} key={slide.id}>
+            <p className="hero__kicker">
+              Популярное · 0{popularTours.indexOf(slide) + 1} / 0{count}
+            </p>
+            <h1 className="hero__title">{slide.title}</h1>
+            <p className="hero__meta">
+              {slide.place}
+              <span />
+              {slide.days}
+              <span />
+              {slide.price}
+            </p>
+            <div className="hero__cta">
+              <Button asChild size="lg" variant="cta">
+                <Link href="#tours">Записаться</Link>
+              </Button>
+              <Button asChild size="lg" variant="glass">
+                <Link href="#tours">Смотреть все</Link>
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="hero__controls">
-        <button
-          type="button"
-          className="hero__arrow"
-          aria-label="Предыдущий тур"
-          onClick={() => go(-1)}
-        >
-          <ArrowLeft />
-        </button>
-        <button
-          type="button"
-          className="hero__arrow"
-          aria-label="Следующий тур"
-          onClick={() => go(1)}
-        >
-          <ArrowRight />
-        </button>
-      </div>
+        <div className="hero__bar">
+          <div className="hero__pager">
+            {popularTours.map((tour, i) => (
+              <button
+                key={tour.id}
+                type="button"
+                className={cx(
+                  "hero__dot",
+                  popularTours.indexOf(slide) === i && "is-active",
+                )}
+                aria-label={tour.title}
+                onClick={() => goTo(i)}
+              >
+                <span />
+              </button>
+            ))}
+          </div>
 
-      <div className="hero__pager">
-        {popularTours.map((tour, i) => (
-          <button
-            key={tour.id}
-            type="button"
-            className={cx(
-              "hero__dot",
-              popularTours.indexOf(slide) === i && "is-active",
-            )}
-            aria-label={tour.title}
-            onClick={() => goTo(i)}
-          >
-            <span />
-          </button>
-        ))}
+          <div className="hero__controls">
+            <button
+              type="button"
+              className="hero__arrow"
+              aria-label="Предыдущий тур"
+              onClick={() => go(-1)}
+            >
+              <ArrowLeft />
+            </button>
+            <button
+              type="button"
+              className="hero__arrow"
+              aria-label="Следующий тур"
+              onClick={() => go(1)}
+            >
+              <ArrowRight />
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   );

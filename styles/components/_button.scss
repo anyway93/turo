@@ -21,7 +21,7 @@
     color $transition,
     border-color $transition,
     box-shadow $transition,
-    transform $transition;
+    filter $transition;
 
   svg {
     width: rem(16px);
@@ -31,11 +31,11 @@
   }
 
   @include hover() {
-    transform: translateY(rem(-2px));
+    filter: brightness(1.07);
   }
 
   &:active {
-    transform: translateY(0);
+    filter: brightness(0.97);
   }
 
   &:disabled {
@@ -104,7 +104,7 @@
 
       @include hover() {
         color: $sunset;
-        transform: none;
+        filter: none;
       }
     }
 
