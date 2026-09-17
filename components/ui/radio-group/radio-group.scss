@@ -1,0 +1,68 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.radio {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: rem(20px);
+  height: rem(20px);
+  border: rem(2.5px) solid $border;
+  border-radius: 50%;
+  background: $card;
+  outline: none;
+  cursor: pointer;
+  transition:
+    background-color $transition,
+    border-color $transition,
+    box-shadow $transition,
+    transform $transition;
+
+  @include hover() {
+    border-color: color-mix(in srgb, $ocean 50%, transparent);
+    box-shadow: 0 rem(8px) rem(18px) rem(-12px) color-mix(in srgb, $ocean 50%, transparent);
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 rem(4px) color-mix(in srgb, $ocean 25%, transparent);
+  }
+
+  &[data-state='checked'] {
+    border-color: $ocean;
+    background: $ocean;
+    color: $sand;
+    box-shadow: 0 rem(10px) rem(22px) rem(-10px) color-mix(in srgb, $ocean 65%, transparent);
+  }
+
+  &__dot {
+    width: rem(8px);
+    height: rem(8px);
+    border-radius: 50%;
+    background: $sand;
+    transition:
+      opacity $transition,
+      transform $transition;
+  }
+
+  &[data-state='unchecked'] &__dot {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  &[data-state='checked'] &__dot {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.radio-group {
+  display: grid;
+  width: 100%;
+  gap: rem(10px);
+}

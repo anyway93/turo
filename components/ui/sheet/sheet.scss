@@ -1,0 +1,48 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: color-mix(in srgb, $ink 18%, transparent);
+  backdrop-filter: blur(6px);
+  animation: fade-in 0.25s $transition-timing-function;
+}
+
+.sheet {
+  position: fixed;
+  z-index: 51;
+  top: 0;
+  left: 0;
+  display: flex;
+  height: 100%;
+  width: min(85vw, rem(320px));
+  flex-direction: column;
+  gap: rem(16px);
+  background: $card;
+  box-shadow: rem(16px) 0 rem(40px) rem(-24px) color-mix(in srgb, $ink 35%, transparent);
+  animation: fade-in 0.25s $transition-timing-function;
+
+  &__header {
+    padding: rem(20px) rem(20px) 0;
+  }
+
+  &__title {
+    font-size: rem(18px);
+    font-weight: 600;
+  }
+
+  &__description {
+    margin-top: rem(4px);
+    font-size: rem(14px);
+    color: $muted;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: rem(12px);
+    padding: 0 rem(20px) rem(20px);
+  }
+}

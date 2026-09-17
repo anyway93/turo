@@ -1,0 +1,60 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.checkbox {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: rem(24px);
+  height: rem(24px);
+  border: rem(2.5px) solid $border;
+  border-radius: rem(8px);
+  background: $card;
+  outline: none;
+  cursor: pointer;
+  transition:
+    background-color $transition,
+    border-color $transition,
+    box-shadow $transition,
+    transform $transition;
+
+  @include hover() {
+    border-color: color-mix(in srgb, $ocean 50%, transparent);
+    box-shadow: 0 rem(8px) rem(18px) rem(-12px) color-mix(in srgb, $ocean 50%, transparent);
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 rem(4px) color-mix(in srgb, $ocean 25%, transparent);
+  }
+
+  &[data-state='checked'] {
+    border-color: $ocean;
+    background: $ocean;
+    color: $sand;
+    box-shadow: 0 rem(10px) rem(22px) rem(-10px) color-mix(in srgb, $ocean 65%, transparent);
+  }
+
+  svg {
+    width: rem(16px);
+    height: rem(16px);
+    transition:
+      opacity $transition,
+      transform $transition;
+  }
+
+  &[data-state='unchecked'] svg {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  &[data-state='checked'] svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

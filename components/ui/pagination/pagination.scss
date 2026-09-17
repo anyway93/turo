@@ -1,0 +1,14 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.pagination {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+
+  &__list {
+    display: flex;
+    align-items: center;
+    gap: rem(4px);
+  }
+}

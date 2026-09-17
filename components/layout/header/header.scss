@@ -1,0 +1,115 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.site-header {
+  position: fixed;
+  z-index: 40;
+  top: 0;
+  right: 0;
+  left: 0;
+  color: $white;
+  transition:
+    background-color 0.5s $transition-timing-function,
+    color 0.5s $transition-timing-function,
+    box-shadow 0.5s $transition-timing-function,
+    backdrop-filter 0.5s $transition-timing-function;
+
+  &.is-scrolled,
+  &.is-open {
+    color: $ink;
+    background: color-mix(in srgb, $sand 92%, transparent);
+    box-shadow: 0 rem(12px) rem(40px) rem(-24px) color-mix(in srgb, $ink 20%, transparent);
+    backdrop-filter: blur(18px);
+  }
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: rem(72px);
+    max-width: rem(1440px);
+    margin: 0 auto;
+    padding: 0 rem(20px);
+
+    @media #{media('>=', m)} {
+      padding: 0 rem(32px);
+    }
+
+    @media #{media('>=', d)} {
+      padding: 0 rem(48px);
+    }
+  }
+
+  &__logo {
+    font-size: rem(22px);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  &__nav {
+    display: none;
+    gap: rem(32px);
+    font-size: rem(14px);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+
+    @media #{media('>=', t)} {
+      display: flex;
+    }
+
+    a {
+      opacity: 0.82;
+      transition: opacity $transition;
+
+      @include hover() {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: rem(16px);
+  }
+
+  &__login {
+    display: none;
+    font-size: rem(14px);
+
+    @media #{media('>=', m)} {
+      display: inline;
+    }
+  }
+
+  &__menu {
+    display: grid;
+    width: rem(40px);
+    height: rem(40px);
+    place-items: center;
+    color: inherit;
+
+    @media #{media('>=', t)} {
+      display: none;
+    }
+
+    svg {
+      width: rem(20px);
+      height: rem(20px);
+    }
+  }
+
+  &__mobile {
+    display: flex;
+    flex-direction: column;
+    gap: rem(20px);
+    padding: rem(8px) rem(24px) rem(32px);
+    font-size: rem(22px);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+
+    @media #{media('>=', t)} {
+      display: none !important;
+    }
+  }
+}

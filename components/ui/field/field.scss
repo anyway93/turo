@@ -1,0 +1,30 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.field {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: rem(8px);
+
+  &__label {
+    font-size: rem(13px);
+    font-weight: 500;
+  }
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: rem(16px);
+  }
+
+  &_end {
+    justify-content: flex-end;
+  }
+
+  &_hidden-label {
+    .field__label {
+      opacity: 0;
+    }
+  }
+}

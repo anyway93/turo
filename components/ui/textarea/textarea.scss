@@ -1,0 +1,58 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid color-mix(in srgb, $border 80%, transparent);
+  background: color-mix(in srgb, $card 80%, transparent);
+  color: $ink;
+  outline: none;
+  transition:
+    border-color $transition,
+    background-color $transition,
+    box-shadow $transition;
+
+  &::placeholder {
+    color: $muted;
+  }
+
+  &:focus-visible {
+    border-color: color-mix(in srgb, $ocean 40%, transparent);
+    box-shadow: 0 0 0 rem(4px) color-mix(in srgb, $ocean 18%, transparent);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+
+  &[aria-invalid='true'] {
+    border-color: $danger;
+    box-shadow: 0 0 0 rem(4px) color-mix(in srgb, $danger 18%, transparent);
+  }
+}
+
+.textarea {
+  min-height: rem(112px);
+  padding: rem(12px) rem(14px);
+  border-radius: rem(20px);
+  resize: vertical;
+  font-size: rem(14px);
+
+  &_variant {
+    &_filled {
+      border-color: transparent;
+      background: color-mix(in srgb, $border 45%, $sand);
+    }
+
+    &_soft {
+      border-color: color-mix(in srgb, $ocean 15%, transparent);
+      background: color-mix(in srgb, $ocean 6%, transparent);
+    }
+
+    &_ghost {
+      border-color: transparent;
+      background: transparent;
+    }
+  }
+}

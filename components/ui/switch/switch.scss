@@ -1,0 +1,32 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.switch {
+  position: relative;
+  display: inline-flex;
+  width: rem(36px);
+  height: rem(22px);
+  align-items: center;
+  border-radius: rem(999px);
+  background: $border;
+  cursor: pointer;
+  transition: background-color $transition;
+
+  &[data-state='checked'] {
+    background: $ocean;
+  }
+
+  &__thumb {
+    display: block;
+    width: rem(16px);
+    height: rem(16px);
+    margin-left: rem(3px);
+    border-radius: 50%;
+    background: $white;
+    transition: transform $transition;
+  }
+
+  &[data-state='checked'] &__thumb {
+    transform: translateX(rem(14px));
+  }
+}

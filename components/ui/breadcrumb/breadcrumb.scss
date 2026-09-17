@@ -1,0 +1,21 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.breadcrumb {
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: rem(6px);
+    font-size: rem(14px);
+    color: $muted;
+  }
+
+  &__page {
+    color: $ink;
+  }
+
+  &__sep {
+    opacity: 0.5;
+  }
+}

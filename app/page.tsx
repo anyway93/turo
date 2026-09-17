@@ -1,10 +1,11 @@
+import "./page.scss";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { HeroSlider } from "@/components/home/hero-slider";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 
 const places = [
   {
