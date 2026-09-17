@@ -1,22 +1,148 @@
+import Image from "next/image";
 import Link from "next/link";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
+import { HeroSlider } from "@/components/home/hero-slider";
 import { Button } from "@/components/ui/button";
-import { Text, Title } from "@/components/ui/typography";
+
+const places = [
+  {
+    name: "Киото",
+    image:
+      "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1400&q=80",
+  },
+  {
+    name: "Марракеш",
+    image:
+      "https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    name: "Лисий фьорд",
+    image:
+      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=900&q=80",
+  },
+];
 
 export default function Home() {
   return (
-    <main className="home">
-      <div className="home__glow home__glow_cta" />
-      <div className="home__glow home__glow_ocean" />
-      <Title variant={12} color="primary">
-        Turo
-      </Title>
-      <Title variant={60}>Путешествия с цветом моря и теплом заката</Title>
-      <Text variant={20} color="muted">
-        Библиотека интерфейса и готовые блоки для сайта туров — на витрине.
-      </Text>
-      <Button asChild size="xl" variant="cta">
-        <Link href="/ui">Открыть UI-витрину</Link>
-      </Button>
-    </main>
+    <div className="page">
+      <Header />
+      <main>
+        <HeroSlider />
+
+        <section className="home-section" id="tours">
+          <p className="home-section__label">Платформа</p>
+          <h2 className="home-section__title">Два пути в одну дорогу</h2>
+          <p className="home-section__text">
+            Можно выбрать готовый маршрут. Можно собрать свой и открыть его для
+            других. Без каталожного шума — только место, даты и люди.
+          </p>
+          <div className="paths">
+            <article className="paths__card">
+              <Image
+                src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80"
+                alt=""
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+              />
+              <div className="paths__veil" />
+              <div className="paths__body">
+                <p className="paths__kicker">Путешественникам</p>
+                <h3 className="paths__title">Найти тур</h3>
+                <p className="paths__text">
+                  Авторские маршруты с датами, ценой и свободными местами.
+                  Запись в два шага.
+                </p>
+                <Button asChild variant="glass">
+                  <Link href="#places">К каталогу</Link>
+                </Button>
+              </div>
+            </article>
+            <article className="paths__card" id="create">
+              <Image
+                src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1400&q=80"
+                alt=""
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+              />
+              <div className="paths__veil" />
+              <div className="paths__body">
+                <p className="paths__kicker">Гидам</p>
+                <h3 className="paths__title">Создать тур</h3>
+                <p className="paths__text">
+                  Опишите маршрут, поставьте цену и откройте набор. Turo — это
+                  витрина, не посредник.
+                </p>
+                <Button asChild variant="cta">
+                  <Link href="#auth">Разместить</Link>
+                </Button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section className="home-section" id="how">
+          <p className="home-section__label">Процесс</p>
+          <h2 className="home-section__title">Три спокойных шага</h2>
+          <div className="steps">
+            <article>
+              <span>01</span>
+              <h3>Регистрация</h3>
+              <p>Один профиль — и как гость, и как автор маршрута.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Выбор или создание</h3>
+              <p>Бронируйте чужой тур или опубликуйте свой на ближайшие даты.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Встреча</h3>
+              <p>Подтверждение, чат с организатором и выезд без лишних писем.</p>
+            </article>
+          </div>
+        </section>
+
+        <section className="home-section" id="places">
+          <p className="home-section__label">Направления</p>
+          <h2 className="home-section__title">Куда уезжают чаще</h2>
+          <p className="home-section__text">
+            Не реклама стран — живые сборы людей. Карточки ниже ведут в каталог.
+          </p>
+          <div className="places">
+            {places.map((place) => (
+              <Link href="#tours" className="places__item" key={place.name}>
+                <Image
+                  src={place.image}
+                  alt={place.name}
+                  fill
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                />
+                <span className="places__name">{place.name}</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="auth" id="auth">
+          <div>
+            <h2>Войти и поехать</h2>
+            <p>
+              Регистрация нужна и чтобы записаться, и чтобы опубликовать свой
+              маршрут. Никакого шума в ленте — только ваши поездки.
+            </p>
+          </div>
+          <div className="auth__actions">
+            <Button variant="cta" size="lg">
+              Создать аккаунт
+            </Button>
+            <Button variant="outline" size="lg">
+              У меня уже есть
+            </Button>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </div>
   );
 }

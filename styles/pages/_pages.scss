@@ -1,59 +1,6 @@
 @use '../global/config' as *;
 @use '../global/mixins' as *;
 
-.home {
-  position: relative;
-  display: flex;
-  flex: 1;
-  min-height: 100%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  padding: rem(80px) rem(24px);
-  text-align: center;
-
-  &__glow {
-    pointer-events: none;
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(rem(64px));
-
-    &_cta {
-      top: rem(-96px);
-      right: -10%;
-      width: rem(420px);
-      height: rem(420px);
-      background: color-mix(in srgb, $sunset 18%, transparent);
-    }
-
-    &_ocean {
-      bottom: -12%;
-      left: -8%;
-      width: rem(380px);
-      height: rem(380px);
-      background: color-mix(in srgb, $ocean 16%, transparent);
-    }
-  }
-
-  .title_variant_12 {
-    margin-bottom: rem(16px);
-  }
-
-  .text {
-    margin-top: rem(20px);
-    max-width: rem(512px);
-  }
-
-  .button {
-    margin-top: rem(32px);
-  }
-
-  .title_variant_60 {
-    max-width: rem(720px);
-  }
-}
-
 .kit {
   position: relative;
   min-height: 100%;

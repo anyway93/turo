@@ -1,32 +1,22 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { Onest } from "next/font/google";
 import { Providers } from "./providers";
 import "../styles/index.scss";
 
-const manrope = Manrope({
-  variable: "--font-manrope",
+const onest = Onest({
+  variable: "--font-onest",
   subsets: ["latin", "cyrillic"],
-});
-
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Turo — туры, которые хочется помнить",
+  title: "Turo — туры от людей и для людей",
   description:
-    "Каталог авторских туров, бронирование и вдохновение для следующих путешествий.",
+    "Выбирайте авторские маршруты или создайте свой тур. Бронирование без лишнего шума.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="ru"
-      suppressHydrationWarning
-      className={`${manrope.variable} ${cormorant.variable}`}
-    >
+    <html lang="ru" suppressHydrationWarning className={onest.variable}>
       <body>
         <Providers>{children}</Providers>
       </body>

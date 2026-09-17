@@ -15,8 +15,8 @@ $transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 $transition-duration: 0.4s;
 $transition: $transition-duration $transition-timing-function;
 
-$font: var(--font-manrope), sans-serif;
-$font-display: var(--font-cormorant), ui-serif, Georgia, serif;
+$font: var(--font-onest), sans-serif;
+$font-display: var(--font-onest), sans-serif;
 
 $breakpoints: (
   d: 1201px,
