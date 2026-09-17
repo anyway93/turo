@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { HeroSlider } from "@/components/home/hero-slider";
@@ -31,53 +32,75 @@ export default function Home() {
         <HeroSlider />
 
         <section className="home-section" id="tours">
-          <p className="home-section__label">Платформа</p>
-          <h2 className="home-section__title">Два пути в одну дорогу</h2>
-          <p className="home-section__text">
-            Можно выбрать готовый маршрут. Можно собрать свой и открыть его для
-            других. Без каталожного шума — только место, даты и люди.
-          </p>
+          <div className="home-section__head">
+            <div>
+              <p className="home-section__label">Платформа</p>
+              <h2 className="home-section__title">Два пути в одну дорогу</h2>
+              <p className="home-section__text">
+                Можно выбрать готовый маршрут. Можно собрать свой и открыть его
+                для других. Без каталожного шума — только место, даты и люди.
+              </p>
+            </div>
+            <p className="home-section__aside">
+              <span>01</span> гость
+              <span>02</span> автор
+            </p>
+          </div>
           <div className="paths">
-            <article className="paths__card">
-              <Image
-                src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80"
-                alt=""
-                fill
-                sizes="(min-width: 1024px) 50vw, 100vw"
-              />
+            <Link href="#places" className="paths__card">
+              <div className="paths__media">
+                <Image
+                  src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80"
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                />
+              </div>
               <div className="paths__veil" />
-              <div className="paths__body">
+              <div className="paths__dim" />
+              <div className="paths__top">
+                <span>01</span>
                 <p className="paths__kicker">Путешественникам</p>
+              </div>
+              <div className="paths__body">
                 <h3 className="paths__title">Найти тур</h3>
                 <p className="paths__text">
                   Авторские маршруты с датами, ценой и свободными местами.
                   Запись в два шага.
                 </p>
-                <Button asChild variant="glass">
-                  <Link href="#places">К каталогу</Link>
-                </Button>
+                <span className="paths__cta">
+                  К каталогу
+                  <ArrowUpRight />
+                </span>
               </div>
-            </article>
-            <article className="paths__card" id="create">
-              <Image
-                src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1400&q=80"
-                alt=""
-                fill
-                sizes="(min-width: 1024px) 50vw, 100vw"
-              />
+            </Link>
+            <Link href="#auth" className="paths__card" id="create">
+              <div className="paths__media">
+                <Image
+                  src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1400&q=80"
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                />
+              </div>
               <div className="paths__veil" />
-              <div className="paths__body">
+              <div className="paths__dim" />
+              <div className="paths__top">
+                <span>02</span>
                 <p className="paths__kicker">Гидам</p>
+              </div>
+              <div className="paths__body">
                 <h3 className="paths__title">Создать тур</h3>
                 <p className="paths__text">
                   Опишите маршрут, поставьте цену и откройте набор. Turo — это
                   витрина, не посредник.
                 </p>
-                <Button asChild variant="cta">
-                  <Link href="#auth">Разместить</Link>
-                </Button>
+                <span className="paths__cta paths__cta_accent">
+                  Разместить
+                  <ArrowUpRight />
+                </span>
               </div>
-            </article>
+            </Link>
           </div>
         </section>
 
@@ -112,12 +135,14 @@ export default function Home() {
           <div className="places">
             {places.map((place) => (
               <Link href="#tours" className="places__item" key={place.name}>
-                <Image
-                  src={place.image}
-                  alt={place.name}
-                  fill
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                />
+                <div className="places__media">
+                  <Image
+                    src={place.image}
+                    alt={place.name}
+                    fill
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                  />
+                </div>
                 <span className="places__name">{place.name}</span>
               </Link>
             ))}
