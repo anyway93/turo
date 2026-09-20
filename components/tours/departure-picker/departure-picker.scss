@@ -1,0 +1,252 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.dep-pick {
+  display: grid;
+  gap: 0;
+
+  &__hint {
+    margin: 0 0 rem(16px);
+    color: $muted;
+    font-size: rem(13px);
+    line-height: 1.55;
+  }
+
+  &__nav {
+    display: grid;
+    grid-template-columns: rem(40px) minmax(0, 1fr) rem(40px);
+    align-items: center;
+    margin-bottom: rem(10px);
+  }
+
+  &__month {
+    margin: 0;
+    text-align: center;
+    font-size: rem(15px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    text-transform: capitalize;
+  }
+
+  &__shift {
+    display: grid;
+    place-items: center;
+    height: rem(40px);
+    color: $ink;
+    background: transparent;
+    transition: color 0.55s $transition-timing-function, opacity 0.55s $transition-timing-function;
+
+    svg {
+      width: rem(18px);
+      height: rem(18px);
+    }
+
+    @include hover() {
+      color: $ocean;
+    }
+  }
+
+  &__week {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    margin-bottom: rem(4px);
+
+    span {
+      color: $muted;
+      font-size: rem(10px);
+      letter-spacing: 0.08em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: rem(2px);
+  }
+
+  &__cell {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: rem(40px);
+    color: $ink;
+    background: $white;
+    font-size: rem(13px);
+    font-weight: 500;
+    transition:
+      color 0.55s $transition-timing-function,
+      background 0.55s $transition-timing-function,
+      opacity 0.55s $transition-timing-function;
+
+    em {
+      position: absolute;
+      right: rem(4px);
+      bottom: rem(3px);
+      color: $ocean;
+      font-size: rem(8px);
+      font-style: normal;
+      letter-spacing: 0.04em;
+    }
+
+    &_empty {
+      background: transparent;
+      pointer-events: none;
+    }
+
+    &.is-on {
+      background: color-mix(in srgb, $ocean 12%, $white);
+      color: $ocean;
+    }
+
+    &.is-value {
+      background: $ocean;
+      color: $white;
+
+      em {
+        color: color-mix(in srgb, $white 80%, $ocean);
+      }
+    }
+
+    &.is-past,
+    &:disabled:not(.is-on) {
+      opacity: 0.32;
+    }
+
+    &.is-sold {
+      opacity: 0.38;
+      text-decoration: line-through;
+    }
+
+    &:not(:disabled) {
+      @include hover() {
+        background: color-mix(in srgb, $ocean 18%, $white);
+        color: $ocean;
+      }
+    }
+  }
+
+  &__rhythm {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(8px);
+    align-items: center;
+    margin-top: rem(16px);
+
+    span {
+      color: $muted;
+      font-size: rem(11px);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    button {
+      color: $ink;
+      background: $white;
+      padding: rem(8px) rem(12px);
+      font-size: rem(12px);
+      transition:
+        color 0.55s $transition-timing-function,
+        background 0.55s $transition-timing-function;
+
+      @include hover() {
+        color: $ocean;
+        background: color-mix(in srgb, $ocean 8%, $white);
+      }
+    }
+  }
+
+  &__clear {
+    color: $muted !important;
+  }
+
+  &__list {
+    display: grid;
+    gap: rem(6px);
+    margin-top: rem(16px);
+  }
+
+  &__empty {
+    color: $muted;
+    font-size: rem(13px);
+  }
+
+  &__list li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) rem(36px);
+    gap: rem(4px);
+    align-items: stretch;
+  }
+
+  &_pick &__list li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  &__chip {
+    display: grid;
+    gap: rem(2px);
+    padding: rem(10px) rem(12px);
+    text-align: left;
+    background: $white;
+    transition:
+      background 0.55s $transition-timing-function,
+      color 0.55s $transition-timing-function;
+
+    strong {
+      font-size: rem(13px);
+      font-weight: 500;
+    }
+
+    span,
+    em {
+      color: $muted;
+      font-size: rem(12px);
+      font-style: normal;
+      line-height: 1.35;
+    }
+
+    &.is-value {
+      background: color-mix(in srgb, $ocean 10%, $white);
+
+      strong {
+        color: $ocean;
+      }
+    }
+
+    &.is-sold {
+      opacity: 0.45;
+    }
+
+    @include hover() {
+      background: color-mix(in srgb, $ocean 8%, $white);
+    }
+  }
+
+  &__x {
+    display: grid;
+    place-items: center;
+    color: $muted;
+    background: $white;
+    transition: color 0.5s $transition-timing-function, opacity 0.5s $transition-timing-function;
+
+    svg {
+      width: rem(14px);
+      height: rem(14px);
+    }
+
+    @include hover() {
+      color: $ink;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dep-pick__cell,
+  .dep-pick__chip,
+  .dep-pick__shift,
+  .dep-pick__rhythm button,
+  .dep-pick__x {
+    transition: none;
+  }
+}

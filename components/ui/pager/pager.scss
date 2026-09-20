@@ -1,0 +1,66 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.pager {
+  display: flex;
+  align-items: flex-end;
+  gap: rem(12px);
+  pointer-events: auto;
+
+  @media #{media('>=', m)} {
+    gap: rem(14px);
+  }
+
+  .button.pager__dot {
+    flex: 0 0 rem(44px);
+    width: rem(44px);
+    height: 2px;
+    min-height: 2px;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    background: color-mix(in srgb, $white 28%, transparent);
+    box-shadow: none;
+
+    @media #{media('>=', m)} {
+      flex-basis: rem(52px);
+      width: rem(52px);
+    }
+
+    @include hover() {
+      filter: none;
+      background: color-mix(in srgb, $white 42%, transparent);
+    }
+
+    span {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: $white;
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    &.is-active span {
+      animation: pager-progress var(--pager-duration, 7s) linear forwards;
+    }
+  }
+}
+
+@keyframes pager-progress {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pager__dot.is-active span {
+    animation: none !important;
+    transform: scaleX(1);
+  }
+}

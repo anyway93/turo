@@ -9,7 +9,6 @@
   align-items: center;
   border-radius: rem(999px);
   background: $border;
-  cursor: pointer;
   transition: background-color $transition;
 
   &[data-state='checked'] {

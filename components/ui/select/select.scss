@@ -4,27 +4,34 @@
 .select__trigger {
   width: 100%;
   min-width: 0;
-  height: rem(40px);
-  padding: 0 rem(14px);
-  border: 1px solid color-mix(in srgb, $border 80%, transparent);
-  border-radius: rem(999px);
-  background: color-mix(in srgb, $card 80%, transparent);
+  height: rem(44px);
+  padding: 0 rem(16px);
+  border: 0;
+  border-radius: 0;
+  background: $white;
   color: $ink;
   font-size: rem(14px);
+  font-weight: 400;
+  letter-spacing: 0.01em;
   outline: none;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
   gap: rem(8px);
-  cursor: pointer;
-  transition:
-    border-color $transition,
-    background-color $transition,
-    box-shadow $transition;
+  transition: background-color 0.55s $transition-timing-function;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled):not(:focus-visible) {
+      background: $card;
+    }
+  }
 
   &:focus-visible {
-    border-color: color-mix(in srgb, $ocean 40%, transparent);
-    box-shadow: 0 0 0 rem(4px) color-mix(in srgb, $ocean 18%, transparent);
+    background: color-mix(in srgb, $sand 55%, $white);
+  }
+
+  &[data-state="open"] {
+    background: color-mix(in srgb, $sand 55%, $white);
   }
 
   svg {
@@ -32,36 +39,64 @@
     height: rem(16px);
     color: $muted;
     flex-shrink: 0;
+    transition: transform 0.55s $transition-timing-function;
+  }
+
+  &[data-state="open"] svg {
+    transform: rotate(180deg);
   }
 }
 
 .select-content {
   z-index: 50;
+  overflow: hidden;
+  width: var(--radix-select-trigger-width);
+  min-width: var(--radix-select-trigger-width);
+  max-height: min(24rem, var(--radix-select-content-available-height));
+  padding: rem(8px) 0;
+  @include overlay-panel;
+}
+
+.select-viewport {
   overflow: auto;
-  min-width: rem(144px);
-  padding: rem(6px);
-  border-radius: rem(16px);
-  background: $card;
-  box-shadow: 0 rem(16px) rem(40px) rem(-20px) color-mix(in srgb, $ink 35%, transparent);
-  animation: fade-in 0.2s $transition-timing-function;
+  max-height: inherit;
 }
 
 .select-item {
   display: flex;
   align-items: center;
-  gap: rem(8px);
-  padding: rem(8px) rem(10px);
-  border-radius: rem(10px);
+  justify-content: space-between;
+  gap: rem(12px);
+  padding: rem(10px) rem(16px);
   font-size: rem(14px);
-  cursor: pointer;
+  letter-spacing: 0.01em;
   outline: none;
-  transition: background-color $transition;
+  transition:
+    background-color 0.5s $transition-timing-function,
+    color 0.5s $transition-timing-function;
 
-  &[data-highlighted] {
-    background: color-mix(in srgb, $ocean 8%, transparent);
+  .select-content[data-state="open"] & {
+    @include overlay-item;
   }
 
-  &[data-state='checked'] {
-    color: $ocean;
+  svg {
+    width: rem(14px);
+    height: rem(14px);
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.45s $transition-timing-function;
+  }
+
+  &[data-highlighted] {
+    background: color-mix(in srgb, $sand 72%, $white);
+  }
+
+  &[data-state="checked"] {
+    color: $ink;
+    font-weight: 500;
+
+    svg {
+      opacity: 1;
+    }
   }
 }

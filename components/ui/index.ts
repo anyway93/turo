@@ -12,6 +12,7 @@ export * from "./field";
 export * from "./input";
 export * from "./label";
 export * from "./pagination";
+export * from "./pager";
 export * from "./popover";
 export * from "./radio-group";
 export * from "./select";

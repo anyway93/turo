@@ -1,0 +1,43 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.main-places {
+  margin-top: rem(72px);
+
+  @media #{media('>=', m)} {
+    margin-top: rem(104px);
+  }
+
+  @media #{media('>=', d)} {
+    margin-top: rem(132px);
+  }
+
+  &__head {
+    @include rise(0.85s);
+
+    .eyebrow {
+      margin-bottom: rem(16px);
+    }
+  }
+
+  &__title {
+    max-width: 14ch;
+    margin: 0 0 rem(20px);
+    font-size: rem(32px);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+
+    @media #{media('>=', m)} {
+      font-size: rem(48px);
+    }
+  }
+
+  &__text {
+    max-width: 28em;
+    margin: 0;
+    color: $muted;
+    font-size: rem(16px);
+    line-height: 1.65;
+  }
+}

@@ -4,55 +4,64 @@
 .textarea {
   width: 100%;
   min-width: 0;
-  border: 1px solid color-mix(in srgb, $border 80%, transparent);
-  background: color-mix(in srgb, $card 80%, transparent);
+  min-height: rem(128px);
+  padding: rem(14px) rem(16px);
+  border: 0;
+  border-radius: 0;
+  background: $white;
   color: $ink;
+  font-family: $font;
+  font-size: rem(14px);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.55;
   outline: none;
+  resize: vertical;
+  appearance: none;
   transition:
-    border-color $transition,
-    background-color $transition,
-    box-shadow $transition;
+    background-color 0.55s $transition-timing-function,
+    color 0.55s $transition-timing-function;
 
   &::placeholder {
-    color: $muted;
+    color: color-mix(in srgb, $muted 82%, $ink);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled):not(:focus-visible):not([aria-invalid="true"]) {
+      background: $card;
+    }
   }
 
   &:focus-visible {
-    border-color: color-mix(in srgb, $ocean 40%, transparent);
-    box-shadow: 0 0 0 rem(4px) color-mix(in srgb, $ocean 18%, transparent);
+    background: color-mix(in srgb, $sand 55%, $white);
   }
 
   &:disabled {
     opacity: 0.5;
   }
 
-  &[aria-invalid='true'] {
-    border-color: $danger;
-    box-shadow: 0 0 0 rem(4px) color-mix(in srgb, $danger 18%, transparent);
+  &[aria-invalid="true"] {
+    background: color-mix(in srgb, $danger 8%, $white);
   }
-}
-
-.textarea {
-  min-height: rem(112px);
-  padding: rem(12px) rem(14px);
-  border-radius: rem(20px);
-  resize: vertical;
-  font-size: rem(14px);
 
   &_variant {
     &_filled {
-      border-color: transparent;
-      background: color-mix(in srgb, $border 45%, $sand);
+      background: color-mix(in srgb, $border 38%, $sand);
     }
 
     &_soft {
-      border-color: color-mix(in srgb, $ocean 15%, transparent);
-      background: color-mix(in srgb, $ocean 6%, transparent);
+      background: color-mix(in srgb, $ocean 5%, $white);
     }
 
     &_ghost {
-      border-color: transparent;
+      padding-inline: 0;
       background: transparent;
+
+      &:focus-visible {
+        background: color-mix(in srgb, $sand 40%, transparent);
+      }
     }
   }
 }

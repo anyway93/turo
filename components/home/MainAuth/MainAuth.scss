@@ -1,0 +1,47 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.main-auth {
+  display: flex;
+  flex-direction: column;
+  gap: rem(24px);
+  margin-top: rem(72px);
+
+  @media #{media('>=', m)} {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-top: rem(104px);
+  }
+
+  @media #{media('>=', d)} {
+    margin-top: rem(132px);
+  }
+
+  &__title {
+    max-width: 12ch;
+    margin: 0;
+    font-size: rem(32px);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+
+    @media #{media('>=', m)} {
+      font-size: rem(44px);
+    }
+  }
+
+  &__text {
+    max-width: rem(360px);
+    margin-top: rem(12px);
+    color: $muted;
+    font-size: rem(15px);
+    line-height: 1.6;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(10px);
+    @include rise(0.9s, 0.1s);
+  }
+}

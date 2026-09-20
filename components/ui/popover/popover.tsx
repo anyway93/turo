@@ -15,11 +15,16 @@ function PopoverTrigger(props: React.ComponentProps<typeof PopoverPrimitive.Trig
 
 function PopoverContent({
   className,
+  sideOffset = 6,
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Content>) {
   return (
     <PopoverPrimitive.Portal>
-      <PopoverPrimitive.Content className={cx("popover", className)} {...props} />
+      <PopoverPrimitive.Content
+        sideOffset={sideOffset}
+        className={cx("popover", className)}
+        {...props}
+      />
     </PopoverPrimitive.Portal>
   );
 }

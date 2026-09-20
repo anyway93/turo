@@ -3,26 +3,21 @@
 
 .popover {
   z-index: 50;
-  min-width: rem(160px);
-  padding: rem(8px);
-  border-radius: rem(16px);
-  background: $card;
-  box-shadow: 0 rem(16px) rem(40px) rem(-20px) color-mix(in srgb, $ink 35%, transparent);
-  animation: fade-in 0.2s $transition-timing-function;
-}
-
-.popover {
   width: rem(280px);
-  padding: rem(12px);
+  min-width: rem(160px);
+  padding: rem(16px);
+  @include overlay-panel;
 
   &__title {
-    font-weight: 600;
+    font-weight: 500;
     font-size: rem(14px);
+    letter-spacing: -0.02em;
   }
 
   &__description {
-    margin-top: rem(4px);
+    margin-top: rem(6px);
     font-size: rem(13px);
+    line-height: 1.5;
     color: $muted;
   }
 }

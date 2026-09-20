@@ -1,0 +1,53 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.step-group {
+  display: grid;
+  gap: rem(28px);
+  margin-top: rem(48px);
+
+  @media #{media('>=', m)} {
+    grid-template-columns: repeat(3, 1fr);
+    gap: rem(40px);
+  }
+}
+
+.step {
+  padding-top: rem(20px);
+  border-top: 1px solid $border;
+  @include rise(0.9s);
+
+  @for $i from 1 through 6 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{0.08s * $i};
+    }
+  }
+
+  span {
+    display: block;
+    margin-bottom: rem(16px);
+    color: $muted;
+    font-size: rem(12px);
+    letter-spacing: 0.16em;
+  }
+
+  h3 {
+    margin-bottom: rem(10px);
+    font-size: rem(20px);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+
+  p {
+    margin: 0;
+    color: $muted;
+    font-size: rem(14px);
+    line-height: 1.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step {
+    animation: none;
+  }
+}

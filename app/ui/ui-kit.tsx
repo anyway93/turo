@@ -4,6 +4,7 @@ import "./ui-kit.scss";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
+import { Wrapper } from "@/components/layout/wrapper";
 import {
   ArrowUpRight,
   CalendarDays,
@@ -100,6 +101,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui";
+import { useLocale } from "@/lib/locale";
 
 const palette = [
   { name: "Sand", token: "background", tone: "background" },
@@ -173,15 +175,16 @@ function Section({
   hint: string;
   children: React.ReactNode;
 }) {
+  const { tx } = useLocale();
   return (
     <section id={id} className="kit__section">
       <div className="kit__intro">
         <Title variant={12} color="primary">
-          {kicker}
+          {tx(kicker)}
         </Title>
-        <Title variant={32}>{title}</Title>
+        <Title variant={32}>{tx(title)}</Title>
         <Text variant={16} color="muted">
-          {hint}
+          {tx(hint)}
         </Text>
       </div>
       {children}
@@ -190,6 +193,7 @@ function Section({
 }
 
 export function UiKit() {
+  const { tx, t } = useLocale();
   return (
     <div className="kit">
       <div className="kit__glow">
@@ -198,6 +202,7 @@ export function UiKit() {
       </div>
 
       <header className="kit__header">
+        <Wrapper>
         <div className="kit__bar">
           <Link href="/" className="kit__logo">
             <span className="kit__mark">
@@ -206,8 +211,8 @@ export function UiKit() {
             Turo
           </Link>
           <nav className="kit__nav">
-            <a href="#catalog">Туры</a>
-            <a href="#search">Направления</a>
+            <a href="#catalog">{tx("Туры")}</a>
+            <a href="#search">{tx("Направления")}</a>
             <a href="#content">FAQ</a>
           </nav>
           <div className="kit__actions">
@@ -219,27 +224,28 @@ export function UiKit() {
               </SheetTrigger>
               <SheetContent>
                 <SheetHeader>
-                  <SheetTitle>Меню</SheetTitle>
-                  <SheetDescription>Разделы витрины</SheetDescription>
+                  <SheetTitle>{tx("Меню")}</SheetTitle>
+                  <SheetDescription>{tx("Разделы витрины")}</SheetDescription>
                 </SheetHeader>
                 <div className="sheet__body">
                   {sections.map((item) => (
                     <a key={item.id} href={`#${item.id}`}>
-                      {item.label}
+                      {tx(item.label)}
                     </a>
                   ))}
                 </div>
               </SheetContent>
             </Sheet>
             <Button variant="ghost" className="button_hidden-mobile">
-              Войти
+              {tx("Войти")}
             </Button>
-            <Button variant="cta">Найти тур</Button>
+            <Button variant="cta">{tx("Найти тур")}</Button>
           </div>
         </div>
+        </Wrapper>
       </header>
 
-      <div className="kit__layout">
+      <Wrapper className="kit__layout">
         <aside className="kit__aside">
           <nav className="kit__toc">
             {sections.map((item) => (
@@ -253,18 +259,18 @@ export function UiKit() {
         <div className="kit__main">
           <div className="kit__hero">
             <Badge variant="soft">UI kit · Turo</Badge>
-            <Title variant={60}>Интерфейс, в который хочется уехать</Title>
+            <Title variant={60}>{tx("Интерфейс, в который хочется уехать")}</Title>
             <Text variant={20} color="muted">
               Стили на SCSS: `rem(20px)` как в finval-front. Без Tailwind.
             </Text>
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbLink href="/">Главная</BreadcrumbLink>
+                  <BreadcrumbLink href="/">{tx("Главная")}</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>UI-витрина</BreadcrumbPage>
+                  <BreadcrumbPage>{tx("UI-витрина")}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -322,20 +328,20 @@ export function UiKit() {
 
           <Section id="buttons" kicker="Actions" title="Кнопки" hint="Варианты и размеры на SCSS.">
             <div className="kit__row">
-              <Button>Смотреть туры</Button>
-              <Button variant="cta">Забронировать</Button>
+              <Button>{tx("Смотреть туры")}</Button>
+              <Button variant="cta">{tx("Забронировать")}</Button>
               <Button variant="gold">Premium</Button>
-              <Button variant="soft">Подборка</Button>
-              <Button variant="secondary">В избранное</Button>
-              <Button variant="outline">Сравнить</Button>
+              <Button variant="soft">{tx("Подборка")}</Button>
+              <Button variant="secondary">{tx("В избранное")}</Button>
+              <Button variant="outline">{tx("Сравнить")}</Button>
               <Button variant="glass">Glass</Button>
               <Button variant="inverse">Inverse</Button>
-              <Button variant="ghost">Подробнее</Button>
+              <Button variant="ghost">{tx("Подробнее")}</Button>
               <Button variant="text">
-                Все направления
+                {tx("Все направления")}
                 <ArrowUpRight />
               </Button>
-              <Button variant="destructive">Отменить</Button>
+              <Button variant="destructive">{tx("Отменить")}</Button>
               <Button size="icon" variant="outline">
                 <Heart />
               </Button>
@@ -346,7 +352,7 @@ export function UiKit() {
               <Button size="default">MD</Button>
               <Button size="lg">LG</Button>
               <Button size="xl" variant="cta">
-                XL · Найти тур
+                XL · {tx("Найти тур")}
               </Button>
             </div>
             <div className="kit__row">
@@ -363,7 +369,7 @@ export function UiKit() {
             <div className="kit__grid kit__grid_2">
               <Field>
                 <FieldLabel>Default</FieldLabel>
-                <Input placeholder="Куда едем?" />
+                <Input placeholder={tx("Куда едем?")} />
               </Field>
               <Field>
                 <FieldLabel>Filled</FieldLabel>
@@ -499,24 +505,24 @@ export function UiKit() {
                       <div className="card__media">
                         <Image
                           src={tour.image}
-                          alt={tour.title}
+                          alt={tx(tour.title)}
                           fill
                           sizes="(min-width: 768px) 33vw, 100vw"
                         />
-                        <Badge className="badge_overlay">{tour.tag}</Badge>
+                        <Badge className="badge_overlay">{tx(tour.tag)}</Badge>
                       </div>
                       <CardHeader>
-                        <CardTitle>{tour.title}</CardTitle>
+                        <CardTitle>{tx(tour.title)}</CardTitle>
                         <CardDescription>
                           <span className="kit__place">
                             <MapPin />
-                            {tour.place}
+                            {tx(tour.place)}
                           </span>
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="card__row">
                         <Text variant={14} color="muted">
-                          {tour.days} дней
+                          {t("tour.days", { n: tour.days })}
                         </Text>
                         <span className="kit__rating">
                           <Star />
@@ -535,7 +541,7 @@ export function UiKit() {
                             <DialogHeader>
                               <DialogTitle>Бронирование</DialogTitle>
                               <DialogDescription>
-                                {tour.title}. Оставьте контакты — подтвердим места.
+                                {tx(tour.title)}. {tx("Оставьте контакты — подтвердим места.")}
                               </DialogDescription>
                             </DialogHeader>
                             <FieldGroup>
@@ -576,7 +582,7 @@ export function UiKit() {
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious href="#catalog" text="Назад" />
+                  <PaginationPrevious href="#catalog" text={tx("Назад")} />
                 </PaginationItem>
                 <PaginationItem>
                   <PaginationLink href="#catalog" isActive>
@@ -590,7 +596,7 @@ export function UiKit() {
                   <PaginationEllipsis />
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationNext href="#catalog" text="Дальше" />
+                  <PaginationNext href="#catalog" text={tx("Дальше")} />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
@@ -775,7 +781,7 @@ export function UiKit() {
             </div>
           </Section>
         </div>
-      </div>
+      </Wrapper>
     </div>
   );
 }

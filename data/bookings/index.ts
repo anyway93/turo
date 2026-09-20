@@ -1,0 +1,34 @@
+import type { Booking } from "../types";
+
+export const bookings: Booking[] = (
+  [
+  { id: "bk-anna-altai", tourSlug: "altai-rivers", userId: "usr-anna", guests: 1, total: 54000, status: "confirmed", paidAt: "2026-02-11T10:12:00.000Z", cardLast4: "4242" },
+  { id: "bk-anna-kyoto", tourSlug: "kyoto-quiet", userId: "usr-anna", guests: 1, total: 142000, status: "paid", paidAt: "2026-01-20T14:03:00.000Z", cardLast4: "4242" },
+  { id: "bk-anna-mar", tourSlug: "marrakech-atlas", userId: "usr-anna", guests: 2, total: 145600, status: "paid", paidAt: "2026-01-08T09:40:00.000Z", cardLast4: "4242" },
+  { id: "bk-anna-geo", tourSlug: "georgia-feast", userId: "usr-anna", guests: 1, total: 58900, status: "completed", paidAt: "2025-05-02T11:00:00.000Z", cardLast4: "1111" },
+  { id: "bk-ivan-ice", tourSlug: "iceland", userId: "usr-ivan", guests: 1, total: 156000, status: "paid", paidAt: "2026-03-01T16:22:00.000Z", cardLast4: "5510" },
+  { id: "bk-ivan-cap", tourSlug: "cappadocia-valleys", userId: "usr-ivan", guests: 1, total: 61200, status: "confirmed", paidAt: "2026-02-14T08:11:00.000Z", cardLast4: "5510" },
+  { id: "bk-maria-amalfi", tourSlug: "amalfi-coast", userId: "usr-maria", guests: 2, total: 236000, status: "paid", paidAt: "2026-01-30T12:00:00.000Z", cardLast4: "8821" },
+  { id: "bk-maria-vn", tourSlug: "vietnam-central", userId: "usr-maria", guests: 1, total: 68400, status: "confirmed", paidAt: "2026-02-02T10:18:00.000Z", cardLast4: "8821" },
+  { id: "bk-maria-ox", tourSlug: "oaxaca-table", userId: "usr-maria", guests: 1, total: 89600, status: "paid", paidAt: "2026-03-12T15:44:00.000Z", cardLast4: "8821" },
+  { id: "bk-dmitry-ann", tourSlug: "annapurna-circuit", userId: "usr-dmitry", guests: 1, total: 118000, status: "paid", paidAt: "2026-04-01T07:30:00.000Z", cardLast4: "3003" },
+  { id: "bk-dmitry-kam", tourSlug: "kamchatka-volcanoes", userId: "usr-dmitry", guests: 1, total: 198000, status: "confirmed", paidAt: "2026-03-18T19:02:00.000Z", cardLast4: "3003" },
+  { id: "bk-olga-altai", tourSlug: "altai-rivers", userId: "usr-olga", guests: 2, total: 108000, status: "confirmed", paidAt: "2026-02-20T11:11:00.000Z", cardLast4: "7777" },
+  { id: "bk-olga-bali", tourSlug: "bali", userId: "usr-olga", guests: 2, total: 195000, status: "paid", paidAt: "2026-01-15T13:20:00.000Z", cardLast4: "7777" },
+  { id: "bk-pavel-rome", tourSlug: "rome-slow", userId: "usr-pavel", guests: 1, total: 67400, status: "completed", paidAt: "2025-12-01T09:00:00.000Z", cardLast4: "2211" },
+  { id: "bk-nina-cusco", tourSlug: "cusco-valley", userId: "usr-nina", guests: 1, total: 154000, status: "paid", paidAt: "2026-02-28T17:45:00.000Z", cardLast4: "9090" },
+  { id: "bk-artem-svan", tourSlug: "svaneti-trails", userId: "usr-artem", guests: 1, total: 62400, status: "confirmed", paidAt: "2026-03-05T08:08:00.000Z", cardLast4: "6161" },
+  { id: "bk-kate-kenya", tourSlug: "kenya-safari", userId: "usr-kate", guests: 1, total: 186000, status: "paid", paidAt: "2026-04-10T10:10:00.000Z", cardLast4: "4444" },
+  { id: "bk-hugo-lyon", tourSlug: "lyon-beaujolais", userId: "usr-hugo", guests: 2, total: 172800, status: "paid", paidAt: "2026-03-22T12:12:00.000Z", cardLast4: "3232" },
+  { id: "bk-sara-nyc", tourSlug: "nyc-walk", userId: "usr-sara", guests: 1, total: 92400, status: "confirmed", paidAt: "2026-02-01T18:00:00.000Z", cardLast4: "1001" },
+  { id: "bk-kenji-kyo", tourSlug: "kyoto-quiet", userId: "usr-kenji", guests: 1, total: 142000, status: "paid", paidAt: "2026-01-11T11:11:00.000Z", cardLast4: "2020" },
+  { id: "bk-lara-san", tourSlug: "santorini", userId: "usr-lara", guests: 2, total: 179800, status: "paid", paidAt: "2026-02-09T09:09:00.000Z", cardLast4: "8585" },
+  { id: "bk-noah-nor", tourSlug: "norway-fjords", userId: "usr-noah", guests: 1, total: 169000, status: "confirmed", paidAt: "2026-03-03T03:03:00.000Z", cardLast4: "7373" },
+  { id: "bk-mia-ser", tourSlug: "serengeti-zanzibar", userId: "usr-mia", guests: 1, total: 224000, status: "paid", paidAt: "2026-04-04T14:14:00.000Z", cardLast4: "1212" },
+  { id: "bk-roman-ess", tourSlug: "essaouira-wind", userId: "usr-roman", guests: 1, total: 41200, status: "paid", paidAt: "2026-02-22T22:22:00.000Z", cardLast4: "5656" },
+  { id: "bk-vera-kat", tourSlug: "kathmandu-valley", userId: "usr-vera", guests: 1, total: 49800, status: "confirmed", paidAt: "2026-01-19T19:19:00.000Z", cardLast4: "3434" },
+  { id: "bk-timur-geo", tourSlug: "georgia-feast", userId: "usr-timur", guests: 2, total: 117800, status: "paid", paidAt: "2026-03-09T09:33:00.000Z", cardLast4: "9898" },
+  { id: "bk-eva-nz", tourSlug: "nz-south", userId: "usr-eva", guests: 1, total: 212000, status: "paid", paidAt: "2025-11-11T11:00:00.000Z", cardLast4: "6767" },
+  { id: "bk-jon-pat", tourSlug: "patagonia-wind", userId: "usr-jon", guests: 1, total: 198000, status: "confirmed", paidAt: "2025-12-20T20:20:00.000Z", cardLast4: "4545" },
+] as Omit<Booking, "departureStart">[]
+).map((item) => ({ ...item, departureStart: "" }));

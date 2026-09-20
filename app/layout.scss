@@ -1,0 +1,19 @@
+@use "global/config" as *;
+
+.page {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+  overflow-x: clip;
+
+  &__content {
+    flex: 1 0 auto;
+    padding-bottom: var(--page-footer-gap);
+
+    &:has(.messages-app) {
+      padding-bottom: 0;
+    }
+  }
+}

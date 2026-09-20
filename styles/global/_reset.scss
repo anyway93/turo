@@ -1,5 +1,6 @@
-@use 'sass:math';
+@use 'sass:map';
 @use 'config' as *;
+@use 'mixins' as *;
 
 *,
 *::before,
@@ -11,31 +12,16 @@
 
 html {
   height: 100%;
+  font-size: $fs;
   scroll-behavior: smooth;
-
-  @media (min-width: 320px) {
-    font-size: getVw($fs, math.div(360px, 100));
-  }
-
-  @each $breakpoint in (360px, 576px, 768px, 1024px) {
-    @media (min-width: #{$breakpoint}) {
-      font-size: getVw($fs, math.div($breakpoint, 100));
-    }
-  }
-
-  @media (min-width: 1201px) {
-    font-size: getVw($fs, math.div(1920px, 100));
-  }
-
-  @media (min-width: 1920px) {
-    font-size: getVw($fs, math.div(1920px, 100));
-  }
+  cursor: default;
 }
 
 body {
   display: flex;
   flex-direction: column;
   min-height: 100%;
+  min-height: 100dvh;
   background: $sand;
   color: $ink;
   font-family: $font;
@@ -68,9 +54,54 @@ select {
 }
 
 button {
-  cursor: pointer;
   background: none;
   border: none;
+}
+
+a[href],
+button:not(:disabled):not([aria-disabled="true"]),
+label,
+summary,
+select:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+[role="tab"],
+[role="menuitem"],
+[role="option"],
+[role="checkbox"],
+[role="radio"],
+[role="switch"],
+[role="combobox"],
+[role="slider"] {
+  cursor: pointer;
+}
+
+input:not(:disabled),
+textarea:not(:disabled),
+[contenteditable="true"],
+code,
+pre,
+kbd,
+samp,
+.is-copy,
+a[href].is-copy {
+  cursor: text;
+}
+
+input[type="button"]:not(:disabled),
+input[type="submit"]:not(:disabled),
+input[type="reset"]:not(:disabled),
+input[type="checkbox"]:not(:disabled),
+input[type="radio"]:not(:disabled),
+input[type="file"]:not(:disabled),
+input[type="color"]:not(:disabled),
+input[type="range"]:not(:disabled),
+input[type="image"]:not(:disabled) {
+  cursor: pointer;
+}
+
+:disabled,
+[aria-disabled="true"] {
+  cursor: default;
 }
 
 ul,
@@ -89,6 +120,23 @@ ol {
   --border: #{$border};
   --white: #{$white};
   --danger: #{$danger};
+  --page-max: #{rem($page-max)};
+  --page-pad: #{rem(map.get($page-pad, s))};
+  --page-footer-gap: #{rem(map.get($page-footer-gap, s))};
+}
+
+@media #{media('>=', m)} {
+  :root {
+    --page-pad: #{rem(map.get($page-pad, m))};
+    --page-footer-gap: #{rem(map.get($page-footer-gap, m))};
+  }
+}
+
+@media #{media('>=', d)} {
+  :root {
+    --page-pad: #{rem(map.get($page-pad, d))};
+    --page-footer-gap: #{rem(map.get($page-footer-gap, d))};
+  }
 }
 
 ::selection {
@@ -129,6 +177,54 @@ ol {
   to {
     height: 0;
     opacity: 0;
+  }
+}
+
+@keyframes block-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, rem(28px), 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--overlay-y, 14px), 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes overlay-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, var(--overlay-y, 10px), 0);
+  }
+}
+
+@keyframes overlay-item {
+  from {
+    opacity: 0;
+    transform: translate3d(0, rem(10px), 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 }
 

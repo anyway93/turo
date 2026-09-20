@@ -2,23 +2,22 @@
 @use "global/mixins" as *;
 
 .site-footer {
-  padding: rem(72px) rem(20px) rem(28px);
+  margin-top: auto;
+  padding-block: rem(72px) rem(28px);
   background: $ink;
   color: color-mix(in srgb, $sand 78%, transparent);
 
   @media #{media('>=', m)} {
-    padding: rem(96px) rem(32px) rem(32px);
+    padding-block: rem(96px) rem(32px);
   }
 
   @media #{media('>=', d)} {
-    padding: rem(120px) rem(48px) rem(40px);
+    padding-block: rem(120px) rem(40px);
   }
 
   &__grid {
     display: grid;
     gap: rem(40px);
-    max-width: rem(1440px);
-    margin: 0 auto;
 
     @media #{media('>=', m)} {
       grid-template-columns: 1.4fr 1fr 1fr 1fr;
@@ -63,19 +62,17 @@
   }
 
   &__bottom {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: rem(8px);
-    max-width: rem(1440px);
-    margin: rem(64px) auto 0;
+    margin-top: rem(64px);
     padding-top: rem(24px);
     border-top: 1px solid color-mix(in srgb, $sand 12%, transparent);
     font-size: rem(12px);
     letter-spacing: 0.04em;
 
     @media #{media('>=', m)} {
-      flex-direction: row;
-      justify-content: space-between;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: rem(32px);
     }
   }
 }

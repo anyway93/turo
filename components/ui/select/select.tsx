@@ -36,8 +36,13 @@ function SelectContent({
 }: React.ComponentProps<typeof SelectPrimitive.Content>) {
   return (
     <SelectPrimitive.Portal>
-      <SelectPrimitive.Content className={cx("select-content", className)} {...props}>
-        <SelectPrimitive.Viewport>{children}</SelectPrimitive.Viewport>
+      <SelectPrimitive.Content
+        position="popper"
+        sideOffset={6}
+        className={cx("select-content", className)}
+        {...props}
+      >
+        <SelectPrimitive.Viewport className="select-viewport">{children}</SelectPrimitive.Viewport>
       </SelectPrimitive.Content>
     </SelectPrimitive.Portal>
   );

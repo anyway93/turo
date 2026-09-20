@@ -1,0 +1,99 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.checkout {
+  padding-top: rem(112px);
+  padding-bottom: rem(48px);
+  @include rise(0.8s);
+
+  h1 {
+    font-size: rem(36px);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  &__hint,
+  &__legal,
+  aside p {
+    color: $muted;
+    line-height: 1.55;
+  }
+
+  &__hint {
+    margin: rem(12px) 0 rem(24px);
+  }
+
+  &__legal {
+    margin-top: rem(12px);
+    font-size: rem(13px);
+
+    a {
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    gap: rem(40px);
+
+    @media #{media('>=', t)} {
+      grid-template-columns: minmax(0, 1fr) rem(280px);
+    }
+  }
+
+  &__form {
+    display: grid;
+    gap: rem(16px);
+    max-width: rem(520px);
+  }
+
+  &__split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: rem(12px);
+  }
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(12px);
+    margin-top: rem(20px);
+  }
+
+  aside {
+    display: grid;
+    gap: rem(8px);
+    height: fit-content;
+    padding: rem(24px);
+    background: $card;
+    border: 1px solid $border;
+  }
+
+  .dep-pick {
+    margin-bottom: rem(8px);
+  }
+
+  .dep-pick__list {
+    max-height: rem(200px);
+    overflow: auto;
+  }
+
+  &__kicker {
+    font-size: rem(12px);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-size: rem(22px);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+
+  &__sum {
+    margin-top: rem(8px);
+    color: $ink !important;
+    font-size: rem(18px);
+  }
+}

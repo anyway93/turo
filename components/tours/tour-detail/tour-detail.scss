@@ -1,0 +1,259 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.tour-detail {
+  padding-bottom: rem(32px);
+
+  &_empty {
+    display: grid;
+    gap: rem(16px);
+    padding-top: rem(120px);
+    padding-bottom: rem(80px);
+  }
+
+  &__layout {
+    display: grid;
+    gap: rem(40px);
+    padding-top: rem(40px);
+
+    @media #{media('>=', m)} {
+      padding-top: rem(56px);
+    }
+
+    @media #{media('>=', t)} {
+      grid-template-columns: minmax(0, 1fr) rem(340px);
+      gap: 0 rem(56px);
+      align-items: start;
+    }
+  }
+
+  &__main {
+    min-width: 0;
+    @include rise(0.95s);
+  }
+
+  &__place {
+    color: $ocean;
+    font-size: rem(12px);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  &__title {
+    margin-top: rem(10px);
+    font-size: rem(36px);
+    font-weight: 500;
+    letter-spacing: -0.045em;
+    line-height: 1.12;
+
+    @media #{media('>=', m)} {
+      font-size: rem(48px);
+    }
+  }
+
+  &__lead {
+    max-width: 38em;
+    margin-top: rem(16px);
+    color: $muted;
+    font-size: rem(17px);
+    line-height: 1.6;
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(8px);
+    margin-top: rem(22px);
+  }
+
+  &__facts {
+    display: grid;
+    gap: rem(16px);
+    margin-top: rem(32px);
+    padding: rem(22px) 0;
+    border-top: 1px solid $border;
+    border-bottom: 1px solid $border;
+
+    @media #{media('>=', m)} {
+      grid-template-columns: 1fr 1fr;
+      gap: rem(18px) rem(24px);
+    }
+
+    dt {
+      margin-bottom: rem(4px);
+      color: $muted;
+      font-size: rem(11px);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    dd {
+      font-size: rem(14px);
+      line-height: 1.45;
+    }
+  }
+
+  &__tabs {
+    margin-top: rem(36px);
+  }
+
+  &__days {
+    display: grid;
+    gap: rem(4px);
+    padding: rem(20px) 0 rem(8px);
+
+    li {
+      position: relative;
+      padding: rem(16px) 0 rem(16px) rem(20px);
+      border-left: 1px solid $border;
+    }
+
+    span {
+      color: $ocean;
+      font-size: rem(11px);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h3 {
+      margin: rem(6px) 0 rem(6px);
+      font-size: rem(18px);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      color: $muted;
+      font-size: rem(14px);
+      line-height: 1.55;
+    }
+  }
+
+  &__split {
+    display: grid;
+    gap: rem(28px);
+    padding-top: rem(20px);
+
+    @media #{media('>=', m)} {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    h3 {
+      margin-bottom: rem(12px);
+      font-size: rem(16px);
+      font-weight: 500;
+    }
+
+    li {
+      margin-top: rem(8px);
+      color: $muted;
+      font-size: rem(14px);
+      line-height: 1.5;
+    }
+  }
+
+  &__note {
+    margin-top: rem(20px);
+    color: $muted;
+    font-size: rem(14px);
+    line-height: 1.55;
+  }
+
+  &__reviews {
+    display: grid;
+    gap: rem(20px);
+    padding-top: rem(20px);
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: rem(12px);
+      font-size: rem(13px);
+      color: $muted;
+    }
+
+    h3 {
+      margin: rem(6px) 0;
+      font-size: rem(18px);
+      font-weight: 500;
+    }
+
+    p {
+      color: $muted;
+      line-height: 1.55;
+    }
+  }
+
+  &__aside {
+    display: grid;
+    gap: rem(8px);
+    padding: rem(22px);
+    background: $card;
+    @include rise(1s, 0.1s);
+
+    @media #{media('>=', t)} {
+      position: sticky;
+      top: rem(88px);
+    }
+
+    .dep-pick {
+      margin: rem(8px) 0 rem(4px);
+    }
+
+    .dep-pick__cell {
+      min-height: rem(36px);
+    }
+
+    .dep-pick__list {
+      max-height: rem(220px);
+      overflow: auto;
+    }
+  }
+
+  &__price {
+    font-size: rem(32px);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  &__per,
+  &__dates,
+  &__seats {
+    color: $muted;
+    font-size: rem(14px);
+    line-height: 1.45;
+  }
+
+  &__host {
+    display: flex;
+    gap: rem(12px);
+    align-items: center;
+    margin: rem(12px) 0 rem(16px);
+    padding: rem(14px) 0;
+    border-top: 1px solid $border;
+    border-bottom: 1px solid $border;
+    transition: opacity 0.5s $transition-timing-function;
+
+    @include hover() {
+      opacity: 0.78;
+    }
+
+    strong,
+    em {
+      display: block;
+    }
+
+    em {
+      color: $muted;
+      font-style: normal;
+      font-size: rem(13px);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tour-detail__main,
+  .tour-detail__aside {
+    animation: none;
+  }
+}

@@ -1,0 +1,96 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.place-card-group {
+  display: grid;
+  gap: rem(12px);
+  margin-top: rem(40px);
+
+  @media #{media('>=', m)} {
+    grid-template-columns: 1.4fr 1fr;
+    grid-template-rows: rem(240px) rem(240px);
+  }
+
+  @media #{media('>=', d)} {
+    grid-template-rows: rem(280px) rem(280px);
+  }
+}
+
+.place-card {
+  position: relative;
+  min-height: rem(220px);
+  overflow: hidden;
+  color: $white;
+  @include rise(1s);
+
+  &:nth-child(2) {
+    animation-delay: 0.08s;
+  }
+
+  &:nth-child(3) {
+    animation-delay: 0.16s;
+  }
+
+  &_featured {
+    @media #{media('>=', m)} {
+      grid-row: span 2;
+      min-height: 100%;
+    }
+  }
+
+  img {
+    max-width: none;
+    object-fit: cover;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, color-mix(in srgb, $ink 55%, transparent));
+    transition: opacity 0.7s $transition-timing-function;
+  }
+
+  &__media {
+    position: absolute;
+    inset: -5% -6%;
+    transform: translate3d(0, 0, 0);
+    transition: transform 1.15s $transition-timing-function;
+  }
+
+  &__name {
+    position: absolute;
+    z-index: 1;
+    right: rem(20px);
+    bottom: rem(18px);
+    left: rem(20px);
+    font-size: rem(18px);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    transform: translate3d(0, 0, 0);
+    transition: transform 0.7s $transition-timing-function;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      .place-card__media {
+        transform: translate3d(-3%, 0, 0);
+      }
+
+      .place-card__name {
+        transform: translate3d(0, rem(-6px), 0);
+      }
+
+      &::after {
+        opacity: 0.72;
+      }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .place-card__media,
+  .place-card__name {
+    transform: none !important;
+  }
+}

@@ -1,0 +1,68 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.lang-switch {
+  display: flex;
+  align-items: baseline;
+  gap: rem(10px);
+}
+
+.lang-switch__opt {
+  position: relative;
+  padding: rem(6px) 0 rem(7px);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: rem(11px);
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  line-height: 1;
+  opacity: 0.26;
+  transition: opacity 0.7s $transition-timing-function;
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: 0.14em;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity 0.7s $transition-timing-function;
+  }
+
+  &.is-on {
+    opacity: 1;
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  @include hover() {
+    opacity: 0.72;
+  }
+
+  &.is-on {
+    @include hover() {
+      opacity: 1;
+    }
+  }
+}
+
+.lang-switch__sep {
+  width: 1px;
+  height: rem(8px);
+  background: currentColor;
+  opacity: 0.2;
+  transform: translate3d(0, rem(-1px), 0);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lang-switch__opt,
+  .lang-switch__opt::after {
+    transition: none;
+  }
+}

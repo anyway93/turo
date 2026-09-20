@@ -8,8 +8,11 @@
   gap: rem(8px);
 
   &__label {
-    font-size: rem(13px);
+    font-size: rem(11px);
     font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, $ink 70%, $muted);
   }
 
   &__group {

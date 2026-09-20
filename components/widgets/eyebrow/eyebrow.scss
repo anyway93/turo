@@ -1,0 +1,9 @@
+@use "global/config" as *;
+
+.eyebrow {
+  margin: 0;
+  color: $ocean;
+  font-size: rem(12px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}

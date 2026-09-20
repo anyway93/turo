@@ -17,11 +17,16 @@ function DropdownMenuTrigger(
 
 function DropdownMenuContent({
   className,
+  sideOffset = 6,
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {
   return (
     <DropdownMenuPrimitive.Portal>
-      <DropdownMenuPrimitive.Content className={cx("dropdown", className)} {...props} />
+      <DropdownMenuPrimitive.Content
+        sideOffset={sideOffset}
+        className={cx("dropdown", className)}
+        {...props}
+      />
     </DropdownMenuPrimitive.Portal>
   );
 }
