@@ -38,39 +38,6 @@
   }
 
   &__head {
-    display: flex;
-    flex-direction: column;
-    gap: rem(28px);
     @include rise(0.85s);
-
-    @media #{media('>=', t)} {
-      flex-direction: row;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: rem(48px);
-    }
-  }
-
-  &__aside {
-    display: flex;
-    flex-wrap: wrap;
-    gap: rem(20px);
-    margin: 0;
-    color: $muted;
-    font-size: rem(12px);
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-
-    span {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 0;
-    }
-
-    b {
-      margin-right: rem(8px);
-      color: $ocean;
-      font-weight: 400;
-    }
   }
 }

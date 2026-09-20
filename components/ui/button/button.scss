@@ -83,9 +83,67 @@
     }
 
     &_glass {
-      border-color: color-mix(in srgb, $white 50%, transparent);
-      background: color-mix(in srgb, $white 45%, transparent);
-      backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      border-color: color-mix(in srgb, $white 42%, transparent);
+      color: $white;
+      background: color-mix(in srgb, $white 16%, transparent);
+      backdrop-filter: blur(14px) saturate(1.2);
+      -webkit-backdrop-filter: blur(14px) saturate(1.2);
+      transition:
+        border-color 0.6s $transition-timing-function,
+        background-color 0.6s $transition-timing-function,
+        box-shadow 0.6s $transition-timing-function,
+        filter 0.6s $transition-timing-function;
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      &::before {
+        inset: 0;
+        background: color-mix(in srgb, $white 28%, transparent);
+        opacity: 0;
+        transition: opacity 0.6s $transition-timing-function;
+      }
+
+      &::after {
+        inset: -40% -70%;
+        background: linear-gradient(
+          108deg,
+          transparent 34%,
+          color-mix(in srgb, $white 18%, transparent) 46%,
+          color-mix(in srgb, $white 55%, transparent) 50%,
+          color-mix(in srgb, $white 18%, transparent) 54%,
+          transparent 66%
+        );
+        opacity: 0;
+        transform: translate3d(-75%, 0, 0);
+      }
+
+      @include hover() {
+        filter: none;
+        border-color: color-mix(in srgb, $white 70%, transparent);
+        background: color-mix(in srgb, $white 0%, transparent);
+        box-shadow: 0 rem(16px) rem(40px) rem(-16px) color-mix(in srgb, $ink 40%, transparent);
+
+        &::before {
+          opacity: 1;
+        }
+
+        &::after {
+          animation: button-sheen 1.05s $transition-timing-function 1;
+        }
+      }
+
+      &:active {
+        filter: none;
+      }
     }
 
     &_glass-tile {
@@ -280,7 +338,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .button_variant_glass-tile::after {
+  .button_variant_glass-tile::after,
+  .button_variant_glass::after {
     animation: none !important;
     opacity: 0 !important;
   }

@@ -100,8 +100,7 @@
 
   &__kicker,
   &__title,
-  &__meta,
-  &__cta {
+  &__meta {
     animation-duration: 1.05s;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
     animation-fill-mode: both;
@@ -109,15 +108,13 @@
 
   &__copy.is-next &__kicker,
   &__copy.is-next &__title,
-  &__copy.is-next &__meta,
-  &__copy.is-next &__cta {
+  &__copy.is-next &__meta {
     animation-name: hero-rise-next;
   }
 
   &__copy.is-prev &__kicker,
   &__copy.is-prev &__title,
-  &__copy.is-prev &__meta,
-  &__copy.is-prev &__cta {
+  &__copy.is-prev &__meta {
     animation-name: hero-rise-prev;
   }
 
@@ -169,7 +166,6 @@
     flex-wrap: wrap;
     gap: rem(10px);
     margin-top: rem(28px);
-    animation-delay: 0.28s;
   }
 
   &__bar {
@@ -224,8 +220,7 @@
   .hero__media,
   .hero__kicker,
   .hero__title,
-  .hero__meta,
-  .hero__cta {
+  .hero__meta {
     transition: none !important;
     animation: none !important;
   }
