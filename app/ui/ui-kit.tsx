@@ -4,6 +4,7 @@ import "./ui-kit.scss";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
+import { Wrapper } from "@/components/layout/wrapper";
 import {
   ArrowUpRight,
   CalendarDays,
@@ -198,6 +199,7 @@ export function UiKit() {
       </div>
 
       <header className="kit__header">
+        <Wrapper>
         <div className="kit__bar">
           <Link href="/" className="kit__logo">
             <span className="kit__mark">
@@ -237,9 +239,10 @@ export function UiKit() {
             <Button variant="cta">Найти тур</Button>
           </div>
         </div>
+        </Wrapper>
       </header>
 
-      <div className="kit__layout">
+      <Wrapper className="kit__layout">
         <aside className="kit__aside">
           <nav className="kit__toc">
             {sections.map((item) => (
@@ -775,7 +778,7 @@ export function UiKit() {
             </div>
           </Section>
         </div>
-      </div>
+      </Wrapper>
     </div>
   );
 }

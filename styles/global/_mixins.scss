@@ -17,6 +17,13 @@
   }
 }
 
+@mixin wrapper {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+}
+
 @mixin hover() {
   @media #{media('>', t)} and (hover: hover) and (pointer: fine) {
     &:hover {

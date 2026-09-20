@@ -1,9 +1,11 @@
 import "./footer.scss";
 import Link from "next/link";
+import { Wrapper } from "@/components/layout/wrapper";
 
 export function Footer() {
   return (
     <footer className="site-footer">
+      <Wrapper>
       <div className="site-footer__grid">
         <div className="site-footer__brand">
           <p className="site-footer__logo">Turo</p>
@@ -14,15 +16,15 @@ export function Footer() {
         </div>
         <div>
           <p className="site-footer__label">Платформа</p>
-          <a href="#tours">Каталог туров</a>
-          <a href="#create">Создать тур</a>
-          <a href="#how">Как это работает</a>
+          <Link href="/#tours">Каталог туров</Link>
+          <Link href="/#create">Создать тур</Link>
+          <Link href="/#how">Как это работает</Link>
         </div>
         <div>
           <p className="site-footer__label">Аккаунт</p>
-          <Link href="#auth">Войти</Link>
-          <Link href="#auth">Регистрация</Link>
-          <Link href="#auth">Мои брони</Link>
+          <Link href="/#auth">Войти</Link>
+          <Link href="/#auth">Регистрация</Link>
+          <Link href="/#auth">Мои брони</Link>
         </div>
         <div>
           <p className="site-footer__label">Контакт</p>
@@ -34,6 +36,7 @@ export function Footer() {
         <span>© {new Date().getFullYear()} Turo</span>
         <span>Минимально. Честно. В дороге.</span>
       </div>
+      </Wrapper>
     </footer>
   );
 }

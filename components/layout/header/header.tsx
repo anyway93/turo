@@ -2,18 +2,22 @@
 import "./header.scss";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui";
+import { Wrapper } from "@/components/layout/wrapper";
 import { cx } from "@/lib/cx";
 
 const links = [
-  { href: "#tours", label: "Туры" },
-  { href: "#create", label: "Создать тур" },
-  { href: "#how", label: "Как это работает" },
+  { href: "/#tours", label: "Туры" },
+  { href: "/#create", label: "Создать тур" },
+  { href: "/#how", label: "Как это работает" },
 ];
 
 export function Header() {
+  const pathname = usePathname();
+  const overlay = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -50,46 +54,61 @@ export function Header() {
     };
   }, [open]);
 
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   return (
-    <header className={cx("site-header", scrolled && "is-scrolled", open && "is-open")}>
-      <div className="site-header__inner">
+    <header
+      className={cx(
+        "site-header",
+        (!overlay || scrolled) && "is-scrolled",
+        open && "is-open",
+      )}
+    >
+      <Wrapper className="site-header__inner">
         <Link href="/" className="site-header__logo">
           Turo
         </Link>
         <nav className="site-header__nav" aria-label="Основное меню">
           {links.map((link) => (
-            <a key={link.href} href={link.href}>
+            <Link key={link.href} href={link.href}>
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="site-header__actions">
-          <Link href="#auth" className="site-header__login">
+          <Link href="/#auth" className="site-header__login">
             Войти
           </Link>
           <Button asChild size="sm" variant="cta">
-            <Link href="#create">Разместить тур</Link>
+            <Link href="/#create">Разместить тур</Link>
           </Button>
           <button
             type="button"
             className="site-header__menu"
+            aria-expanded={open}
+            aria-controls="site-header-mobile"
             aria-label={open ? "Закрыть меню" : "Открыть меню"}
             onClick={() => setOpen((value) => !value)}
           >
             {open ? <X /> : <Menu />}
           </button>
         </div>
-      </div>
-      <div className="site-header__mobile" hidden={!open}>
+      </Wrapper>
+      <div
+        className={cx("site-header__mobile", open && "is-open")}
+        id="site-header-mobile"
+      >
         {links.map((link) => (
-          <a key={link.href} href={link.href} onClick={() => setOpen(false)}>
+          <Link key={link.href} href={link.href} onClick={() => setOpen(false)}>
             {link.label}
-          </a>
+          </Link>
         ))}
-        <Link href="#auth" onClick={() => setOpen(false)}>
+        <Link href="/#auth" onClick={() => setOpen(false)}>
           Войти
         </Link>
-        <Link href="#create" onClick={() => setOpen(false)}>
+        <Link href="/#create" onClick={() => setOpen(false)}>
           Разместить тур
         </Link>
       </div>

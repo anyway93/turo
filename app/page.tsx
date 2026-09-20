@@ -2,10 +2,9 @@ import "./page.scss";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { HeroSlider } from "@/components/home/hero-slider";
 import { Button } from "@/components/ui";
+import { Wrapper } from "@/components/layout/wrapper";
 
 const places = [
   {
@@ -27,11 +26,10 @@ const places = [
 
 export default function Home() {
   return (
-    <div className="page">
-      <Header />
-      <main>
+    <main>
         <HeroSlider />
 
+        <Wrapper>
         <section className="home-section" id="tours">
           <div className="home-section__head">
             <div>
@@ -167,8 +165,7 @@ export default function Home() {
             </Button>
           </div>
         </section>
-      </main>
-      <Footer />
-    </div>
+        </Wrapper>
+    </main>
   );
 }

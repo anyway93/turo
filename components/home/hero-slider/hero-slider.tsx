@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui";
+import { Wrapper } from "@/components/layout/wrapper";
 import { cx } from "@/lib/cx";
 
 export const popularTours = [
@@ -216,7 +217,7 @@ export function HeroSlider() {
         <div className="hero__veil" />
       </div>
 
-      <div className="hero__shell">
+      <Wrapper className="hero__shell">
         <div className="hero__content">
           <div className={cx("hero__copy", dir === 1 ? "is-next" : "is-prev")} key={slide.id}>
             <p className="hero__kicker">
@@ -278,7 +279,7 @@ export function HeroSlider() {
             </button>
           </div>
         </div>
-      </div>
+      </Wrapper>
     </section>
   );
 }

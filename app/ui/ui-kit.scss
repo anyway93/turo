@@ -5,6 +5,7 @@
   position: relative;
   min-height: 100%;
   overflow-x: hidden;
+  padding-top: rem(72px);
 
   &__glow {
     pointer-events: none;
@@ -37,11 +38,8 @@
 
   &__header {
     position: sticky;
-    top: rem(16px);
-    z-index: 40;
-    width: calc(100% - rem(24px));
-    max-width: rem(1152px);
-    margin: 0 auto;
+    top: rem(88px);
+    z-index: 20;
   }
 
   &__bar {
@@ -110,10 +108,8 @@
 
   &__layout {
     display: grid;
-    max-width: rem(1152px);
     gap: rem(48px);
-    margin: 0 auto;
-    padding: rem(48px) rem(16px) rem(96px);
+    padding-block: rem(48px) rem(96px);
 
     @media #{media('>=', d)} {
       grid-template-columns: rem(180px) 1fr;

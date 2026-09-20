@@ -1,14 +1,9 @@
 @use 'sass:math';
-@use 'sass:map';
 
 $fs: 16px;
 
 @function rem($size) {
   @return math.div($size, $fs) * 1rem;
-}
-
-@function getVw($px, $width) {
-  @return math.div($px, $width) * 1vw;
 }
 
 $transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
@@ -23,6 +18,13 @@ $breakpoints: (
   t: 1024px,
   m: 768px,
   s: 576px,
+);
+
+$page-max: 1440px;
+$page-pad: (
+  s: 20px,
+  m: 32px,
+  d: 48px,
 );
 
 $sand: #f6f1e8;

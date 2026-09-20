@@ -1,5 +1,6 @@
-@use 'sass:math';
+@use 'sass:map';
 @use 'config' as *;
+@use 'mixins' as *;
 
 *,
 *::before,
@@ -11,31 +12,15 @@
 
 html {
   height: 100%;
+  font-size: $fs;
   scroll-behavior: smooth;
-
-  @media (min-width: 320px) {
-    font-size: getVw($fs, math.div(360px, 100));
-  }
-
-  @each $breakpoint in (360px, 576px, 768px, 1024px) {
-    @media (min-width: #{$breakpoint}) {
-      font-size: getVw($fs, math.div($breakpoint, 100));
-    }
-  }
-
-  @media (min-width: 1201px) {
-    font-size: getVw($fs, math.div(1920px, 100));
-  }
-
-  @media (min-width: 1920px) {
-    font-size: getVw($fs, math.div(1920px, 100));
-  }
 }
 
 body {
   display: flex;
   flex-direction: column;
   min-height: 100%;
+  min-height: 100dvh;
   background: $sand;
   color: $ink;
   font-family: $font;
@@ -89,6 +74,20 @@ ol {
   --border: #{$border};
   --white: #{$white};
   --danger: #{$danger};
+  --page-max: #{rem($page-max)};
+  --page-pad: #{rem(map.get($page-pad, s))};
+}
+
+@media #{media('>=', m)} {
+  :root {
+    --page-pad: #{rem(map.get($page-pad, m))};
+  }
+}
+
+@media #{media('>=', d)} {
+  :root {
+    --page-pad: #{rem(map.get($page-pad, d))};
+  }
 }
 
 ::selection {
