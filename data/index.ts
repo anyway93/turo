@@ -4,7 +4,7 @@ export { tours, tourBySlug, continents, tourStyles } from "./tours";
 export { reviews, reviewsForTour } from "./reviews";
 export { bookings } from "./bookings";
 export { conversations, messages } from "./chats";
-export { termsSections } from "./content/terms";
+export { termsSections, termsMeta } from "./content/terms";
 export { faqItems } from "./content/faq";
 export {
   money,

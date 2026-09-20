@@ -40,7 +40,6 @@ export function Footer() {
       </div>
       <div className="site-footer__bottom">
         <span>© {new Date().getFullYear()} Turo</span>
-        <Link href="/terms/">Соглашение</Link>
       </div>
       </Wrapper>
     </footer>

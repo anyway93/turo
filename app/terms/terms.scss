@@ -2,30 +2,290 @@
 @use "global/mixins" as *;
 
 .terms-page {
-  padding-bottom: rem(40px);
+  padding-bottom: rem(72px);
 
-  &__list {
-    display: grid;
-    gap: rem(28px);
-    max-width: rem(720px);
-    margin-bottom: rem(48px);
+  &__hero {
+    padding-top: rem(112px);
+    padding-bottom: rem(36px);
+    @include rise(0.9s);
 
-    h2 {
-      margin-bottom: rem(8px);
-      font-size: rem(20px);
+    @media #{media('>=', m)} {
+      padding-top: rem(128px);
+      padding-bottom: rem(44px);
+    }
+
+    .eyebrow {
+      margin-bottom: rem(14px);
+    }
+
+    h1 {
+      max-width: 16ch;
+      font-size: rem(36px);
       font-weight: 500;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.045em;
+      line-height: 1.12;
+
+      @media #{media('>=', m)} {
+        font-size: rem(48px);
+      }
     }
 
     p {
+      max-width: 36em;
+      margin-top: rem(16px);
       color: $muted;
-      line-height: 1.65;
+      font-size: rem(16px);
+      line-height: 1.6;
     }
   }
 
-  &__faq-title {
-    margin-bottom: rem(16px);
-    font-size: rem(24px);
-    font-weight: 500;
+  &__facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: rem(12px) rem(16px);
+    margin-bottom: rem(40px);
+    padding: rem(20px) 0;
+    border-top: 1px solid $border;
+    border-bottom: 1px solid $border;
+    @include rise(0.95s, 0.06s);
+
+    @media #{media('>=', m)} {
+      grid-template-columns: repeat(4, 1fr);
+      gap: rem(20px);
+      padding: rem(24px) 0;
+    }
+
+    span {
+      display: block;
+      margin-bottom: 0.35em;
+      color: $muted;
+      font-size: rem(11px);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    strong {
+      display: block;
+      font-size: rem(14px);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.35;
+    }
+  }
+
+  &__layout {
+    display: grid;
+    gap: 0;
+
+    @media #{media('>=', t)} {
+      grid-template-columns: rem(248px) minmax(0, 1fr);
+      gap: rem(56px);
+      align-items: start;
+    }
+  }
+
+  &__toc {
+    display: none;
+
+    @media #{media('>=', t)} {
+      position: sticky;
+      top: rem(96px);
+      z-index: 2;
+      display: block;
+      align-self: start;
+      max-height: calc(100dvh - rem(120px));
+      overflow: auto;
+      padding-right: rem(8px);
+    }
+
+    > p {
+      margin-bottom: rem(14px);
+      color: $muted;
+      font-size: rem(11px);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    ol {
+      display: grid;
+      gap: rem(2px);
+    }
+
+    a {
+      display: grid;
+      grid-template-columns: rem(28px) minmax(0, 1fr);
+      gap: rem(8px);
+      padding: rem(8px) 0;
+      color: $muted;
+      font-size: rem(13px);
+      font-weight: 400;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+      transition: color 0.55s $transition-timing-function;
+
+      span {
+        color: color-mix(in srgb, $ocean 42%, $muted);
+        font-variant-numeric: tabular-nums;
+        font-size: rem(12px);
+        transition: color 0.55s $transition-timing-function;
+      }
+
+      @include hover() {
+        color: color-mix(in srgb, $ink 70%, $muted);
+
+        span {
+          color: color-mix(in srgb, $ocean 78%, $ink);
+        }
+      }
+
+      &.is-active {
+        color: $ink;
+        font-weight: 500;
+
+        span {
+          color: $ocean;
+        }
+      }
+    }
+  }
+
+  &__doc {
+    min-width: 0;
+    max-width: rem(720px);
+  }
+
+  &__intro {
+    margin-bottom: rem(48px);
+    padding: rem(28px);
+    background: $card;
+    @include rise(1s, 0.08s);
+
+    @media #{media('>=', m)} {
+      padding: rem(32px);
+    }
+
+    > p {
+      max-width: 42em;
+      margin-bottom: rem(28px);
+      font-size: rem(16px);
+      line-height: 1.65;
+      letter-spacing: -0.015em;
+    }
+
+    dl {
+      display: grid;
+      gap: rem(16px);
+      padding-top: rem(24px);
+      border-top: 1px solid $border;
+
+      @media #{media('>=', m)} {
+        grid-template-columns: 1fr 1fr;
+        gap: 0 rem(24px) rem(20px);
+      }
+    }
+
+    dt {
+      margin-bottom: rem(4px);
+      color: $muted;
+      font-size: rem(11px);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    dd {
+      font-size: rem(14px);
+      line-height: 1.5;
+    }
+
+    a {
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+      text-decoration-color: color-mix(in srgb, $ocean 35%, transparent);
+      transition: text-decoration-color 0.5s $transition-timing-function;
+
+      @include hover() {
+        text-decoration-color: $ocean;
+      }
+    }
+  }
+
+  &__article {
+    padding: rem(32px) 0;
+    border-top: 1px solid $border;
+    scroll-margin-top: rem(100px);
+
+    h2 {
+      display: grid;
+      grid-template-columns: rem(40px) minmax(0, 1fr);
+      gap: rem(14px);
+      align-items: baseline;
+      margin-bottom: rem(20px);
+      font-size: rem(22px);
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      line-height: 1.25;
+
+      span {
+        color: $ocean;
+        font-size: rem(13px);
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.08em;
+      }
+    }
+
+    > p {
+      max-width: 42em;
+      color: color-mix(in srgb, $ink 88%, $muted);
+      font-size: rem(15px);
+      line-height: 1.72;
+    }
+
+    > p + p {
+      margin-top: rem(12px);
+    }
+  }
+
+  &__clause {
+    display: grid;
+    grid-template-columns: rem(40px) minmax(0, 1fr);
+    gap: rem(14px);
+    margin-top: rem(14px);
+    max-width: none;
+
+    span {
+      color: $ocean;
+      font-size: rem(12px);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+      line-height: 1.72;
+    }
+  }
+
+  &__end {
+    padding: rem(28px) 0 rem(8px);
+    border-top: 1px solid $border;
+    color: $muted;
+    font-size: rem(13px);
+    line-height: 1.65;
+
+    a {
+      color: $ink;
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+      text-decoration-color: color-mix(in srgb, $ink 22%, transparent);
+      transition: text-decoration-color 0.5s $transition-timing-function;
+
+      @include hover() {
+        text-decoration-color: $ocean;
+      }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terms-page__hero,
+  .terms-page__facts,
+  .terms-page__intro {
+    animation: none;
   }
 }

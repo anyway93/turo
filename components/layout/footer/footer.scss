@@ -73,10 +73,6 @@
     @media #{media('>=', m)} {
       grid-template-columns: 1.4fr 1fr 1fr 1fr;
       gap: rem(32px);
-
-      span:last-child {
-        grid-column: 4;
-      }
     }
   }
 }
