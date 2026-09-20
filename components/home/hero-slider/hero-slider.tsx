@@ -42,7 +42,8 @@ export const popularTours = [
 ] as const;
 
 const INTERVAL = 7000;
-const DURATION = 1200;
+const DURATION = 820;
+const COPY_IN = Math.round(DURATION * 0.58);
 const PARALLAX = 0.24;
 const EASE = "cubic-bezier(0.65, 0, 0.35, 1)";
 
@@ -58,11 +59,21 @@ export function HeroSlider() {
   const [dir, setDir] = useState<1 | -1>(1);
   const [instant, setInstant] = useState(false);
   const [armed, setArmed] = useState(false);
+  const [leaving, setLeaving] = useState(false);
   const [width, setWidth] = useState(0);
+  const [shown, setShown] = useState<(typeof popularTours)[number]>(popularTours[0]);
   const stageRef = useRef<HTMLDivElement>(null);
   const locked = useRef(false);
   const posRef = useRef(1);
+  const settledPos = useRef<number | null>(null);
   const touchX = useRef<number | null>(null);
+  const copyTimer = useRef<number>(0);
+  const settleTimer = useRef<number>(0);
+
+  const tourAt = useCallback(
+    (index: number) => popularTours[((index - 1) % count + count) % count],
+    [count],
+  );
 
   useLayoutEffect(() => {
     posRef.current = pos;
@@ -97,12 +108,52 @@ export function HeroSlider() {
     return () => window.cancelAnimationFrame(id);
   }, [instant]);
 
+  const revealCopy = useCallback(() => {
+    window.clearTimeout(copyTimer.current);
+    setShown(tourAt(posRef.current));
+    setLeaving(false);
+  }, [tourAt]);
+
+  const finishMove = useCallback(() => {
+    const current = posRef.current;
+    if (settledPos.current === current) return;
+    settledPos.current = current;
+    window.clearTimeout(settleTimer.current);
+    revealCopy();
+
+    if (current === 0) {
+      setInstant(true);
+      setPos(count);
+      return;
+    }
+    if (current === count + 1) {
+      setInstant(true);
+      setPos(1);
+      return;
+    }
+    locked.current = false;
+  }, [count, revealCopy]);
+
+  const startMove = useCallback(
+    (direction: 1 | -1, delta: number) => {
+      locked.current = true;
+      settledPos.current = null;
+      setDir(direction);
+      setLeaving(true);
+      setPos((value) => value + delta);
+      window.clearTimeout(copyTimer.current);
+      window.clearTimeout(settleTimer.current);
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      copyTimer.current = window.setTimeout(revealCopy, reduced ? 0 : COPY_IN);
+      settleTimer.current = window.setTimeout(finishMove, reduced ? 0 : DURATION + 80);
+    },
+    [finishMove, revealCopy],
+  );
+
   const go = useCallback((direction: 1 | -1) => {
     if (locked.current) return;
-    locked.current = true;
-    setDir(direction);
-    setPos((current) => current + direction);
-  }, []);
+    startMove(direction, direction);
+  }, [startMove]);
 
   const goTo = useCallback(
     (target: number) => {
@@ -113,11 +164,9 @@ export function HeroSlider() {
       const forward = (target - current + count) % count;
       const backward = (current - target + count) % count;
       const direction: 1 | -1 = forward <= backward ? 1 : -1;
-      locked.current = true;
-      setDir(direction);
-      setPos((value) => value + (direction === 1 ? forward : -backward));
+      startMove(direction, direction === 1 ? forward : -backward);
     },
-    [count],
+    [count, startMove],
   );
 
   useEffect(() => {
@@ -147,21 +196,18 @@ export function HeroSlider() {
     if (event.target !== event.currentTarget) return;
     if (event.propertyName !== "transform") return;
 
-    const current = posRef.current;
-    if (current === 0) {
-      setInstant(true);
-      setPos(count);
-      return;
-    }
-    if (current === count + 1) {
-      setInstant(true);
-      setPos(1);
-      return;
-    }
-    locked.current = false;
+    finishMove();
   };
 
-  const slide = popularTours[((pos - 1) % count + count) % count];
+  useEffect(
+    () => () => {
+      window.clearTimeout(copyTimer.current);
+      window.clearTimeout(settleTimer.current);
+    },
+    [],
+  );
+
+  const slide = shown;
   const motion =
     instant || !armed ? "none" : `transform ${DURATION}ms ${EASE}`;
 
@@ -213,7 +259,10 @@ export function HeroSlider() {
 
       <Wrapper className="hero__shell">
         <div className="hero__content">
-          <div className={cx("hero__copy", dir === 1 ? "is-next" : "is-prev")} key={slide.id}>
+          <div
+            className={cx("hero__copy", dir === 1 ? "is-next" : "is-prev", leaving && "is-leaving")}
+            key={slide.id}
+          >
             <p className="hero__kicker">
               {t("hero.kicker")} · 0{popularTours.indexOf(slide) + 1} / 0{count}
             </p>

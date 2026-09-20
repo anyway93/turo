@@ -22,6 +22,10 @@
     background-color 0.55s $transition-timing-function,
     color 0.55s $transition-timing-function;
 
+  @media (pointer: coarse) {
+    font-size: rem(16px);
+  }
+
   &::placeholder {
     color: color-mix(in srgb, $muted 82%, $ink);
     font-weight: 400;

@@ -172,6 +172,21 @@
     width: 100%;
   }
 
+  &:has(.media-image-fallback) {
+    .tour-card__veil,
+    .tour-card__dim,
+    .tour-card__shine,
+    .tour-card__peek {
+      display: none;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover .tour-card__photo {
+        transform: none;
+      }
+    }
+  }
+
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       box-shadow: 0 rem(28px) rem(56px) rem(-28px) color-mix(in srgb, $ink 28%, transparent);

@@ -53,6 +53,14 @@ select {
   color: inherit;
 }
 
+@media (pointer: coarse) {
+  input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]):not([type="range"]):not([type="image"]):not([type="hidden"]),
+  textarea,
+  select {
+    font-size: rem(16px);
+  }
+}
+
 button {
   background: none;
   border: none;

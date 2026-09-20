@@ -71,6 +71,14 @@
     transition: transform 0.7s $transition-timing-function;
   }
 
+  &:has(.media-image-fallback) {
+    @media (hover: hover) and (pointer: fine) {
+      &:hover .place-card__media {
+        transform: none;
+      }
+    }
+  }
+
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       .place-card__media {

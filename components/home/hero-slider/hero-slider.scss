@@ -96,11 +96,21 @@
   &__copy {
     display: flex;
     flex-direction: column;
+    transition:
+      opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+
+    &.is-leaving {
+      opacity: 0;
+      transform: translate3d(0, rem(14px), 0);
+      pointer-events: none;
+    }
   }
 
   &__kicker,
   &__title,
-  &__meta {
+  &__meta,
+  &__cta {
     animation-duration: 1.05s;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
     animation-fill-mode: both;
@@ -108,13 +118,15 @@
 
   &__copy.is-next &__kicker,
   &__copy.is-next &__title,
-  &__copy.is-next &__meta {
+  &__copy.is-next &__meta,
+  &__copy.is-next &__cta {
     animation-name: hero-rise-next;
   }
 
   &__copy.is-prev &__kicker,
   &__copy.is-prev &__title,
-  &__copy.is-prev &__meta {
+  &__copy.is-prev &__meta,
+  &__copy.is-prev &__cta {
     animation-name: hero-rise-prev;
   }
 
@@ -166,6 +178,7 @@
     flex-wrap: wrap;
     gap: rem(10px);
     margin-top: rem(28px);
+    animation-delay: 0.28s;
   }
 
   &__bar {
@@ -216,11 +229,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hero__copy,
   .hero__track,
   .hero__media,
   .hero__kicker,
   .hero__title,
-  .hero__meta {
+  .hero__meta,
+  .hero__cta {
     transition: none !important;
     animation: none !important;
   }

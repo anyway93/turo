@@ -20,6 +20,10 @@
     background-color 0.55s $transition-timing-function,
     color 0.55s $transition-timing-function;
 
+  @media (pointer: coarse) {
+    font-size: rem(16px);
+  }
+
   &::placeholder {
     color: color-mix(in srgb, $muted 82%, $ink);
     font-weight: 400;
@@ -86,11 +90,20 @@
       height: rem(36px);
       padding-inline: rem(12px);
       font-size: rem(13px);
+
+      @media (pointer: coarse) {
+        height: rem(44px);
+        font-size: rem(16px);
+      }
     }
 
     &_lg {
       height: rem(52px);
       font-size: rem(15px);
+
+      @media (pointer: coarse) {
+        font-size: rem(16px);
+      }
     }
 
     &_xl {
