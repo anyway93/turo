@@ -1,9 +1,8 @@
 "use client";
 import "./tour-detail.scss";
 
-import { MediaImage } from "@/components/widgets/media-image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Wrapper } from "@/components/layout/wrapper";
 import {
   Avatar,
@@ -16,6 +15,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui";
+import { TourGallery } from "@/components/tours/tour-gallery";
 import {
   bookPath,
   formatRange,
@@ -25,12 +25,10 @@ import {
   seatsLeft,
 } from "@/data";
 import { useTuro } from "@/lib/turo-store";
-import { cx } from "@/lib/cx";
 
 export function TourDetail({ slug }: { slug: string }) {
   const { tourBySlug, userById, user, bookings, conversations } = useTuro();
   const tour = tourBySlug(slug);
-  const [photo, setPhoto] = useState(0);
   const reviews = useMemo(() => (tour ? reviewsForTour(tour.slug) : []), [tour]);
 
   if (!tour) {
@@ -58,30 +56,13 @@ export function TourDetail({ slug }: { slug: string }) {
     (item) => item.tourSlug === tour.slug && item.travelerId === user?.id,
   );
   const gallery = [tour.cover, ...tour.gallery.filter((src) => src !== tour.cover)];
-  const current = gallery[photo] ?? tour.cover;
 
   return (
     <article className="tour-detail">
-      <div className="tour-detail__gallery">
-        <div className="tour-detail__stage">
-          <MediaImage src={current} alt={tour.title} fill sizes="100vw" priority />
-        </div>
-        <div className="tour-detail__thumbs">
-          {gallery.slice(0, 5).map((src, index) => (
-            <button
-              key={src + index}
-              type="button"
-              className={cx("tour-detail__thumb", photo === index && "is-on")}
-              onClick={() => setPhoto(index)}
-            >
-              <MediaImage src={src} alt="" fill sizes="120px" />
-            </button>
-          ))}
-        </div>
-      </div>
+      <TourGallery title={tour.title} images={gallery} />
 
       <Wrapper className="tour-detail__layout">
-        <div>
+        <div className="tour-detail__main">
           <p className="tour-detail__place">
             {tour.continent} · {tour.city}, {tour.country}
           </p>
@@ -97,6 +78,29 @@ export function TourDetail({ slug }: { slug: string }) {
               </Badge>
             ))}
           </div>
+
+          <dl className="tour-detail__facts">
+            <div>
+              <dt>Даты</dt>
+              <dd>{formatRange(tour.startDate, tour.endDate)}</dd>
+            </div>
+            <div>
+              <dt>Места</dt>
+              <dd>
+                {left > 0 ? `${left} свободно` : "Набор закрыт"} из {tour.seats}
+              </dd>
+            </div>
+            <div>
+              <dt>Оценка</dt>
+              <dd>
+                {tour.rating.toFixed(1)} · {tour.reviewsCount} отзывов
+              </dd>
+            </div>
+            <div>
+              <dt>Встреча</dt>
+              <dd>{tour.meetingPoint}</dd>
+            </div>
+          </dl>
 
           <Tabs defaultValue="plan" className="tour-detail__tabs">
             <TabsList>
@@ -134,9 +138,7 @@ export function TourDetail({ slug }: { slug: string }) {
                   </ul>
                 </div>
               </div>
-              <p className="tour-detail__note">
-                Встреча: {tour.meetingPoint}. {tour.cancellation}.
-              </p>
+              <p className="tour-detail__note">{tour.cancellation}.</p>
             </TabsContent>
             <TabsContent value="rev">
               <div className="tour-detail__reviews">

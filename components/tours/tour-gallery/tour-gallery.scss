@@ -1,0 +1,485 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.tour-gallery {
+  position: relative;
+  height: min(86vh, rem(720px));
+  min-height: rem(420px);
+  overflow: hidden;
+  color: $white;
+  background: $ink;
+  user-select: none;
+  touch-action: pan-y;
+  --autoplay: 6500ms;
+  --move: 1.2s;
+  --in-x: 6.5%;
+  --out-x: -5%;
+
+  &[data-dir="-1"] {
+    --in-x: -6.5%;
+    --out-x: 5%;
+  }
+
+  &__slide {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+
+    &.is-leaving {
+      z-index: 1;
+      opacity: 1;
+    }
+
+    &.is-on {
+      z-index: 2;
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  &.is-armed.is-moving &__slide.is-on {
+    animation: tour-gallery-fade-a var(--move) $transition-timing-function both;
+  }
+
+  &.is-armed.is-moving.is-play-b &__slide.is-on {
+    animation-name: tour-gallery-fade-b;
+  }
+
+  &__photo {
+    position: absolute;
+    top: 0;
+    left: -8%;
+    width: 116%;
+    height: 100%;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+
+    img,
+    .media-image-fallback {
+      max-width: none;
+      object-fit: cover;
+    }
+  }
+
+  &__mist {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    background: color-mix(in srgb, $sand 22%, transparent);
+  }
+
+  &.is-armed.is-moving:not(.is-reduce) &__slide.is-on &__photo {
+    transform: translate3d(var(--in-x), 0, 0);
+    filter: blur(18px);
+    animation: tour-gallery-in-a var(--move) $transition-timing-function forwards;
+  }
+
+  &.is-armed.is-moving.is-play-b:not(.is-reduce) &__slide.is-on &__photo {
+    animation-name: tour-gallery-in-b;
+  }
+
+  &.is-armed.is-moving:not(.is-reduce) &__slide.is-leaving &__photo {
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+    animation: tour-gallery-out-a var(--move) $transition-timing-function forwards;
+  }
+
+  &.is-armed.is-moving.is-play-b:not(.is-reduce) &__slide.is-leaving &__photo {
+    animation-name: tour-gallery-out-b;
+  }
+
+  &.is-armed.is-moving:not(.is-reduce) &__slide.is-on &__mist {
+    opacity: 0.42;
+    animation: tour-gallery-mist-in-a var(--move) $transition-timing-function forwards;
+  }
+
+  &.is-armed.is-moving.is-play-b:not(.is-reduce) &__slide.is-on &__mist {
+    animation-name: tour-gallery-mist-in-b;
+  }
+
+  &.is-armed.is-moving:not(.is-reduce) &__slide.is-leaving &__mist {
+    opacity: 0;
+    animation: tour-gallery-mist-out-a var(--move) $transition-timing-function forwards;
+  }
+
+  &.is-armed.is-moving.is-play-b:not(.is-reduce) &__slide.is-leaving &__mist {
+    animation-name: tour-gallery-mist-out-b;
+  }
+
+  &__veil,
+  &__dim {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  &__veil {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, $ink 42%, transparent) 0%,
+      transparent 34%
+    );
+  }
+
+  &__dim {
+    background: linear-gradient(
+      180deg,
+      transparent 42%,
+      color-mix(in srgb, $ink 78%, transparent) 100%
+    );
+  }
+
+  &__progress {
+    position: absolute;
+    z-index: 4;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 2px;
+    overflow: hidden;
+    pointer-events: none;
+    background: color-mix(in srgb, $white 16%, transparent);
+
+    span {
+      display: block;
+      width: 100%;
+      height: 100%;
+      transform: scaleX(0);
+      transform-origin: left center;
+      background: linear-gradient(
+        90deg,
+        color-mix(in srgb, $gold 55%, $white) 0%,
+        $white 100%
+      );
+      box-shadow: 0 0 16px color-mix(in srgb, $gold 55%, transparent);
+    }
+  }
+
+  &.is-armed:not(.is-reduce) &__progress span {
+    animation: tour-gallery-progress var(--autoplay) linear forwards;
+  }
+
+  &.is-paused &__progress span,
+  &.is-paused &__ring-run {
+    animation-play-state: paused;
+  }
+
+  &__bar {
+    position: absolute;
+    z-index: 3;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: rem(28px) var(--page-pad) rem(28px);
+    pointer-events: none;
+  }
+
+  &__count {
+    margin: 0 0 rem(12px);
+    padding: rem(6px) rem(12px);
+    border-radius: 999px;
+    font-size: rem(11px);
+    letter-spacing: 0.22em;
+    font-variant-numeric: tabular-nums;
+    color: $white;
+    background: color-mix(in srgb, $ink 28%, transparent);
+    backdrop-filter: blur(18px) saturate(1.3);
+    -webkit-backdrop-filter: blur(18px) saturate(1.3);
+    border: 1px solid color-mix(in srgb, $white 18%, transparent);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, $white 22%, transparent);
+
+    span {
+      margin: 0 0.4em;
+      opacity: 0.42;
+    }
+  }
+
+  &__dock {
+    pointer-events: auto;
+    padding: rem(10px) rem(14px);
+    border-radius: 999px;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, $white 22%, transparent) 0%,
+        color-mix(in srgb, $white 8%, transparent) 100%
+      ),
+      color-mix(in srgb, $ink 22%, transparent);
+    backdrop-filter: blur(24px) saturate(1.45);
+    -webkit-backdrop-filter: blur(24px) saturate(1.45);
+    border: 1px solid color-mix(in srgb, $white 34%, transparent);
+    box-shadow:
+      0 18px 48px color-mix(in srgb, $ink 42%, transparent),
+      inset 0 1px 0 color-mix(in srgb, $white 46%, transparent),
+      inset 0 -1px 0 color-mix(in srgb, $ink 18%, transparent);
+  }
+
+  &__thumbs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: rem(10px);
+  }
+
+  &__thumb {
+    position: relative;
+    width: rem(56px);
+    height: rem(56px);
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    isolation: isolate;
+
+    &:focus-visible {
+      outline: 2px solid $white;
+      outline-offset: 3px;
+    }
+
+    @include hover() {
+      .tour-gallery__orb {
+        opacity: 0.92;
+      }
+
+      .tour-gallery__ring-track {
+        stroke: color-mix(in srgb, $white 48%, transparent);
+      }
+    }
+  }
+
+  &__orb {
+    position: absolute;
+    inset: rem(6px);
+    overflow: hidden;
+    border-radius: 50%;
+    background: color-mix(in srgb, $ink 40%, transparent);
+    box-shadow: 0 6px 16px color-mix(in srgb, $ink 35%, transparent);
+    opacity: 0.55;
+    transition: opacity 0.7s $transition-timing-function;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(
+        165deg,
+        color-mix(in srgb, $white 38%, transparent) 0%,
+        transparent 42%
+      );
+      opacity: 0.7;
+      transition: opacity 0.7s $transition-timing-function;
+    }
+
+    img,
+    .media-image-fallback {
+      max-width: none;
+      object-fit: cover;
+    }
+  }
+
+  &__ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  &__ring-track,
+  &__ring-run {
+    fill: none;
+    stroke-linecap: round;
+  }
+
+  &__ring-track {
+    stroke: color-mix(in srgb, $white 22%, transparent);
+    stroke-width: 1.5;
+    transition: stroke 0.7s $transition-timing-function;
+  }
+
+  &__ring-run {
+    stroke: $white;
+    stroke-width: 2.25;
+    filter: drop-shadow(0 0 4px color-mix(in srgb, $gold 70%, $white));
+  }
+
+  &.is-armed:not(.is-reduce) &__ring-run {
+    animation: tour-gallery-ring var(--autoplay) linear forwards;
+  }
+
+  &__thumb.is-on {
+    .tour-gallery__orb {
+      opacity: 1;
+    }
+
+    .tour-gallery__ring-track {
+      stroke: color-mix(in srgb, $white 36%, transparent);
+    }
+  }
+}
+
+@keyframes tour-gallery-fade-a {
+  from {
+    opacity: 0.22;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes tour-gallery-fade-b {
+  from {
+    opacity: 0.22;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes tour-gallery-in-a {
+  from {
+    transform: translate3d(var(--in-x), 0, 0);
+    filter: blur(18px);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes tour-gallery-in-b {
+  from {
+    transform: translate3d(var(--in-x), 0, 0);
+    filter: blur(18px);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes tour-gallery-out-a {
+  from {
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+
+  to {
+    transform: translate3d(var(--out-x), 0, 0);
+    filter: blur(22px);
+  }
+}
+
+@keyframes tour-gallery-out-b {
+  from {
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+
+  to {
+    transform: translate3d(var(--out-x), 0, 0);
+    filter: blur(22px);
+  }
+}
+
+@keyframes tour-gallery-mist-in-a {
+  from {
+    opacity: 0.42;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes tour-gallery-mist-in-b {
+  from {
+    opacity: 0.42;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes tour-gallery-mist-out-a {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.5;
+  }
+}
+
+@keyframes tour-gallery-mist-out-b {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.5;
+  }
+}
+
+@keyframes tour-gallery-progress {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes tour-gallery-ring {
+  from {
+    stroke-dashoffset: var(--ring);
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tour-gallery.is-armed .tour-gallery__slide.is-on,
+  .tour-gallery.is-armed .tour-gallery__photo,
+  .tour-gallery.is-armed .tour-gallery__mist {
+    animation: none !important;
+    filter: none;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .tour-gallery.is-armed .tour-gallery__progress span,
+  .tour-gallery.is-armed .tour-gallery__ring-run {
+    animation: none !important;
+  }
+
+  .tour-gallery.is-armed .tour-gallery__progress span {
+    transform: scaleX(1);
+  }
+
+  .tour-gallery.is-armed .tour-gallery__ring-run {
+    stroke-dashoffset: 0;
+  }
+}
