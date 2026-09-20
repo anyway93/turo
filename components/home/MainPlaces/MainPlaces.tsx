@@ -10,14 +10,13 @@ export function MainPlaces() {
         <Eyebrow>Направления</Eyebrow>
         <h2 className="main-places__title">Куда уезжают чаще</h2>
         <p className="main-places__text">
-          Не реклама стран — живые сборы людей. Карточки ниже ведут в каталог.
+          Не реклама стран — живые сборы людей. Карточка ведёт на этот маршрут.
         </p>
       </header>
       <PlaceCardGroup>
         {places.map((place, index) => (
           <PlaceCard
             key={place.name}
-            href="#tours"
             featured={index === 0}
             {...place}
           />

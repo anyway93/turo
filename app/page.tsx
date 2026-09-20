@@ -3,6 +3,7 @@ import { HeroSlider } from "@/components/home/hero-slider";
 import { MainAbout } from "@/components/home/MainAbout";
 import { MainInfo } from "@/components/home/MainInfo";
 import { MainPlaces } from "@/components/home/MainPlaces";
+import { MainTours } from "@/components/home/MainTours";
 import { MainAuth } from "@/components/home/MainAuth";
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
       <HeroSlider />
       <Wrapper>
         <MainAbout />
+        <MainTours />
         <MainInfo />
         <MainPlaces />
         <MainAuth />

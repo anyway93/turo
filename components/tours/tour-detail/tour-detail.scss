@@ -1,0 +1,253 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.tour-detail {
+  padding-bottom: rem(24px);
+
+  &_empty {
+    display: grid;
+    gap: rem(16px);
+    padding-top: rem(120px);
+    padding-bottom: rem(80px);
+  }
+
+  &__gallery {
+    position: relative;
+  }
+
+  &__stage {
+    position: relative;
+    height: min(72vh, rem(560px));
+    overflow: hidden;
+
+    img {
+      max-width: none;
+      object-fit: cover;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 50%, color-mix(in srgb, $sand 88%, transparent));
+      pointer-events: none;
+    }
+  }
+
+  &__thumbs {
+    display: flex;
+    gap: rem(8px);
+    max-width: var(--page-max);
+    margin: rem(-48px) auto 0;
+    padding-inline: var(--page-pad);
+    position: relative;
+    z-index: 1;
+  }
+
+  &__thumb {
+    position: relative;
+    width: rem(72px);
+    height: rem(52px);
+    overflow: hidden;
+    border: 1px solid transparent;
+    opacity: 0.7;
+    transition: opacity 0.5s $transition-timing-function, border-color 0.5s $transition-timing-function;
+
+    img {
+      max-width: none;
+      object-fit: cover;
+    }
+
+    &.is-on,
+    &:hover {
+      opacity: 1;
+      border-color: $ink;
+    }
+  }
+
+  &__layout {
+    display: grid;
+    gap: rem(40px);
+    padding-top: rem(40px);
+
+    @media #{media('>=', t)} {
+      grid-template-columns: minmax(0, 1fr) rem(320px);
+      align-items: start;
+    }
+  }
+
+  &__place {
+    color: $muted;
+    font-size: rem(12px);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  &__title {
+    margin-top: rem(10px);
+    font-size: rem(36px);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1.15;
+
+    @media #{media('>=', m)} {
+      font-size: rem(44px);
+    }
+  }
+
+  &__lead {
+    max-width: 40em;
+    margin-top: rem(14px);
+    color: $muted;
+    line-height: 1.6;
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(8px);
+    margin-top: rem(20px);
+  }
+
+  &__tabs {
+    margin-top: rem(32px);
+  }
+
+  &__days {
+    display: grid;
+    gap: rem(18px);
+    padding: rem(16px) 0 rem(8px);
+
+    li {
+      padding-bottom: rem(16px);
+      border-bottom: 1px solid $border;
+    }
+
+    span {
+      color: $ocean;
+      font-size: rem(12px);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h3 {
+      margin: rem(6px) 0 rem(6px);
+      font-size: rem(18px);
+      font-weight: 500;
+    }
+
+    p {
+      color: $muted;
+      font-size: rem(14px);
+      line-height: 1.55;
+    }
+  }
+
+  &__split {
+    display: grid;
+    gap: rem(24px);
+    padding-top: rem(16px);
+
+    @media #{media('>=', m)} {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    h3 {
+      margin-bottom: rem(10px);
+      font-size: rem(16px);
+      font-weight: 500;
+    }
+
+    li {
+      margin-top: rem(8px);
+      color: $muted;
+      font-size: rem(14px);
+    }
+  }
+
+  &__note {
+    margin-top: rem(20px);
+    color: $muted;
+    font-size: rem(14px);
+    line-height: 1.55;
+  }
+
+  &__reviews {
+    display: grid;
+    gap: rem(20px);
+    padding-top: rem(16px);
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: rem(12px);
+      font-size: rem(13px);
+      color: $muted;
+    }
+
+    h3 {
+      margin: rem(6px) 0;
+      font-size: rem(18px);
+      font-weight: 500;
+    }
+
+    p {
+      color: $muted;
+      line-height: 1.55;
+    }
+  }
+
+  &__aside {
+    display: grid;
+    gap: rem(10px);
+    padding: rem(24px);
+    background: $card;
+    border: 1px solid $border;
+    @include rise(1s, 0.08s);
+
+    @media #{media('>=', t)} {
+      position: sticky;
+      top: rem(96px);
+    }
+  }
+
+  &__price {
+    font-size: rem(28px);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+
+  &__per,
+  &__dates,
+  &__seats {
+    color: $muted;
+    font-size: rem(14px);
+  }
+
+  &__host {
+    display: flex;
+    gap: rem(12px);
+    align-items: center;
+    margin: rem(8px) 0 rem(12px);
+    padding: rem(12px) 0;
+    border-top: 1px solid $border;
+    border-bottom: 1px solid $border;
+
+    strong,
+    em {
+      display: block;
+    }
+
+    em {
+      color: $muted;
+      font-style: normal;
+      font-size: rem(13px);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tour-detail__aside {
+    animation: none;
+  }
+}

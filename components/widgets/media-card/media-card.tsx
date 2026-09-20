@@ -1,6 +1,6 @@
 import "./media-card.scss";
 import type { ReactNode } from "react";
-import Image from "next/image";
+import { MediaImage } from "@/components/widgets/media-image";
 import Link from "next/link";
 import { Button } from "@/components/ui";
 import { ArrowUpRight } from "lucide-react";
@@ -31,7 +31,7 @@ export function MediaCard({
   return (
     <Link href={href} className="media-card" id={id}>
       <div className="media-card__media">
-        <Image src={image} alt="" fill sizes="(min-width: 1024px) 50vw, 100vw" />
+        <MediaImage src={image} alt="" fill sizes="(min-width: 1024px) 50vw, 100vw" />
       </div>
       <div className="media-card__veil" />
       <div className="media-card__dim" />

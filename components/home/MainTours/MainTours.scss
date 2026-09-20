@@ -1,0 +1,38 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.main-tours {
+  padding-top: rem(72px);
+
+  header {
+    max-width: rem(560px);
+    margin-bottom: rem(32px);
+  }
+
+  h2 {
+    margin-top: rem(8px);
+    font-size: rem(32px);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  p {
+    margin-top: rem(10px);
+    color: $muted;
+    line-height: 1.55;
+  }
+
+  &__grid {
+    display: grid;
+    gap: rem(16px);
+    margin-bottom: rem(28px);
+
+    @media #{media('>=', m)} {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media #{media('>=', d)} {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+}

@@ -1,0 +1,47 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.page-hero {
+  padding-top: rem(112px);
+  padding-bottom: rem(40px);
+  @include rise(0.9s);
+
+  @media #{media('>=', m)} {
+    padding-top: rem(128px);
+    padding-bottom: rem(56px);
+  }
+
+  &__title {
+    max-width: rem(720px);
+    margin-top: 0.4em;
+    font-size: rem(36px);
+    font-weight: 500;
+    letter-spacing: -0.045em;
+    line-height: 1.12;
+
+    @media #{media('>=', m)} {
+      font-size: rem(48px);
+    }
+  }
+
+  &__text {
+    max-width: 38em;
+    margin-top: rem(16px);
+    color: $muted;
+    font-size: rem(16px);
+    line-height: 1.6;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(12px);
+    margin-top: rem(28px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-hero {
+    animation: none;
+  }
+}

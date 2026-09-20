@@ -1,0 +1,1 @@
+export { MainTours } from "./MainTours";

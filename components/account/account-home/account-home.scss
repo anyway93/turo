@@ -1,0 +1,113 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.account-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 rem(20px);
+  margin-bottom: rem(28px);
+  font-size: rem(14px);
+
+  a {
+    padding-bottom: rem(8px);
+    border-bottom: 1px solid transparent;
+    opacity: 0.7;
+    transition: opacity 0.45s $transition-timing-function, border-color 0.45s $transition-timing-function;
+
+    @include hover() {
+      opacity: 1;
+      border-color: $ink;
+    }
+  }
+}
+
+.account-home {
+  padding-top: rem(112px);
+  padding-bottom: rem(48px);
+  @include rise(0.8s);
+
+  h1 {
+    font-size: rem(32px);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  &__head {
+    display: flex;
+    gap: rem(20px);
+    align-items: flex-start;
+    margin-bottom: rem(28px);
+
+    p {
+      margin-top: rem(6px);
+      color: $muted;
+      line-height: 1.5;
+    }
+  }
+
+  &__stats {
+    display: grid;
+    gap: rem(12px);
+    margin-bottom: rem(24px);
+
+    @media #{media('>=', m)} {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    article {
+      padding: rem(20px);
+      background: $card;
+      border: 1px solid $border;
+    }
+
+    strong {
+      display: block;
+      font-size: rem(28px);
+      font-weight: 500;
+    }
+
+    span {
+      color: $muted;
+      font-size: rem(13px);
+    }
+  }
+
+  &__title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: rem(16px);
+    margin-bottom: rem(20px);
+  }
+
+  &__list {
+    display: grid;
+    gap: rem(10px);
+    margin-top: 0;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      gap: rem(16px);
+      padding: rem(16px);
+      background: $card;
+      border: 1px solid $border;
+    }
+
+    span,
+    em {
+      display: block;
+      margin-top: rem(4px);
+      color: $muted;
+      font-size: rem(13px);
+      font-style: normal;
+    }
+
+    a {
+      align-self: center;
+      font-size: rem(14px);
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+    }
+  }
+}

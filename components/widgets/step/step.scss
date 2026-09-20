@@ -16,11 +16,7 @@
   padding-top: rem(20px);
   border-top: 1px solid $border;
   cursor: default;
-  transform: translate3d(0, 0, 0);
   @include rise(0.9s);
-  transition:
-    transform 0.55s $transition-timing-function,
-    border-color 0.55s $transition-timing-function;
 
   @for $i from 1 through 6 {
     &:nth-child(#{$i}) {
@@ -34,9 +30,6 @@
     color: $muted;
     font-size: rem(12px);
     letter-spacing: 0.16em;
-    transition:
-      color 0.55s $transition-timing-function,
-      transform 0.55s $transition-timing-function;
   }
 
   h3 {
@@ -52,22 +45,10 @@
     font-size: rem(14px);
     line-height: 1.6;
   }
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      transform: translate3d(0, rem(-6px), 0);
-      border-top-color: $ocean;
-
-      span {
-        color: $ocean;
-        transform: translate3d(0, rem(2px), 0);
-      }
-    }
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .step {
-    transform: none !important;
+    animation: none;
   }
 }

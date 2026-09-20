@@ -1,0 +1,81 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.auth-screen {
+  display: grid;
+  gap: rem(40px);
+  padding-top: rem(112px);
+  padding-bottom: rem(48px);
+  @include rise(0.85s);
+
+  @media #{media('>=', t)} {
+    grid-template-columns: minmax(0, 1fr) rem(300px);
+    align-items: start;
+  }
+
+  form {
+    display: grid;
+    gap: rem(14px);
+    max-width: rem(440px);
+  }
+
+  h1 {
+    font-size: rem(36px);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  form > p,
+  &__legal,
+  &__alt {
+    color: $muted;
+    font-size: rem(14px);
+    line-height: 1.55;
+  }
+
+  a {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  &__roles {
+    display: grid;
+    gap: rem(10px);
+    margin-top: rem(8px);
+
+    label {
+      display: flex;
+      gap: rem(10px);
+      align-items: center;
+    }
+  }
+
+  &__kicker {
+    margin-bottom: rem(12px);
+    font-size: rem(12px);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  aside button {
+    display: grid;
+    gap: rem(4px);
+    width: 100%;
+    margin-top: rem(8px);
+    padding: rem(16px);
+    text-align: left;
+    background: $card;
+    border: 1px solid $border;
+    transition: border-color 0.5s $transition-timing-function, background-color 0.5s $transition-timing-function;
+
+    @include hover() {
+      border-color: $ocean;
+      background: $white;
+    }
+
+    span {
+      color: $muted;
+      font-size: rem(13px);
+    }
+  }
+}

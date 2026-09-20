@@ -1,7 +1,7 @@
 "use client";
 import "./hero-slider.scss";
 
-import Image from "next/image";
+import { MediaImage } from "@/components/widgets/media-image";
 import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -200,7 +200,7 @@ export function HeroSlider() {
                   transition: motion,
                 }}
               >
-                <Image
+                <MediaImage
                   src={tour.image}
                   alt={tour.title}
                   fill
@@ -233,10 +233,10 @@ export function HeroSlider() {
             </p>
             <div className="hero__cta">
               <Button asChild size="lg" variant="cta">
-                <Link href="#tours">Записаться</Link>
+                <Link href={`/tours/${slide.id}/`}>Записаться</Link>
               </Button>
               <Button asChild size="lg" variant="glass">
-                <Link href="#tours">Смотреть все</Link>
+                <Link href="/tours/">Смотреть все</Link>
               </Button>
             </div>
           </div>

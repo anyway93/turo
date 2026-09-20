@@ -1,6 +1,6 @@
 export const paths = [
   {
-    href: "#places",
+    href: "/tours/",
     image:
       "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80",
     index: "01",
@@ -10,7 +10,7 @@ export const paths = [
     action: "К каталогу",
   },
   {
-    href: "#auth",
+    href: "/create/",
     id: "create",
     image:
       "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1400&q=80",
@@ -27,7 +27,7 @@ export const steps = [
   {
     index: "01",
     title: "Регистрация",
-    text: "Один профиль — и как гость, и как автор маршрута.",
+    text: "Один профиль: брони, свои маршруты и чаты.",
   },
   {
     index: "02",
@@ -44,16 +44,19 @@ export const steps = [
 export const places = [
   {
     name: "Киото",
+    href: "/tours/kyoto-quiet/",
     image:
       "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1400&q=80",
   },
   {
     name: "Марракеш",
+    href: "/tours/marrakech-atlas/",
     image:
       "https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?auto=format&fit=crop&w=900&q=80",
   },
   {
     name: "Лисий фьорд",
+    href: "/tours/norway-fjords/",
     image:
       "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=900&q=80",
   },

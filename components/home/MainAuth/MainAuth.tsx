@@ -1,4 +1,5 @@
 import "./MainAuth.scss";
+import Link from "next/link";
 import { Button } from "@/components/ui";
 
 export function MainAuth() {
@@ -12,11 +13,11 @@ export function MainAuth() {
         </p>
       </div>
       <div className="main-auth__actions">
-        <Button variant="cta" size="lg">
-          Создать аккаунт
+        <Button asChild variant="cta" size="lg">
+          <Link href="/register/">Создать аккаунт</Link>
         </Button>
-        <Button variant="outline" size="lg">
-          У меня уже есть
+        <Button asChild variant="outline" size="lg">
+          <Link href="/login/">У меня уже есть</Link>
         </Button>
       </div>
     </section>

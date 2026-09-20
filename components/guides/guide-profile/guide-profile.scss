@@ -1,0 +1,50 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.guide-profile {
+  padding-top: rem(112px);
+  padding-bottom: rem(40px);
+  @include rise(0.8s);
+
+  header {
+    display: flex;
+    gap: rem(20px);
+    margin-bottom: rem(40px);
+  }
+
+  h1 {
+    margin: rem(6px) 0 rem(10px);
+    font-size: rem(36px);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  p {
+    color: $muted;
+    line-height: 1.55;
+  }
+
+  &__meta {
+    margin-top: rem(10px);
+    font-size: rem(14px);
+  }
+
+  h2 {
+    margin-bottom: rem(16px);
+    font-size: rem(22px);
+    font-weight: 500;
+  }
+
+  &__grid {
+    display: grid;
+    gap: rem(16px);
+
+    @media #{media('>=', m)} {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media #{media('>=', d)} {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+}

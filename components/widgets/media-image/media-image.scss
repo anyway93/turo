@@ -1,0 +1,44 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.media-image-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: rem(10px);
+  overflow: hidden;
+  padding: 0 rem(16px);
+  background: color-mix(in srgb, $border 42%, $sand);
+  color: color-mix(in srgb, $ink 45%, $muted);
+  text-align: center;
+  container-type: size;
+
+  svg {
+    width: rem(28px);
+    height: rem(28px);
+    max-width: none;
+    opacity: 0.72;
+  }
+
+  em {
+    font-size: rem(13px);
+    font-style: normal;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+  }
+
+  @container (max-height: 90px) {
+    gap: rem(4px);
+
+    svg {
+      width: rem(18px);
+      height: rem(18px);
+    }
+
+    em {
+      display: none;
+    }
+  }
+}

@@ -2,16 +2,30 @@
 import "./header.scss";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Button, IconButton } from "@/components/ui";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  IconButton,
+} from "@/components/ui";
 import { Wrapper } from "@/components/layout/wrapper";
+import { initials } from "@/data";
 import { cx } from "@/lib/cx";
+import { useTuro } from "@/lib/turo-store";
 
 const links = [
-  { href: "/#tours", label: "Туры" },
-  { href: "/#create", label: "Создать тур" },
+  { href: "/tours/", label: "Туры" },
+  { href: "/create/", label: "Создать тур" },
   { href: "/#how", label: "Как это работает" },
 ];
 
@@ -20,6 +34,8 @@ export function Header() {
   const overlay = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const { user, logout, ready } = useTuro();
+  const router = useRouter();
 
   useEffect(() => {
     let ticking = false;
@@ -78,11 +94,40 @@ export function Header() {
           ))}
         </nav>
         <div className="site-header__actions">
-          <Button asChild variant="ghost" size="sm" className="site-header__login">
-            <Link href="/#auth">Войти</Link>
-          </Button>
+          {ready && user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="site-header__user">
+                <Avatar>
+                  {user.avatar ? <AvatarImage src={user.avatar} alt="" /> : null}
+                  <AvatarFallback>{initials(user.name)}</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onSelect={() => router.push("/account/")}>
+                  Кабинет
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => router.push("/account/bookings/")}>
+                  Мои брони
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => router.push("/messages/")}>
+                  Сообщения
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => router.push("/create/")}>
+                  Разместить тур
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onSelect={() => logout()}>Выйти</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button asChild variant="ghost" size="sm" className="site-header__login">
+              <Link href="/login/">Войти</Link>
+            </Button>
+          )}
           <Button asChild size="sm" variant="cta">
-            <Link href="/#create">Разместить тур</Link>
+            <Link href="/create/">Разместить тур</Link>
           </Button>
           <IconButton
             label={open ? "Закрыть меню" : "Открыть меню"}
@@ -106,11 +151,11 @@ export function Header() {
             {link.label}
           </Link>
         ))}
-        <Link href="/#auth" onClick={() => setOpen(false)}>
-          Войти
+        <Link href={user ? "/account/" : "/login/"} onClick={() => setOpen(false)}>
+          {user ? "Кабинет" : "Войти"}
         </Link>
         <Button asChild variant="cta" size="sm">
-          <Link href="/#create" onClick={() => setOpen(false)}>
+          <Link href="/create/" onClick={() => setOpen(false)}>
             Разместить тур
           </Link>
         </Button>

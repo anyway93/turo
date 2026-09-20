@@ -1,0 +1,43 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.tours-catalog {
+  padding-bottom: rem(48px);
+
+  &__filters {
+    display: grid;
+    gap: rem(12px);
+
+    @media #{media('>=', m)} {
+      grid-template-columns: 1.4fr 1fr 1fr;
+    }
+
+    @media #{media('>=', d)} {
+      grid-template-columns: 1.6fr repeat(4, 1fr);
+    }
+  }
+
+  &__count {
+    margin: rem(24px) 0 rem(16px);
+    color: $muted;
+    font-size: rem(14px);
+  }
+
+  &__empty {
+    padding: rem(40px) 0 rem(80px);
+    color: $muted;
+  }
+
+  &__grid {
+    display: grid;
+    gap: rem(16px);
+
+    @media #{media('>=', m)} {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media #{media('>=', d)} {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+}

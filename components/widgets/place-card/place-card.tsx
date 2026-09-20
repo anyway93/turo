@@ -1,6 +1,6 @@
 import "./place-card.scss";
 import type { ReactNode } from "react";
-import Image from "next/image";
+import { MediaImage } from "@/components/widgets/media-image";
 import Link from "next/link";
 import { cx } from "@/lib/cx";
 
@@ -15,7 +15,7 @@ export function PlaceCard({ href, name, image, featured }: PlaceCardProps) {
   return (
     <Link href={href} className={cx("place-card", featured && "place-card_featured")}>
       <div className="place-card__media">
-        <Image src={image} alt={name} fill sizes="(min-width: 768px) 50vw, 100vw" />
+        <MediaImage src={image} alt={name} fill sizes="(min-width: 768px) 50vw, 100vw" />
       </div>
       <span className="place-card__name">{name}</span>
     </Link>
