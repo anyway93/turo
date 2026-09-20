@@ -76,17 +76,20 @@ ol {
   --danger: #{$danger};
   --page-max: #{rem($page-max)};
   --page-pad: #{rem(map.get($page-pad, s))};
+  --page-footer-gap: #{rem(map.get($page-footer-gap, s))};
 }
 
 @media #{media('>=', m)} {
   :root {
     --page-pad: #{rem(map.get($page-pad, m))};
+    --page-footer-gap: #{rem(map.get($page-footer-gap, m))};
   }
 }
 
 @media #{media('>=', d)} {
   :root {
     --page-pad: #{rem(map.get($page-pad, d))};
+    --page-footer-gap: #{rem(map.get($page-footer-gap, d))};
   }
 }
 

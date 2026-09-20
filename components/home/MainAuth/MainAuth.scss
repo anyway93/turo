@@ -1,25 +1,24 @@
 @use "global/config" as *;
 @use "global/mixins" as *;
 
-.cta-band {
+.main-auth {
   display: flex;
   flex-direction: column;
   gap: rem(24px);
-  margin-bottom: rem(24px);
-  padding-bottom: rem(72px);
+  margin-top: rem(72px);
 
   @media #{media('>=', m)} {
     flex-direction: row;
     align-items: flex-end;
     justify-content: space-between;
-    padding-bottom: rem(96px);
+    margin-top: rem(104px);
   }
 
   @media #{media('>=', d)} {
-    padding-bottom: rem(120px);
+    margin-top: rem(132px);
   }
 
-  h2 {
+  &__title {
     max-width: 12ch;
     margin: 0;
     font-size: rem(32px);
@@ -31,9 +30,9 @@
     }
   }
 
-  p {
+  &__text {
     max-width: rem(360px);
-    margin-top: 0.75rem;
+    margin-top: rem(12px);
     color: $muted;
     font-size: rem(15px);
     line-height: 1.6;

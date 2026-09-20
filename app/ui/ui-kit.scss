@@ -109,7 +109,7 @@
   &__layout {
     display: grid;
     gap: rem(48px);
-    padding-block: rem(48px) rem(96px);
+    padding-block: rem(48px) 0;
 
     @media #{media('>=', d)} {
       grid-template-columns: rem(180px) 1fr;

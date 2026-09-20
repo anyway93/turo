@@ -1,19 +1,23 @@
 @use "global/config" as *;
 @use "global/mixins" as *;
 
-.section {
-  padding-block: rem(72px);
+.main-places {
+  margin-top: rem(72px);
 
   @media #{media('>=', m)} {
-    padding-block: rem(104px);
+    margin-top: rem(104px);
   }
 
   @media #{media('>=', d)} {
-    padding-block: rem(132px);
+    margin-top: rem(132px);
   }
 
-  &__label {
-    margin-bottom: rem(16px);
+  &__head {
+    @include rise(0.85s);
+
+    .eyebrow {
+      margin-bottom: rem(16px);
+    }
   }
 
   &__title {
@@ -35,9 +39,5 @@
     color: $muted;
     font-size: rem(16px);
     line-height: 1.65;
-  }
-
-  &__head {
-    @include rise(0.85s);
   }
 }

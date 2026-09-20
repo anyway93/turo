@@ -62,8 +62,7 @@
   }
 
   &__bottom {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: rem(8px);
     margin-top: rem(64px);
     padding-top: rem(24px);
@@ -72,8 +71,12 @@
     letter-spacing: 0.04em;
 
     @media #{media('>=', m)} {
-      flex-direction: row;
-      justify-content: space-between;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: rem(32px);
+
+      span:last-child {
+        grid-column: 4;
+      }
     }
   }
 }

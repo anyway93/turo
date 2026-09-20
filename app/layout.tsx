@@ -24,7 +24,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Providers>
           <div className="page">
             <Header />
-            {children}
+            <div className="page__content">{children}</div>
             <Footer />
           </div>
         </Providers>
