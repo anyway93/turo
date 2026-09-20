@@ -29,6 +29,8 @@
 }
 
 @mixin hover() {
+  cursor: pointer;
+
   @media #{media('>', t)} and (hover: hover) and (pointer: fine) {
     &:hover {
       @content;

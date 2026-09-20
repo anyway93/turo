@@ -34,7 +34,7 @@ export function Footer() {
         <div>
           <p className="site-footer__label">Документы</p>
           <Link href="/terms/">Пользовательское соглашение</Link>
-          <a href="mailto:hello@turo.travel">hello@turo.travel</a>
+          <a className="is-copy" href="mailto:hello@turo.travel">hello@turo.travel</a>
           <p>Пн–Вс, 10:00–21:00</p>
         </div>
       </div>

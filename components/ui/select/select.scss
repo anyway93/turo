@@ -16,7 +16,6 @@
   align-items: center;
   justify-content: space-between;
   gap: rem(8px);
-  cursor: pointer;
   transition:
     border-color $transition,
     background-color $transition,
@@ -53,7 +52,6 @@
   padding: rem(8px) rem(10px);
   border-radius: rem(10px);
   font-size: rem(14px);
-  cursor: pointer;
   outline: none;
   transition: background-color $transition;
 

@@ -15,7 +15,6 @@
 .step {
   padding-top: rem(20px);
   border-top: 1px solid $border;
-  cursor: default;
   @include rise(0.9s);
 
   @for $i from 1 through 6 {

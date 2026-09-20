@@ -23,9 +23,8 @@
     align-items: center;
     padding: rem(8px);
     border-radius: rem(10px);
-    font-size: rem(14px);
-    cursor: pointer;
-    outline: none;
+  font-size: rem(14px);
+  outline: none;
     transition: background-color $transition;
 
     &[data-highlighted] {
