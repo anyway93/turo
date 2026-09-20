@@ -1,0 +1,28 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.popover {
+  z-index: 50;
+  min-width: rem(160px);
+  padding: rem(8px);
+  border-radius: rem(16px);
+  background: $card;
+  box-shadow: 0 rem(16px) rem(40px) rem(-20px) color-mix(in srgb, $ink 35%, transparent);
+  animation: fade-in 0.2s $transition-timing-function;
+}
+
+.popover {
+  width: rem(280px);
+  padding: rem(12px);
+
+  &__title {
+    font-weight: 600;
+    font-size: rem(14px);
+  }
+
+  &__description {
+    margin-top: rem(4px);
+    font-size: rem(13px);
+    color: $muted;
+  }
+}

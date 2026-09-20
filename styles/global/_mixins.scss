@@ -1,0 +1,35 @@
+@use 'sass:map';
+@use 'config' as *;
+
+@function breakpoint($variant: d) {
+  @return map.get($breakpoints, $variant);
+}
+
+@function media($direction: '>', $variant: d) {
+  @if $direction == '>' {
+    @return '(min-width: #{breakpoint($variant) + 1px})';
+  } @else if $direction == '>=' {
+    @return '(min-width: #{breakpoint($variant)})';
+  } @else if $direction == '<' {
+    @return '(max-width: #{breakpoint($variant) - 1px})';
+  } @else if $direction == '<=' {
+    @return '(max-width: #{breakpoint($variant)})';
+  }
+}
+
+@mixin hover() {
+  @media #{media('>', t)} and (hover: hover) and (pointer: fine) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+@mixin crop-text($lineCount) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lineCount;
+  line-clamp: $lineCount;
+  text-overflow: ellipsis;
+}

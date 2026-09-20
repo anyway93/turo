@@ -1,0 +1,53 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: rem(22px);
+  padding: 0 rem(10px);
+  border: 1px solid transparent;
+  border-radius: rem(999px);
+  font-size: rem(12px);
+  font-weight: 500;
+  white-space: nowrap;
+  background: $ocean;
+  color: $sand;
+
+  &_variant {
+    &_secondary {
+      background: color-mix(in srgb, $border 80%, $sand);
+      color: $ink;
+    }
+
+    &_outline {
+      border-color: $border;
+      background: transparent;
+      color: $ink;
+    }
+
+    &_cta {
+      background: $sunset;
+      color: $white;
+    }
+
+    &_gold {
+      background: $gold;
+      color: $ink;
+    }
+
+    &_soft {
+      background: color-mix(in srgb, $ocean 12%, transparent);
+      color: $ocean;
+    }
+  }
+
+  &_overlay {
+    position: absolute;
+    top: rem(12px);
+    left: rem(12px);
+    background: color-mix(in srgb, $card 90%, transparent);
+    color: $ink;
+    backdrop-filter: blur(8px);
+  }
+}

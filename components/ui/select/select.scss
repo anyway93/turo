@@ -1,0 +1,67 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.select__trigger {
+  width: 100%;
+  min-width: 0;
+  height: rem(40px);
+  padding: 0 rem(14px);
+  border: 1px solid color-mix(in srgb, $border 80%, transparent);
+  border-radius: rem(999px);
+  background: color-mix(in srgb, $card 80%, transparent);
+  color: $ink;
+  font-size: rem(14px);
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: rem(8px);
+  cursor: pointer;
+  transition:
+    border-color $transition,
+    background-color $transition,
+    box-shadow $transition;
+
+  &:focus-visible {
+    border-color: color-mix(in srgb, $ocean 40%, transparent);
+    box-shadow: 0 0 0 rem(4px) color-mix(in srgb, $ocean 18%, transparent);
+  }
+
+  svg {
+    width: rem(16px);
+    height: rem(16px);
+    color: $muted;
+    flex-shrink: 0;
+  }
+}
+
+.select-content {
+  z-index: 50;
+  overflow: auto;
+  min-width: rem(144px);
+  padding: rem(6px);
+  border-radius: rem(16px);
+  background: $card;
+  box-shadow: 0 rem(16px) rem(40px) rem(-20px) color-mix(in srgb, $ink 35%, transparent);
+  animation: fade-in 0.2s $transition-timing-function;
+}
+
+.select-item {
+  display: flex;
+  align-items: center;
+  gap: rem(8px);
+  padding: rem(8px) rem(10px);
+  border-radius: rem(10px);
+  font-size: rem(14px);
+  cursor: pointer;
+  outline: none;
+  transition: background-color $transition;
+
+  &[data-highlighted] {
+    background: color-mix(in srgb, $ocean 8%, transparent);
+  }
+
+  &[data-state='checked'] {
+    color: $ocean;
+  }
+}

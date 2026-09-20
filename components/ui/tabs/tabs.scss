@@ -1,0 +1,40 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  gap: rem(8px);
+
+  &__list {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    padding: rem(4px);
+    border-radius: rem(999px);
+    background: color-mix(in srgb, $border 50%, $sand);
+  }
+
+  &__trigger {
+    height: rem(36px);
+    padding: 0 rem(16px);
+    border-radius: rem(999px);
+    font-size: rem(14px);
+    font-weight: 500;
+    color: color-mix(in srgb, $ink 55%, transparent);
+    transition:
+      color $transition,
+      background-color $transition,
+      box-shadow $transition;
+
+    &[data-state='active'] {
+      background: $card;
+      color: $ink;
+      box-shadow: 0 rem(4px) rem(12px) rem(-8px) color-mix(in srgb, $ink 30%, transparent);
+    }
+  }
+
+  &__content {
+    outline: none;
+  }
+}

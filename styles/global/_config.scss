@@ -1,0 +1,37 @@
+@use 'sass:math';
+@use 'sass:map';
+
+$fs: 16px;
+
+@function rem($size) {
+  @return math.div($size, $fs) * 1rem;
+}
+
+@function getVw($px, $width) {
+  @return math.div($px, $width) * 1vw;
+}
+
+$transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+$transition-duration: 0.4s;
+$transition: $transition-duration $transition-timing-function;
+
+$font: var(--font-onest), sans-serif;
+$font-display: var(--font-onest), sans-serif;
+
+$breakpoints: (
+  d: 1201px,
+  t: 1024px,
+  m: 768px,
+  s: 576px,
+);
+
+$sand: #f6f1e8;
+$ink: #1a2a28;
+$ocean: #0e6b63;
+$sunset: #c45c26;
+$gold: #d4a017;
+$muted: #8a9a8e;
+$card: #fffcf7;
+$border: #e4d9c8;
+$white: #ffffff;
+$danger: #b42318;

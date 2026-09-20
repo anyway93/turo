@@ -1,0 +1,14 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.tooltip {
+  z-index: 50;
+  min-width: 0;
+  padding: rem(6px) rem(10px);
+  border-radius: rem(16px);
+  background: $ink;
+  color: $sand;
+  font-size: rem(12px);
+  box-shadow: 0 rem(16px) rem(40px) rem(-20px) color-mix(in srgb, $ink 35%, transparent);
+  animation: fade-in 0.2s $transition-timing-function;
+}
