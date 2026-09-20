@@ -287,6 +287,25 @@
       max-width: none;
       object-fit: cover;
     }
+
+    .media-image-fallback {
+      padding: 0;
+      gap: 0;
+      background: color-mix(in srgb, $ink 18%, $white);
+
+      em {
+        display: none;
+      }
+
+      svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: rem(16px);
+        height: rem(16px);
+        transform: translate(-50%, -50%);
+      }
+    }
   }
 
   &__ring {

@@ -4,11 +4,23 @@
 .tooltip {
   z-index: 50;
   min-width: 0;
-  padding: rem(6px) rem(10px);
-  border-radius: rem(16px);
+  padding: rem(8px) rem(12px);
+  border: 0;
+  border-radius: 0;
   background: $ink;
   color: $sand;
   font-size: rem(12px);
-  box-shadow: 0 rem(16px) rem(40px) rem(-20px) color-mix(in srgb, $ink 35%, transparent);
-  animation: fade-in 0.2s $transition-timing-function;
+  letter-spacing: 0.02em;
+  box-shadow: 0 rem(24px) rem(48px) rem(-24px) color-mix(in srgb, $ink 40%, transparent);
+  --overlay-y: #{rem(8px)};
+  animation: overlay-in 0.55s $transition-timing-function both;
+
+  &[data-side="top"] {
+    --overlay-y: #{rem(-8px)};
+  }
+
+  &[data-state="closed"] {
+    animation-name: overlay-out;
+    animation-duration: 0.35s;
+  }
 }

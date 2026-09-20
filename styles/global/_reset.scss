@@ -192,6 +192,42 @@ ol {
   }
 }
 
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--overlay-y, 14px), 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes overlay-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, var(--overlay-y, 10px), 0);
+  }
+}
+
+@keyframes overlay-item {
+  from {
+    opacity: 0;
+    transform: translate3d(0, rem(10px), 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;

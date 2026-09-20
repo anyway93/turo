@@ -38,6 +38,39 @@
   }
 }
 
+@mixin overlay-panel {
+  border: 0;
+  border-radius: 0;
+  background: $white;
+  box-shadow: 0 rem(32px) rem(64px) rem(-28px) color-mix(in srgb, $ink 28%, transparent);
+  --overlay-y: #{rem(14px)};
+  transform-origin: var(--radix-select-content-transform-origin, center top);
+  animation: overlay-in 0.7s $transition-timing-function both;
+
+  &[data-side="top"] {
+    --overlay-y: #{rem(-14px)};
+  }
+
+  &[data-side="bottom"] {
+    --overlay-y: #{rem(14px)};
+  }
+
+  &[data-state="closed"] {
+    animation-name: overlay-out;
+    animation-duration: 0.45s;
+  }
+}
+
+@mixin overlay-item {
+  animation: overlay-item 0.65s $transition-timing-function both;
+
+  @for $i from 1 through 24 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{0.022s * ($i - 1)};
+    }
+  }
+}
+
 @mixin crop-text($lineCount) {
   overflow: hidden;
   display: -webkit-box;

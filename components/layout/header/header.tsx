@@ -19,15 +19,11 @@ import {
   IconButton,
 } from "@/components/ui";
 import { Wrapper } from "@/components/layout/wrapper";
+import { LangSwitch } from "@/components/layout/lang-switch";
 import { initials } from "@/data";
 import { cx } from "@/lib/cx";
+import { useLocale } from "@/lib/locale";
 import { useTuro } from "@/lib/turo-store";
-
-const links = [
-  { href: "/tours/", label: "Туры" },
-  { href: "/create/", label: "Создать тур" },
-  { href: "/#how", label: "Как это работает" },
-];
 
 export function Header() {
   const pathname = usePathname();
@@ -35,7 +31,14 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { user, logout, ready } = useTuro();
+  const { t } = useLocale();
   const router = useRouter();
+
+  const links = [
+    { href: "/tours/", label: t("header.tours") },
+    { href: "/create/", label: t("header.create") },
+    { href: "/#how", label: t("header.how") },
+  ];
 
   useEffect(() => {
     let ticking = false;
@@ -86,7 +89,7 @@ export function Header() {
         <Link href="/" className="site-header__logo">
           Turo
         </Link>
-        <nav className="site-header__nav" aria-label="Основное меню">
+        <nav className="site-header__nav" aria-label={t("header.menu")}>
           {links.map((link) => (
             <Link key={link.href} href={link.href}>
               {link.label}
@@ -94,6 +97,7 @@ export function Header() {
           ))}
         </nav>
         <div className="site-header__actions">
+          <LangSwitch />
           {ready && user ? (
             <DropdownMenu>
               <DropdownMenuTrigger className="site-header__user">
@@ -106,31 +110,28 @@ export function Header() {
                 <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onSelect={() => router.push("/account/")}>
-                  Кабинет
+                  {t("header.account")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => router.push("/account/bookings/")}>
-                  Мои брони
+                  {t("header.bookings")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => router.push("/messages/")}>
-                  Сообщения
+                  {t("header.messages")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => router.push("/create/")}>
-                  Разместить тур
+                  {t("header.publish")}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onSelect={() => logout()}>Выйти</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => logout()}>{t("header.logout")}</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <Button asChild variant="ghost" size="sm" className="site-header__login">
-              <Link href="/login/">Войти</Link>
+              <Link href="/login/">{t("header.login")}</Link>
             </Button>
           )}
-          <Button asChild size="sm" variant="cta">
-            <Link href="/create/">Разместить тур</Link>
-          </Button>
           <IconButton
-            label={open ? "Закрыть меню" : "Открыть меню"}
+            label={open ? t("header.closeMenu") : t("header.openMenu")}
             variant="ghost"
             size="icon"
             className="site-header__menu"
@@ -152,13 +153,8 @@ export function Header() {
           </Link>
         ))}
         <Link href={user ? "/account/" : "/login/"} onClick={() => setOpen(false)}>
-          {user ? "Кабинет" : "Войти"}
+          {user ? t("header.account") : t("header.login")}
         </Link>
-        <Button asChild variant="cta" size="sm">
-          <Link href="/create/" onClick={() => setOpen(false)}>
-            Разместить тур
-          </Link>
-        </Button>
       </div>
     </header>
   );
