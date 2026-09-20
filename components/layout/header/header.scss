@@ -64,10 +64,9 @@
 
   &__login {
     display: none;
-    font-size: rem(14px);
 
     @media #{media('>=', m)} {
-      display: inline;
+      display: inline-flex;
     }
   }
 

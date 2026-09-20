@@ -13,6 +13,7 @@ type ButtonVariant =
   | "soft"
   | "gold"
   | "glass"
+  | "glass-tile"
   | "inverse"
   | "text";
 
@@ -25,7 +26,14 @@ type ButtonSize =
   | "icon"
   | "icon-xs"
   | "icon-sm"
-  | "icon-lg";
+  | "icon-lg"
+  | "icon-xl";
+
+type ButtonProps = React.ComponentProps<"button"> & {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  asChild?: boolean;
+};
 
 function Button({
   className,
@@ -33,11 +41,7 @@ function Button({
   size = "default",
   asChild = false,
   ...props
-}: React.ComponentProps<"button"> & {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  asChild?: boolean;
-}) {
+}: ButtonProps) {
   const Comp = asChild ? Slot.Root : "button";
 
   return (
@@ -54,5 +58,16 @@ function Button({
   );
 }
 
-export { Button };
-export type { ButtonVariant, ButtonSize };
+function IconButton({
+  label,
+  variant = "glass",
+  size = "icon",
+  ...props
+}: Omit<ButtonProps, "aria-label" | "asChild"> & { label: string }) {
+  return (
+    <Button type="button" variant={variant} size={size} aria-label={label} {...props} />
+  );
+}
+
+export { Button, IconButton };
+export type { ButtonVariant, ButtonSize, ButtonProps };

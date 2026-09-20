@@ -24,6 +24,10 @@
   padding-inline: var(--page-pad);
 }
 
+@mixin rise($duration: 0.9s, $delay: 0s) {
+  animation: block-rise $duration $transition-timing-function $delay both;
+}
+
 @mixin hover() {
   @media #{media('>', t)} and (hover: hover) and (pointer: fine) {
     &:hover {

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui";
+import { Button, IconButton, Pager } from "@/components/ui";
 import { Wrapper } from "@/components/layout/wrapper";
 import { cx } from "@/lib/cx";
 
@@ -243,40 +243,34 @@ export function HeroSlider() {
         </div>
 
         <div className="hero__bar">
-          <div className="hero__pager">
-            {popularTours.map((tour, i) => (
-              <button
-                key={tour.id}
-                type="button"
-                className={cx(
-                  "hero__dot",
-                  popularTours.indexOf(slide) === i && "is-active",
-                )}
-                aria-label={tour.title}
-                onClick={() => goTo(i)}
-              >
-                <span />
-              </button>
-            ))}
-          </div>
+          <Pager
+            className="hero__pager"
+            durationMs={INTERVAL}
+            active={popularTours.indexOf(slide)}
+            onSelect={goTo}
+            items={popularTours.map((tour) => ({
+              id: tour.id,
+              label: tour.title,
+            }))}
+          />
 
           <div className="hero__controls">
-            <button
-              type="button"
-              className="hero__arrow"
-              aria-label="Предыдущий тур"
+            <IconButton
+              label="Предыдущий тур"
+              variant="glass-tile"
+              size="icon-xl"
               onClick={() => go(-1)}
             >
               <ArrowLeft />
-            </button>
-            <button
-              type="button"
-              className="hero__arrow"
-              aria-label="Следующий тур"
+            </IconButton>
+            <IconButton
+              label="Следующий тур"
+              variant="glass-tile"
+              size="icon-xl"
               onClick={() => go(1)}
             >
               <ArrowRight />
-            </button>
+            </IconButton>
           </div>
         </div>
       </Wrapper>

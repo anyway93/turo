@@ -1,0 +1,76 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.section {
+  padding-block: rem(72px);
+
+  @media #{media('>=', m)} {
+    padding-block: rem(104px);
+  }
+
+  @media #{media('>=', d)} {
+    padding-block: rem(132px);
+  }
+
+  &__label {
+    margin-bottom: rem(16px);
+  }
+
+  &__title {
+    max-width: 14ch;
+    margin: 0 0 rem(20px);
+    font-size: rem(32px);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+
+    @media #{media('>=', m)} {
+      font-size: rem(48px);
+    }
+  }
+
+  &__text {
+    max-width: 28em;
+    margin: 0;
+    color: $muted;
+    font-size: rem(16px);
+    line-height: 1.65;
+  }
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    gap: rem(28px);
+    @include rise(0.85s);
+
+    @media #{media('>=', t)} {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: rem(48px);
+    }
+  }
+
+  &__aside {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(20px);
+    margin: 0;
+    color: $muted;
+    font-size: rem(12px);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+
+    span {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0;
+    }
+
+    b {
+      margin-right: rem(8px);
+      color: $ocean;
+      font-weight: 400;
+    }
+  }
+}

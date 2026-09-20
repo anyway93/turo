@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui";
+import { Button, IconButton } from "@/components/ui";
 import { Wrapper } from "@/components/layout/wrapper";
 import { cx } from "@/lib/cx";
 
@@ -78,22 +78,23 @@ export function Header() {
           ))}
         </nav>
         <div className="site-header__actions">
-          <Link href="/#auth" className="site-header__login">
-            Войти
-          </Link>
+          <Button asChild variant="ghost" size="sm" className="site-header__login">
+            <Link href="/#auth">Войти</Link>
+          </Button>
           <Button asChild size="sm" variant="cta">
             <Link href="/#create">Разместить тур</Link>
           </Button>
-          <button
-            type="button"
+          <IconButton
+            label={open ? "Закрыть меню" : "Открыть меню"}
+            variant="ghost"
+            size="icon"
             className="site-header__menu"
             aria-expanded={open}
             aria-controls="site-header-mobile"
-            aria-label={open ? "Закрыть меню" : "Открыть меню"}
             onClick={() => setOpen((value) => !value)}
           >
             {open ? <X /> : <Menu />}
-          </button>
+          </IconButton>
         </div>
       </Wrapper>
       <div
@@ -108,9 +109,11 @@ export function Header() {
         <Link href="/#auth" onClick={() => setOpen(false)}>
           Войти
         </Link>
-        <Link href="/#create" onClick={() => setOpen(false)}>
-          Разместить тур
-        </Link>
+        <Button asChild variant="cta" size="sm">
+          <Link href="/#create" onClick={() => setOpen(false)}>
+            Разместить тур
+          </Link>
+        </Button>
       </div>
     </header>
   );
