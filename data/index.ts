@@ -16,9 +16,20 @@ export {
   bookPath,
   initials,
 } from "./format";
+export {
+  hydrateTour,
+  leftover,
+  openDepartures,
+  nextOpenStart,
+  tripEnd,
+  takenMap,
+  todayIso,
+  seatKey,
+} from "./dates";
 export type {
   User,
   Tour,
+  Departure,
   Review,
   Booking,
   Conversation,

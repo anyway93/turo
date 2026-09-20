@@ -4,7 +4,7 @@ import "./account-home.scss";
 import Link from "next/link";
 import { Wrapper } from "@/components/layout/wrapper";
 import { Avatar, AvatarFallback, AvatarImage, Button } from "@/components/ui";
-import { initials, tourPath } from "@/data";
+import { initials, tourPath, tripEnd } from "@/data";
 import { useTuro } from "@/lib/turo-store";
 import { useLocale } from "@/lib/locale";
 
@@ -116,7 +116,9 @@ export function AccountBookings() {
                   <span>
                     {t("account.guests", { n: item.guests })} · {money(item.total)} · {t(`status.${item.status}`)}
                   </span>
-                  {tour ? <em>{range(tour.startDate, tour.endDate)}</em> : null}
+                  {tour && item.departureStart ? (
+                    <em>{range(item.departureStart, tripEnd(item.departureStart, tour.durationDays))}</em>
+                  ) : null}
                 </div>
                 {tour ? (
                   <Link href={tourPath(tour)}>{t("account.open")}</Link>

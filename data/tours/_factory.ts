@@ -1,4 +1,5 @@
-import type { ItineraryDay, Tour } from "../types";
+import { hydrateTour } from "../dates";
+import type { Departure, ItineraryDay, Tour } from "../types";
 
 export function days(count: number, titles: string[]): ItineraryDay[] {
   return Array.from({ length: count }, (_, index) => ({
@@ -29,15 +30,17 @@ const excludedBase = [
 ];
 
 export function makeTour(
-  tour: Omit<Tour, "included" | "excluded" | "source"> & {
+  tour: Omit<Tour, "included" | "excluded" | "source" | "departures"> & {
     included?: string[];
     excluded?: string[];
+    departures?: Departure[];
   },
 ): Tour {
-  return {
+  return hydrateTour({
     ...tour,
+    departures: tour.departures ?? [],
     included: tour.included ?? includedBase,
     excluded: tour.excluded ?? excludedBase,
     source: "seed",
-  };
+  });
 }

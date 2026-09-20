@@ -15,6 +15,10 @@ import {
   messages as seedMessages,
   tours as seedTours,
   users as seedUsers,
+  hydrateTour,
+  leftover,
+  nextOpenStart,
+  seatKey,
   type Booking,
   type ChatMessage,
   type Conversation,
@@ -56,6 +60,7 @@ type BookInput = {
   tourSlug: string;
   guests: number;
   cardLast4: string;
+  departureStart: string;
 };
 
 type CreateTourInput = Omit<Tour, "source" | "seatsTaken" | "rating" | "reviewsCount" | "organizerId">;
@@ -96,6 +101,29 @@ function uid(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
+function applySeats(tour: Tour, seatTaken: Record<string, number>): Tour {
+  const live = hydrateTour(tour);
+  const extra = new Map<string, number>();
+  for (const [key, count] of Object.entries(seatTaken)) {
+    if (key === live.slug) {
+      const first = live.departures[0]?.start;
+      if (first) extra.set(first, (extra.get(first) ?? 0) + count);
+    } else if (key.startsWith(`${live.slug}::`)) {
+      const start = key.slice(live.slug.length + 2);
+      extra.set(start, (extra.get(start) ?? 0) + count);
+    }
+  }
+  const departures = live.departures.map((item) => ({
+    ...item,
+    taken: item.taken + (extra.get(item.start) ?? 0),
+  }));
+  return {
+    ...live,
+    departures,
+    seatsTaken: departures.reduce((sum, item) => sum + item.taken, 0),
+  };
+}
+
 export function TuroProvider({ children }: { children: ReactNode }) {
   const [persist, setPersist] = useState<Persist>(empty);
   const [ready, setReady] = useState(false);
@@ -116,17 +144,18 @@ export function TuroProvider({ children }: { children: ReactNode }) {
   );
 
   const tours = useMemo(
-    () =>
-      [...seedTours, ...persist.extraTours].map((tour) => ({
-        ...tour,
-        seatsTaken: tour.seatsTaken + (persist.seatTaken[tour.slug] ?? 0),
-      })),
+    () => [...seedTours, ...persist.extraTours].map((tour) => applySeats(tour, persist.seatTaken)),
     [persist.extraTours, persist.seatTaken],
   );
 
   const bookings = useMemo(
-    () => [...seedBookings, ...persist.extraBookings],
-    [persist.extraBookings],
+    () =>
+      [...seedBookings, ...persist.extraBookings].map((item) => {
+        if (item.departureStart) return item;
+        const tour = tours.find((entry) => entry.slug === item.tourSlug);
+        return { ...item, departureStart: tour ? nextOpenStart(tour) ?? tour.startDate : "" };
+      }),
+    [persist.extraBookings, tours],
   );
 
   const conversations = useMemo(
@@ -209,7 +238,7 @@ export function TuroProvider({ children }: { children: ReactNode }) {
       if (current.id === tour.organizerId) {
         return { ok: false, error: "error.ownTour" };
       }
-      const left = tour.seats - tour.seatsTaken;
+      const left = leftover(tour, input.departureStart);
       if (input.guests < 1 || input.guests > left) {
         return { ok: false, error: "error.noSeats" };
       }
@@ -217,6 +246,7 @@ export function TuroProvider({ children }: { children: ReactNode }) {
         (item) =>
           item.userId === current.id &&
           item.tourSlug === tour.slug &&
+          item.departureStart === input.departureStart &&
           item.status !== "cancelled",
       );
       const booking: Booking = {
@@ -228,6 +258,7 @@ export function TuroProvider({ children }: { children: ReactNode }) {
         status: "paid",
         paidAt: new Date().toISOString(),
         cardLast4: input.cardLast4,
+        departureStart: input.departureStart,
       };
       const existingChat = conversations.find(
         (item) =>
@@ -259,7 +290,8 @@ export function TuroProvider({ children }: { children: ReactNode }) {
         extraMessages: [...prev.extraMessages, hello],
         seatTaken: {
           ...prev.seatTaken,
-          [tour.slug]: (prev.seatTaken[tour.slug] ?? 0) + input.guests,
+          [seatKey(tour.slug, input.departureStart)]:
+            (prev.seatTaken[seatKey(tour.slug, input.departureStart)] ?? 0) + input.guests,
         },
       }));
       void already;
@@ -277,7 +309,7 @@ export function TuroProvider({ children }: { children: ReactNode }) {
       if (tours.some((item) => item.slug === slug)) {
         return { ok: false, error: "error.slugTaken" };
       }
-      const tour: Tour = {
+      const tour: Tour = hydrateTour({
         ...input,
         slug,
         organizerId: current.id,
@@ -285,7 +317,7 @@ export function TuroProvider({ children }: { children: ReactNode }) {
         rating: 5,
         reviewsCount: 0,
         source: "user",
-      };
+      });
       setPersist((prev) => ({
         ...prev,
         extraTours: [...prev.extraTours, tour],

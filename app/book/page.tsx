@@ -5,8 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { Checkout } from "@/components/booking/checkout";
 
 function BookQuery() {
-  const slug = useSearchParams().get("slug") ?? "";
-  return <Checkout slug={slug} />;
+  const params = useSearchParams();
+  return <Checkout slug={params.get("slug") ?? ""} date={params.get("date") ?? ""} />;
 }
 
 export default function BookPage() {

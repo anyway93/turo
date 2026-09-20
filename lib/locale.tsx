@@ -15,7 +15,7 @@ import { uiEn, uiRu } from "@/lib/i18n/ui";
 import { enLexicon } from "@/lib/i18n/lexicon";
 import { enDays } from "@/lib/i18n/lexicon-days";
 import { enCopy } from "@/lib/i18n/lexicon-copy";
-import { formatRange, money, PAID_MARK } from "@/lib/i18n/format";
+import { formatDay, formatMonthTitle, formatRange, money, PAID_MARK } from "@/lib/i18n/format";
 
 export type { Locale };
 
@@ -42,6 +42,8 @@ type LocaleApi = {
   tag: string;
   money: (value: number) => string;
   range: (start: string, end: string) => string;
+  day: (iso: string) => string;
+  monthTitle: (year: number, month: number) => string;
   line: (text: string) => string;
 };
 
@@ -86,6 +88,8 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
       tx,
       money: (value) => money(value, locale),
       range: (start, end) => formatRange(start, end, locale),
+      day: (iso) => formatDay(iso, locale),
+      monthTitle: (year, month) => formatMonthTitle(year, month, locale),
       line: (text) => {
         if (text.startsWith(`${PAID_MARK}|`)) {
           const parts = text.split("|");

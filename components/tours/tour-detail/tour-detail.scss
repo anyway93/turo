@@ -187,13 +187,26 @@
   &__aside {
     display: grid;
     gap: rem(8px);
-    padding: rem(28px);
+    padding: rem(22px);
     background: $card;
     @include rise(1s, 0.1s);
 
     @media #{media('>=', t)} {
       position: sticky;
-      top: rem(96px);
+      top: rem(88px);
+    }
+
+    .dep-pick {
+      margin: rem(8px) 0 rem(4px);
+    }
+
+    .dep-pick__cell {
+      min-height: rem(36px);
+    }
+
+    .dep-pick__list {
+      max-height: rem(220px);
+      overflow: auto;
     }
   }
 

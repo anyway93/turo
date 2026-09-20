@@ -1,6 +1,7 @@
 import type { Booking } from "../types";
 
-export const bookings: Booking[] = [
+export const bookings: Booking[] = (
+  [
   { id: "bk-anna-altai", tourSlug: "altai-rivers", userId: "usr-anna", guests: 1, total: 54000, status: "confirmed", paidAt: "2026-02-11T10:12:00.000Z", cardLast4: "4242" },
   { id: "bk-anna-kyoto", tourSlug: "kyoto-quiet", userId: "usr-anna", guests: 1, total: 142000, status: "paid", paidAt: "2026-01-20T14:03:00.000Z", cardLast4: "4242" },
   { id: "bk-anna-mar", tourSlug: "marrakech-atlas", userId: "usr-anna", guests: 2, total: 145600, status: "paid", paidAt: "2026-01-08T09:40:00.000Z", cardLast4: "4242" },
@@ -29,4 +30,5 @@ export const bookings: Booking[] = [
   { id: "bk-timur-geo", tourSlug: "georgia-feast", userId: "usr-timur", guests: 2, total: 117800, status: "paid", paidAt: "2026-03-09T09:33:00.000Z", cardLast4: "9898" },
   { id: "bk-eva-nz", tourSlug: "nz-south", userId: "usr-eva", guests: 1, total: 212000, status: "paid", paidAt: "2025-11-11T11:00:00.000Z", cardLast4: "6767" },
   { id: "bk-jon-pat", tourSlug: "patagonia-wind", userId: "usr-jon", guests: 1, total: 198000, status: "confirmed", paidAt: "2025-12-20T20:20:00.000Z", cardLast4: "4545" },
-];
+] as Omit<Booking, "departureStart">[]
+).map((item) => ({ ...item, departureStart: "" }));

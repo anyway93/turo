@@ -5,7 +5,7 @@ import { MediaImage } from "@/components/widgets/media-image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui";
-import { seatsLeft, tourPath } from "@/data";
+import { leftover, tourPath } from "@/data";
 import type { Tour } from "@/data";
 import { useLocale } from "@/lib/locale";
 import { cx } from "@/lib/cx";
@@ -19,8 +19,9 @@ export function TourCard({
   index?: number;
   preview?: boolean;
 }) {
-  const left = seatsLeft(tour);
-  const { t, tx, money, range } = useLocale();
+  const { t, tx, money } = useLocale();
+  const left = leftover(tour);
+  const open = tour.departures?.length ?? 0;
   const className = cx("tour-card", preview && "tour-card_preview");
   const style = { animationDelay: `${Math.min(index, 8) * 0.07}s` };
   const inner = (
@@ -47,7 +48,7 @@ export function TourCard({
         <h3 className="tour-card__title">{tx(tour.title)}</h3>
         <p className="tour-card__text">{tx(tour.subtitle)}</p>
         <div className="tour-card__meta">
-          <span>{range(tour.startDate, tour.endDate)}</span>
+          <span>{open > 0 ? t("card.groups", { n: open }) : t("card.noSeats")}</span>
           <span>{left > 0 ? t("card.seats", { n: left }) : t("card.noSeats")}</span>
         </div>
         <div className="tour-card__foot">

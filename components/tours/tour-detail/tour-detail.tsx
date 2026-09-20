@@ -2,7 +2,7 @@
 import "./tour-detail.scss";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Wrapper } from "@/components/layout/wrapper";
 import {
   Avatar,
@@ -16,20 +16,33 @@ import {
   TabsTrigger,
 } from "@/components/ui";
 import { TourGallery } from "@/components/tours/tour-gallery";
+import { DeparturePicker } from "@/components/tours/departure-picker";
 import {
   bookPath,
   initials,
+  leftover,
+  nextOpenStart,
   reviewsForTour,
-  seatsLeft,
+  takenMap,
 } from "@/data";
 import { useTuro } from "@/lib/turo-store";
 import { useLocale } from "@/lib/locale";
 
 export function TourDetail({ slug }: { slug: string }) {
   const { tourBySlug, userById, user, bookings, conversations } = useTuro();
-  const { t, tx, money, range } = useLocale();
+  const { t, tx, money } = useLocale();
   const tour = tourBySlug(slug);
   const reviews = useMemo(() => (tour ? reviewsForTour(tour.slug) : []), [tour]);
+  const [date, setDate] = useState("");
+
+  useEffect(() => {
+    if (!tour) return;
+    setDate((current) =>
+      tour.departures.some((item) => item.start === current)
+        ? current
+        : (nextOpenStart(tour) ?? ""),
+    );
+  }, [tour]);
 
   if (!tour) {
     return (
@@ -44,7 +57,7 @@ export function TourDetail({ slug }: { slug: string }) {
   }
 
   const organizer = userById(tour.organizerId);
-  const left = seatsLeft(tour);
+  const left = leftover(tour, date);
   const mine = bookings.some(
     (item) =>
       user &&
@@ -81,8 +94,12 @@ export function TourDetail({ slug }: { slug: string }) {
 
           <dl className="tour-detail__facts">
             <div>
+              <dt>{t("tour.duration")}</dt>
+              <dd>{t("tour.days", { n: tour.durationDays })}</dd>
+            </div>
+            <div>
               <dt>{t("tour.dates")}</dt>
-              <dd>{range(tour.startDate, tour.endDate)}</dd>
+              <dd>{t("tour.datesOpen", { n: tour.departures.length })}</dd>
             </div>
             <div>
               <dt>{t("tour.seats")}</dt>
@@ -169,7 +186,15 @@ export function TourDetail({ slug }: { slug: string }) {
         <aside className="tour-detail__aside">
           <p className="tour-detail__price">{money(tour.price)}</p>
           <p className="tour-detail__per">{t("tour.perPerson")}</p>
-          <p className="tour-detail__dates">{range(tour.startDate, tour.endDate)}</p>
+          <DeparturePicker
+            mode="pick"
+            durationDays={tour.durationDays}
+            dates={tour.departures.map((item) => item.start)}
+            value={date}
+            seats={tour.seats}
+            taken={takenMap(tour)}
+            onValueChange={setDate}
+          />
           <p className="tour-detail__seats">
             {left > 0 ? t("tour.seatsLine", { left, total: tour.seats }) : t("tour.seatsClosed")}
           </p>
@@ -192,8 +217,8 @@ export function TourDetail({ slug }: { slug: string }) {
               <Link href={chat ? `/messages/?c=${chat.id}` : "/messages/"}>{t("tour.write")}</Link>
             </Button>
           ) : (
-            <Button asChild variant="cta" size="lg" disabled={left === 0}>
-              <Link href={bookPath(tour)}>{t("tour.pay")}</Link>
+            <Button asChild variant="cta" size="lg" disabled={left === 0 || !date}>
+              <Link href={bookPath(tour, date)}>{t("tour.pay")}</Link>
             </Button>
           )}
           <Button asChild variant="outline">

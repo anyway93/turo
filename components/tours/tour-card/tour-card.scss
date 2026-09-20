@@ -214,6 +214,16 @@
         opacity: 1;
       }
     }
+
+    &.tour-card_preview:hover {
+      transform: none;
+      box-shadow: none;
+
+      .tour-card__body,
+      .tour-card__title {
+        transform: none;
+      }
+    }
   }
 }
 

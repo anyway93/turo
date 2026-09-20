@@ -20,12 +20,14 @@ import {
   Textarea,
 } from "@/components/ui";
 import { continents, tourPath, tourStyles } from "@/data";
+import { upcomingWeekdays, tripEnd } from "@/data/dates";
 import { coverPool } from "@/data/media/photos";
 import type { Continent, Difficulty, TourStyle } from "@/data";
 import { useTuro } from "@/lib/turo-store";
 import { useLocale } from "@/lib/locale";
 import { cx } from "@/lib/cx";
 import { TourCard } from "@/components/tours/tour-card";
+import { DeparturePicker } from "@/components/tours/departure-picker";
 import type { Tour } from "@/data";
 
 export function CreateTourForm() {
@@ -42,7 +44,7 @@ export function CreateTourForm() {
   const [days, setDays] = useState(7);
   const [price, setPrice] = useState(59000);
   const [seats, setSeats] = useState(8);
-  const [start, setStart] = useState("2026-08-01");
+  const [dates, setDates] = useState(() => upcomingWeekdays(6, 4));
   const [cover, setCover] = useState(coverPool[0]);
   const [plan, setPlan] = useState("");
 
@@ -61,8 +63,7 @@ export function CreateTourForm() {
   }, [t]);
 
   const draft = useMemo<Tour>(() => {
-    const end = new Date(start);
-    end.setDate(end.getDate() + Math.max(days - 1, 0));
+    const start = dates[0] ?? upcomingWeekdays(6, 1)[0];
     return {
       slug: "preview",
       title: title.trim() || t("create.untitled"),
@@ -77,7 +78,8 @@ export function CreateTourForm() {
       seats,
       seatsTaken: 0,
       startDate: start,
-      endDate: end.toISOString().slice(0, 10),
+      endDate: tripEnd(start, days),
+      departures: dates.map((item) => ({ start: item, taken: 0 })),
       difficulty,
       style,
       tags: [style],
@@ -97,11 +99,11 @@ export function CreateTourForm() {
     continent,
     country,
     cover,
+    dates,
     days,
     difficulty,
     price,
     seats,
-    start,
     style,
     subtitle,
     t,
@@ -146,8 +148,11 @@ export function CreateTourForm() {
         title: line.replace(/^день\s*\d+\s*[:.—-]?\s*/i, "") || `День ${index + 1}`,
         text: "Авторский день: темп и остановки гид уточнит в чате перед выездом.",
       }));
-    const end = new Date(start);
-    end.setDate(end.getDate() + Math.max(days - 1, 0));
+    if (dates.length === 0) {
+      toast.error(t("create.datesNeed"));
+      return;
+    }
+    const start = dates[0];
     const result = createTour({
       slug,
       title: title.trim(),
@@ -160,7 +165,8 @@ export function CreateTourForm() {
       price,
       seats,
       startDate: start,
-      endDate: end.toISOString().slice(0, 10),
+      endDate: tripEnd(start, days),
+      departures: dates.map((item) => ({ start: item, taken: 0 })),
       difficulty,
       style,
       tags: [style, city.toLowerCase() || "авторский"],
@@ -273,7 +279,7 @@ export function CreateTourForm() {
 
             <section className="create-tour__panel">
               <p className="create-tour__label">{t("create.set")}</p>
-              <div className="create-tour__grid create-tour__grid_4">
+              <div className="create-tour__grid create-tour__grid_3">
                 <Field>
                   <FieldLabel>{t("create.days")}</FieldLabel>
                   <Input type="number" min={2} max={21} value={days} onChange={(e) => setDays(Number(e.target.value))} />
@@ -286,10 +292,18 @@ export function CreateTourForm() {
                   <FieldLabel>{t("create.seats")}</FieldLabel>
                   <Input type="number" min={2} max={20} value={seats} onChange={(e) => setSeats(Number(e.target.value))} />
                 </Field>
-                <Field>
-                  <FieldLabel>{t("create.start")}</FieldLabel>
-                  <Input type="date" value={start} onChange={(e) => setStart(e.target.value)} />
-                </Field>
+              </div>
+              <div className="create-tour__dates">
+                <p className="create-tour__dates-label">{t("create.datesTitle")}</p>
+                <p className="create-tour__dates-count">
+                  {dates.length > 0 ? t("create.datesCount", { n: dates.length }) : t("create.datesEmpty")}
+                </p>
+                <DeparturePicker
+                  mode="edit"
+                  durationDays={days}
+                  dates={dates}
+                  onDatesChange={setDates}
+                />
               </div>
               <Field>
                 <FieldLabel>{t("create.plan")}</FieldLabel>

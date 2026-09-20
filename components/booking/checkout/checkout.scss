@@ -70,6 +70,15 @@
     border: 1px solid $border;
   }
 
+  .dep-pick {
+    margin-bottom: rem(8px);
+  }
+
+  .dep-pick__list {
+    max-height: rem(200px);
+    overflow: auto;
+  }
+
   &__kicker {
     font-size: rem(12px);
     letter-spacing: 0.12em;

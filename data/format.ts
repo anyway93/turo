@@ -1,3 +1,4 @@
+import { leftover } from "./dates";
 import type { Tour } from "./types";
 
 export function money(value: number) {
@@ -16,8 +17,8 @@ export function formatRange(start: string, end: string) {
   return `${a.toLocaleDateString("ru-RU", opts)} — ${b.toLocaleDateString("ru-RU", opts)} ${year}`;
 }
 
-export function seatsLeft(tour: Tour) {
-  return Math.max(0, tour.seats - tour.seatsTaken);
+export function seatsLeft(tour: Tour, start?: string) {
+  return leftover(tour, start);
 }
 
 export function tourPath(tour: Pick<Tour, "slug" | "source">) {
@@ -25,8 +26,9 @@ export function tourPath(tour: Pick<Tour, "slug" | "source">) {
   return `/tours/${tour.slug}/`;
 }
 
-export function bookPath(tour: Pick<Tour, "slug" | "source">) {
-  return `/book/?slug=${tour.slug}`;
+export function bookPath(tour: Pick<Tour, "slug" | "source">, date?: string) {
+  const query = date ? `&date=${date}` : "";
+  return `/book/?slug=${tour.slug}${query}`;
 }
 
 export function initials(name: string) {

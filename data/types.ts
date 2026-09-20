@@ -32,6 +32,11 @@ export type ItineraryDay = {
   text: string;
 };
 
+export type Departure = {
+  start: string;
+  taken: number;
+};
+
 export type Tour = {
   slug: string;
   title: string;
@@ -47,6 +52,7 @@ export type Tour = {
   seatsTaken: number;
   startDate: string;
   endDate: string;
+  departures: Departure[];
   difficulty: Difficulty;
   style: TourStyle;
   tags: string[];
@@ -102,6 +108,7 @@ export type Booking = {
   status: BookingStatus;
   paidAt: string;
   cardLast4: string;
+  departureStart: string;
 };
 
 export type Conversation = {
