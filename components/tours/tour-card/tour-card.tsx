@@ -8,17 +8,23 @@ import { Badge } from "@/components/ui";
 import { seatsLeft, tourPath } from "@/data";
 import type { Tour } from "@/data";
 import { useLocale } from "@/lib/locale";
+import { cx } from "@/lib/cx";
 
-export function TourCard({ tour, index = 0 }: { tour: Tour; index?: number }) {
+export function TourCard({
+  tour,
+  index = 0,
+  preview = false,
+}: {
+  tour: Tour;
+  index?: number;
+  preview?: boolean;
+}) {
   const left = seatsLeft(tour);
   const { t, tx, money, range } = useLocale();
-
-  return (
-    <Link
-      href={tourPath(tour)}
-      className="tour-card"
-      style={{ animationDelay: `${Math.min(index, 8) * 0.07}s` }}
-    >
+  const className = cx("tour-card", preview && "tour-card_preview");
+  const style = { animationDelay: `${Math.min(index, 8) * 0.07}s` };
+  const inner = (
+    <>
       <div className="tour-card__media">
         <div className="tour-card__photo">
           <MediaImage src={tour.cover} alt={tx(tour.title)} fill sizes="(min-width: 1024px) 33vw, 100vw" />
@@ -51,6 +57,20 @@ export function TourCard({ tour, index = 0 }: { tour: Tour; index?: number }) {
           </span>
         </div>
       </div>
+    </>
+  );
+
+  if (preview) {
+    return (
+      <div className={className} style={style}>
+        {inner}
+      </div>
+    );
+  }
+
+  return (
+    <Link href={tourPath(tour)} className={className} style={style}>
+      {inner}
     </Link>
   );
 }
