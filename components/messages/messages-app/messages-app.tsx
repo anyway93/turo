@@ -14,9 +14,11 @@ import {
 import { initials, tourPath } from "@/data";
 import { useTuro } from "@/lib/turo-store";
 import { cx } from "@/lib/cx";
+import { useLocale } from "@/lib/locale";
 
 export function MessagesApp() {
   const { user, ready, conversations, messages, tours, userById, sendMessage } = useTuro();
+  const { t, tx, line } = useLocale();
   const search = useSearchParams();
   const router = useRouter();
   const activeId = search.get("c");
@@ -60,15 +62,15 @@ export function MessagesApp() {
     [active?.id, messages],
   );
 
-  if (!ready) return <div className="messages-app">Загрузка…</div>;
+  if (!ready) return <div className="messages-app">{t("messages.loading")}</div>;
 
   if (!user) {
     return (
       <div className="messages-app messages-app_gate">
-        <h1>Чат после входа</h1>
-        <p>Переписка открывается гостю после оплаты. Организатору — по каждому туру отдельно.</p>
+        <h1>{t("messages.gateTitle")}</h1>
+        <p>{t("messages.gateText")}</p>
         <Button asChild variant="cta">
-          <Link href="/login/?next=/messages/">Войти</Link>
+          <Link href="/login/?next=/messages/">{t("messages.login")}</Link>
         </Button>
       </div>
     );
@@ -95,13 +97,13 @@ export function MessagesApp() {
   return (
     <div className="messages-app">
       <aside className="messages-app__list">
-        <h1>Сообщения</h1>
+        <h1>{t("messages.title")}</h1>
         {isOrganizerView && groups.length > 0 ? (
           <div className="messages-app__groups">
-            <p className="messages-app__label">По турам</p>
+            <p className="messages-app__label">{t("messages.byTours")}</p>
             {groups.map(({ tour, chats }) => (
               <section key={tour?.slug ?? chats[0]?.id}>
-                <h2>{tour?.title ?? "Тур"}</h2>
+                <h2>{tour ? tx(tour.title) : t("messages.tour")}</h2>
                 {chats.map((chat) => {
                   const guest = userById(chat.travelerId);
                   return (
@@ -111,8 +113,8 @@ export function MessagesApp() {
                       className={cx(active?.id === chat.id && "is-on")}
                       onClick={() => open(chat.id)}
                     >
-                      <span>{guest?.name ?? "Гость"}</span>
-                      <em>1 на 1</em>
+                      <span>{guest?.name ?? t("messages.guest")}</span>
+                      <em>{t("messages.one")}</em>
                     </button>
                   );
                 })}
@@ -123,7 +125,7 @@ export function MessagesApp() {
 
         {travelerChats.length > 0 ? (
           <div className="messages-app__groups">
-            {isOrganizerView ? <p className="messages-app__label">Мои поездки</p> : null}
+            {isOrganizerView ? <p className="messages-app__label">{t("messages.myTrips")}</p> : null}
             {travelerChats.map((chat) => {
               const host = userById(chat.organizerId);
               const tour = tours.find((item) => item.slug === chat.tourSlug);
@@ -134,8 +136,8 @@ export function MessagesApp() {
                   className={cx("messages-app__row", active?.id === chat.id && "is-on")}
                   onClick={() => open(chat.id)}
                 >
-                  <span>{host?.name ?? "Гид"}</span>
-                  <em>{tour?.title}</em>
+                  <span>{host?.name ?? t("messages.guide")}</span>
+                  <em>{tour ? tx(tour.title) : ""}</em>
                 </button>
               );
             })}
@@ -143,14 +145,14 @@ export function MessagesApp() {
         ) : null}
 
         {mine.length === 0 ? (
-          <p className="messages-app__empty">Пока тихо. Чат появится, когда вы оплатите тур.</p>
+          <p className="messages-app__empty">{t("messages.empty")}</p>
         ) : null}
       </aside>
 
       <section className="messages-app__thread">
         {!active ? (
           <div className="messages-app__placeholder">
-            Выберите человека слева. Это всегда диалог один на один, не общая лента группы.
+            {t("messages.pick")}
           </div>
         ) : (
           <>
@@ -162,9 +164,9 @@ export function MessagesApp() {
               <div>
                 <strong>{peer?.name}</strong>
                 {activeTour ? (
-                  <Link href={tourPath(activeTour)}>{activeTour.title}</Link>
+                  <Link href={tourPath(activeTour)}>{tx(activeTour.title)}</Link>
                 ) : (
-                  <span>Тур</span>
+                  <span>{t("messages.tour")}</span>
                 )}
               </div>
             </header>
@@ -177,7 +179,7 @@ export function MessagesApp() {
                     item.senderId === user.id && "is-mine",
                   )}
                 >
-                  {item.text}
+                  {line(item.text)}
                 </p>
               ))}
             </div>
@@ -191,10 +193,10 @@ export function MessagesApp() {
                 rows={2}
                 value={draft}
                 onChange={(event) => setDraft(event.target.value)}
-                placeholder="Сообщение только этому человеку"
+                placeholder={t("messages.ph")}
               />
               <Button type="submit" variant="cta">
-                Отправить
+                {t("messages.send")}
               </Button>
             </form>
           </>

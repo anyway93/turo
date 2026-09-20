@@ -5,6 +5,7 @@ export { reviews, reviewsForTour } from "./reviews";
 export { bookings } from "./bookings";
 export { conversations, messages } from "./chats";
 export { termsSections, termsMeta } from "./content/terms";
+export { termsSectionsEn } from "./content/terms-en";
 export { faqItems } from "./content/faq";
 export {
   money,

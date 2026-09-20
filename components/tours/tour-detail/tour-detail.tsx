@@ -18,26 +18,26 @@ import {
 import { TourGallery } from "@/components/tours/tour-gallery";
 import {
   bookPath,
-  formatRange,
   initials,
-  money,
   reviewsForTour,
   seatsLeft,
 } from "@/data";
 import { useTuro } from "@/lib/turo-store";
+import { useLocale } from "@/lib/locale";
 
 export function TourDetail({ slug }: { slug: string }) {
   const { tourBySlug, userById, user, bookings, conversations } = useTuro();
+  const { t, tx, money, range } = useLocale();
   const tour = tourBySlug(slug);
   const reviews = useMemo(() => (tour ? reviewsForTour(tour.slug) : []), [tour]);
 
   if (!tour) {
     return (
       <Wrapper className="tour-detail tour-detail_empty">
-        <h1>Тур не найден</h1>
-        <p>Возможно, это черновик с другого устройства. Вернитесь в каталог.</p>
+        <h1>{t("tour.missing")}</h1>
+        <p>{t("tour.missingText")}</p>
         <Button asChild>
-          <Link href="/tours/">К каталогу</Link>
+          <Link href="/tours/">{t("tour.toCatalog")}</Link>
         </Button>
       </Wrapper>
     );
@@ -59,62 +59,62 @@ export function TourDetail({ slug }: { slug: string }) {
 
   return (
     <article className="tour-detail">
-      <TourGallery title={tour.title} images={gallery} />
+      <TourGallery title={tx(tour.title)} images={gallery} />
 
       <Wrapper className="tour-detail__layout">
         <div className="tour-detail__main">
           <p className="tour-detail__place">
-            {tour.continent} · {tour.city}, {tour.country}
+            {t(`continent.${tour.continent}`)} · {tx(tour.city)}, {tx(tour.country)}
           </p>
-          <h1 className="tour-detail__title">{tour.title}</h1>
-          <p className="tour-detail__lead">{tour.subtitle}</p>
+          <h1 className="tour-detail__title">{tx(tour.title)}</h1>
+          <p className="tour-detail__lead">{tx(tour.subtitle)}</p>
           <div className="tour-detail__chips">
-            <Badge variant="soft">{tour.durationDays} дней</Badge>
-            <Badge variant="outline">{tour.difficulty}</Badge>
-            <Badge variant="outline">{tour.style}</Badge>
+            <Badge variant="soft">{t("tour.days", { n: tour.durationDays })}</Badge>
+            <Badge variant="outline">{t(`diff.${tour.difficulty}`)}</Badge>
+            <Badge variant="outline">{t(`style.${tour.style}`)}</Badge>
             {tour.tags.map((tag) => (
               <Badge key={tag} variant="secondary">
-                {tag}
+                {tx(tag)}
               </Badge>
             ))}
           </div>
 
           <dl className="tour-detail__facts">
             <div>
-              <dt>Даты</dt>
-              <dd>{formatRange(tour.startDate, tour.endDate)}</dd>
+              <dt>{t("tour.dates")}</dt>
+              <dd>{range(tour.startDate, tour.endDate)}</dd>
             </div>
             <div>
-              <dt>Места</dt>
+              <dt>{t("tour.seats")}</dt>
               <dd>
-                {left > 0 ? `${left} свободно` : "Набор закрыт"} из {tour.seats}
+                {left > 0 ? t("tour.seatsOpen", { n: left }) : t("tour.seatsClosed")} {t("tour.seatsOf", { n: tour.seats })}
               </dd>
             </div>
             <div>
-              <dt>Оценка</dt>
+              <dt>{t("tour.rating")}</dt>
               <dd>
-                {tour.rating.toFixed(1)} · {tour.reviewsCount} отзывов
+                {tour.rating.toFixed(1)} · {t("tour.reviews", { n: tour.reviewsCount })}
               </dd>
             </div>
             <div>
-              <dt>Встреча</dt>
-              <dd>{tour.meetingPoint}</dd>
+              <dt>{t("tour.meet")}</dt>
+              <dd>{tx(tour.meetingPoint)}</dd>
             </div>
           </dl>
 
           <Tabs defaultValue="plan" className="tour-detail__tabs">
             <TabsList>
-              <TabsTrigger value="plan">Программа</TabsTrigger>
-              <TabsTrigger value="inc">Что входит</TabsTrigger>
-              <TabsTrigger value="rev">Отзывы ({reviews.length})</TabsTrigger>
+              <TabsTrigger value="plan">{t("tour.tabPlan")}</TabsTrigger>
+              <TabsTrigger value="inc">{t("tour.tabInc")}</TabsTrigger>
+              <TabsTrigger value="rev">{t("tour.tabRev", { n: reviews.length })}</TabsTrigger>
             </TabsList>
             <TabsContent value="plan">
               <ol className="tour-detail__days">
                 {tour.itinerary.map((day) => (
                   <li key={day.day}>
-                    <span>День {day.day}</span>
-                    <h3>{day.title}</h3>
-                    <p>{day.text}</p>
+                    <span>{t("tour.day", { n: day.day })}</span>
+                    <h3>{tx(day.title)}</h3>
+                    <p>{tx(day.text)}</p>
                   </li>
                 ))}
               </ol>
@@ -122,41 +122,41 @@ export function TourDetail({ slug }: { slug: string }) {
             <TabsContent value="inc">
               <div className="tour-detail__split">
                 <div>
-                  <h3>Включено</h3>
+                  <h3>{t("tour.included")}</h3>
                   <ul>
                     {tour.included.map((item) => (
-                      <li key={item}>{item}</li>
+                      <li key={item}>{tx(item)}</li>
                     ))}
                   </ul>
                 </div>
                 <div>
-                  <h3>Не включено</h3>
+                  <h3>{t("tour.excluded")}</h3>
                   <ul>
                     {tour.excluded.map((item) => (
-                      <li key={item}>{item}</li>
+                      <li key={item}>{tx(item)}</li>
                     ))}
                   </ul>
                 </div>
               </div>
-              <p className="tour-detail__note">{tour.cancellation}.</p>
+              <p className="tour-detail__note">{tx(tour.cancellation)}.</p>
             </TabsContent>
             <TabsContent value="rev">
               <div className="tour-detail__reviews">
                 {reviews.length === 0 ? (
-                  <p>Отзывов пока нет — тур новый или только с этой площадки.</p>
+                  <p>{t("tour.noReviews")}</p>
                 ) : (
                   reviews.map((review) => {
                     const author = userById(review.userId);
                     return (
                       <article key={review.id}>
                         <header>
-                          <strong>{author?.name ?? "Гость"}</strong>
+                          <strong>{author?.name ?? t("tour.guest")}</strong>
                           <span>
                             {review.rating.toFixed(1)} · {review.date}
                           </span>
                         </header>
-                        <h3>{review.title}</h3>
-                        <p>{review.text}</p>
+                        <h3>{tx(review.title)}</h3>
+                        <p>{tx(review.text)}</p>
                       </article>
                     );
                   })
@@ -168,10 +168,10 @@ export function TourDetail({ slug }: { slug: string }) {
 
         <aside className="tour-detail__aside">
           <p className="tour-detail__price">{money(tour.price)}</p>
-          <p className="tour-detail__per">за человека</p>
-          <p className="tour-detail__dates">{formatRange(tour.startDate, tour.endDate)}</p>
+          <p className="tour-detail__per">{t("tour.perPerson")}</p>
+          <p className="tour-detail__dates">{range(tour.startDate, tour.endDate)}</p>
           <p className="tour-detail__seats">
-            {left > 0 ? `Свободно ${left} из ${tour.seats}` : "Набор закрыт"}
+            {left > 0 ? t("tour.seatsLine", { left, total: tour.seats }) : t("tour.seatsClosed")}
           </p>
           {organizer ? (
             <Link href={`/guides/${organizer.id}/`} className="tour-detail__host">
@@ -182,22 +182,22 @@ export function TourDetail({ slug }: { slug: string }) {
               <span>
                 <strong>{organizer.name}</strong>
                 <em>
-                  {organizer.city} · {organizer.rating.toFixed(1)}
+                  {tx(organizer.city)} · {organizer.rating.toFixed(1)}
                 </em>
               </span>
             </Link>
           ) : null}
           {mine ? (
             <Button asChild variant="cta" size="lg">
-              <Link href={chat ? `/messages/?c=${chat.id}` : "/messages/"}>Написать гиду</Link>
+              <Link href={chat ? `/messages/?c=${chat.id}` : "/messages/"}>{t("tour.write")}</Link>
             </Button>
           ) : (
             <Button asChild variant="cta" size="lg" disabled={left === 0}>
-              <Link href={bookPath(tour)}>Оплатить и записаться</Link>
+              <Link href={bookPath(tour)}>{t("tour.pay")}</Link>
             </Button>
           )}
           <Button asChild variant="outline">
-            <Link href="/tours/">Другие туры</Link>
+            <Link href="/tours/">{t("tour.other")}</Link>
           </Button>
         </aside>
       </Wrapper>

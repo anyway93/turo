@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cx } from "@/lib/cx";
+import { useLocale } from "@/lib/locale";
 
 type TocItem = {
   id: string;
@@ -10,6 +11,7 @@ type TocItem = {
 };
 
 export function TermsToc({ items }: { items: TocItem[] }) {
+  const { t } = useLocale();
   const [active, setActive] = useState(items[0]?.id ?? "");
 
   useEffect(() => {
@@ -41,8 +43,8 @@ export function TermsToc({ items }: { items: TocItem[] }) {
   }, [active]);
 
   return (
-    <nav className="terms-page__toc" aria-label="Содержание">
-      <p>Содержание</p>
+    <nav className="terms-page__toc" aria-label={t("terms.toc")}>
+      <p>{t("terms.toc")}</p>
       <ol>
         {items.map((item) => (
           <li key={item.id}>

@@ -6,16 +6,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui";
 import { initials } from "@/data";
 import { TourCard } from "@/components/tours/tour-card";
 import { useTuro } from "@/lib/turo-store";
+import { useLocale } from "@/lib/locale";
 
 export function GuideProfile({ id }: { id: string }) {
   const { userById, tours } = useTuro();
+  const { t, tx } = useLocale();
   const guide = userById(id);
   const hosted = tours.filter((item) => item.organizerId === id);
 
   if (!guide) {
     return (
       <Wrapper className="guide-profile">
-        <h1>Гид не найден</h1>
+        <h1>{t("guide.missing")}</h1>
       </Wrapper>
     );
   }
@@ -29,17 +31,17 @@ export function GuideProfile({ id }: { id: string }) {
         </Avatar>
         <div>
           <p>
-            {guide.city}, {guide.country}
-            {guide.yearsGuiding ? ` · ${guide.yearsGuiding} лет с группами` : ""}
+            {tx(guide.city)}, {tx(guide.country)}
+            {guide.yearsGuiding ? ` · ${t("guide.years", { n: guide.yearsGuiding })}` : ""}
           </p>
           <h1>{guide.name}</h1>
-          <p>{guide.bio}</p>
+          <p>{tx(guide.bio)}</p>
           <p className="guide-profile__meta">
-            {guide.languages.join(" · ")} · {guide.rating.toFixed(1)} · {guide.reviewsCount} отзывов
+            {guide.languages.map((lang) => tx(lang)).join(" · ")} · {guide.rating.toFixed(1)} · {t("guide.reviews", { n: guide.reviewsCount })}
           </p>
         </div>
       </header>
-      <h2>Маршруты</h2>
+      <h2>{t("guide.routes")}</h2>
       <div className="guide-profile__grid">
         {hosted.map((tour, index) => (
           <TourCard key={tour.slug} tour={tour} index={index} />

@@ -14,6 +14,7 @@ import {
 } from "@/components/ui";
 import { demoAccounts } from "@/data";
 import { useTuro } from "@/lib/turo-store";
+import { useLocale } from "@/lib/locale";
 
 function nextPath(search: ReturnType<typeof useSearchParams>) {
   const raw = search.get("next");
@@ -23,6 +24,7 @@ function nextPath(search: ReturnType<typeof useSearchParams>) {
 
 export function LoginScreen() {
   const { login, ready } = useTuro();
+  const { t } = useLocale();
   const router = useRouter();
   const search = useSearchParams();
   const [email, setEmail] = useState("anna@turo.travel");
@@ -31,10 +33,10 @@ export function LoginScreen() {
   function submit() {
     const result = login(email, password);
     if (!result.ok) {
-      toast.error(result.error);
+      toast.error(t(result.error ?? "error.badCredentials"));
       return;
     }
-    toast.success("Вы вошли");
+    toast.success(t("auth.in"));
     router.push(nextPath(search));
   }
 
@@ -46,26 +48,33 @@ export function LoginScreen() {
           submit();
         }}
       >
-        <h1>Войти</h1>
-        <p>Демо-пароль у всех готовых аккаунтов: turo123</p>
+        <h1>{t("auth.loginTitle")}</h1>
+        <p>{t("auth.loginLead")}</p>
         <Field>
-          <FieldLabel>Почта</FieldLabel>
+          <FieldLabel>{t("auth.email")}</FieldLabel>
           <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </Field>
         <Field>
-          <FieldLabel>Пароль</FieldLabel>
+          <FieldLabel>{t("auth.password")}</FieldLabel>
           <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </Field>
         <Button type="submit" variant="cta" size="lg" disabled={!ready}>
-          Войти
+          {t("auth.loginTitle")}
         </Button>
         <p className="auth-screen__alt">
-          Нет профиля? <Link href={`/register/${search.toString() ? `?${search.toString()}` : ""}`}>Регистрация</Link>
+          {t("auth.noProfile")} <Link href={`/register/${search.toString() ? `?${search.toString()}` : ""}`}>{t("auth.register")}</Link>
         </p>
       </form>
       <aside>
-        <p className="auth-screen__kicker">Быстрый вход</p>
-        {demoAccounts.map((account) => (
+        <p className="auth-screen__kicker">{t("auth.quick")}</p>
+        {demoAccounts.map((account) => {
+          const key =
+            account.email.startsWith("anna")
+              ? "demoAnna"
+              : account.email.startsWith("elena")
+                ? "demoElena"
+                : "demoMarco";
+          return (
           <button
             key={account.email}
             type="button"
@@ -74,15 +83,16 @@ export function LoginScreen() {
               setPassword(account.password);
               const result = login(account.email, account.password);
               if (result.ok) {
-                toast.success(account.label);
+                toast.success(t(`auth.${key}`));
                 router.push(nextPath(search));
               }
             }}
           >
-            <strong>{account.label}</strong>
-            <span>{account.hint}</span>
+            <strong>{t(`auth.${key}`)}</strong>
+            <span>{t(`auth.${key}Hint`)}</span>
           </button>
-        ))}
+          );
+        })}
       </aside>
     </Wrapper>
   );
@@ -90,6 +100,7 @@ export function LoginScreen() {
 
 export function RegisterScreen() {
   const { register, ready } = useTuro();
+  const { t } = useLocale();
   const router = useRouter();
   const search = useSearchParams();
   const [name, setName] = useState("");
@@ -100,10 +111,10 @@ export function RegisterScreen() {
   function submit() {
     const result = register({ name, email, password, city });
     if (!result.ok) {
-      toast.error(result.error);
+      toast.error(t(result.error ?? "error.emailTaken"));
       return;
     }
-    toast.success("Профиль создан");
+    toast.success(t("auth.created"));
     router.push(nextPath(search));
   }
 
@@ -115,32 +126,32 @@ export function RegisterScreen() {
           submit();
         }}
       >
-        <h1>Регистрация</h1>
-        <p>Один профиль: можно ездить, можно публиковать свои туры и писать гостям.</p>
+        <h1>{t("auth.registerTitle")}</h1>
+        <p>{t("auth.registerLead")}</p>
         <Field>
-          <FieldLabel>Имя</FieldLabel>
+          <FieldLabel>{t("auth.name")}</FieldLabel>
           <Input value={name} onChange={(e) => setName(e.target.value)} required />
         </Field>
         <Field>
-          <FieldLabel>Город</FieldLabel>
+          <FieldLabel>{t("auth.city")}</FieldLabel>
           <Input value={city} onChange={(e) => setCity(e.target.value)} />
         </Field>
         <Field>
-          <FieldLabel>Почта</FieldLabel>
+          <FieldLabel>{t("auth.email")}</FieldLabel>
           <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </Field>
         <Field>
-          <FieldLabel>Пароль</FieldLabel>
+          <FieldLabel>{t("auth.password")}</FieldLabel>
           <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </Field>
         <p className="auth-screen__legal">
-          Регистрируясь, вы принимаете <Link href="/terms/">пользовательское соглашение</Link>.
+          {t("auth.legal")} <Link href="/terms/">{t("auth.terms")}</Link>.
         </p>
         <Button type="submit" variant="cta" size="lg" disabled={!ready}>
-          Создать профиль
+          {t("auth.createProfile")}
         </Button>
         <p className="auth-screen__alt">
-          Уже есть? <Link href={`/login/${search.toString() ? `?${search.toString()}` : ""}`}>Войти</Link>
+          {t("auth.have")} <Link href={`/login/${search.toString() ? `?${search.toString()}` : ""}`}>{t("auth.loginTitle")}</Link>
         </p>
       </form>
     </Wrapper>

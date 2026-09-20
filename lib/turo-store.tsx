@@ -158,7 +158,7 @@ export function TuroProvider({ children }: { children: ReactNode }) {
           item.email.toLowerCase() === email.trim().toLowerCase() &&
           item.password === password,
       );
-      if (!found) return { ok: false, error: "Неверная почта или пароль" };
+      if (!found) return { ok: false, error: "error.badCredentials" };
       setPersist((prev) => ({ ...prev, sessionUserId: found.id }));
       return { ok: true };
     },
@@ -170,9 +170,9 @@ export function TuroProvider({ children }: { children: ReactNode }) {
     const exists = [...seedUsers, ...readPersist().extraUsers].some(
       (item) => item.email.toLowerCase() === email,
     );
-    if (exists) return { ok: false, error: "Такая почта уже зарегистрирована" };
+    if (exists) return { ok: false, error: "error.emailTaken" };
     if (input.password.length < 6) {
-      return { ok: false, error: "Пароль — от 6 символов" };
+      return { ok: false, error: "error.shortPassword" };
     }
     const created: User = {
       id: uid("usr"),
@@ -203,15 +203,15 @@ export function TuroProvider({ children }: { children: ReactNode }) {
   const book = useCallback(
     (input: BookInput) => {
       const current = users.find((item) => item.id === persist.sessionUserId);
-      if (!current) return { ok: false, error: "Войдите, чтобы оплатить тур" };
+      if (!current) return { ok: false, error: "error.loginToPay" };
       const tour = tours.find((item) => item.slug === input.tourSlug);
-      if (!tour) return { ok: false, error: "Тур не найден" };
+      if (!tour) return { ok: false, error: "error.tourMissing" };
       if (current.id === tour.organizerId) {
-        return { ok: false, error: "Нельзя записаться на свой тур" };
+        return { ok: false, error: "error.ownTour" };
       }
       const left = tour.seats - tour.seatsTaken;
       if (input.guests < 1 || input.guests > left) {
-        return { ok: false, error: "Нет столько свободных мест" };
+        return { ok: false, error: "error.noSeats" };
       }
       const already = bookings.find(
         (item) =>
@@ -247,7 +247,7 @@ export function TuroProvider({ children }: { children: ReactNode }) {
         id: uid("msg"),
         conversationId: conversation.id,
         senderId: current.id,
-        text: `Здравствуйте! Я оплатил(а) тур «${tour.title}», ${input.guests} чел. Напишите, пожалуйста, что дальше.`,
+        text: `__TURO_PAID__|${tour.title}|${input.guests}`,
         createdAt: new Date().toISOString(),
       };
       setPersist((prev) => ({
@@ -271,11 +271,11 @@ export function TuroProvider({ children }: { children: ReactNode }) {
   const createTour = useCallback(
     (input: CreateTourInput) => {
       const current = users.find((item) => item.id === persist.sessionUserId);
-      if (!current) return { ok: false, error: "Войдите, чтобы опубликовать тур" };
+      if (!current) return { ok: false, error: "error.loginToPublish" };
       const slug =
         input.slug.replace(/[^a-z0-9-]/gi, "-").toLowerCase() || uid("tour");
       if (tours.some((item) => item.slug === slug)) {
-        return { ok: false, error: "Такой адрес тура уже занят" };
+        return { ok: false, error: "error.slugTaken" };
       }
       const tour: Tour = {
         ...input,
@@ -314,9 +314,9 @@ export function TuroProvider({ children }: { children: ReactNode }) {
   const ensureChat = useCallback(
     (tourSlug: string) => {
       const current = users.find((item) => item.id === persist.sessionUserId);
-      if (!current) return { ok: false, error: "Войдите" };
+      if (!current) return { ok: false, error: "error.login" };
       const tour = tours.find((item) => item.slug === tourSlug);
-      if (!tour) return { ok: false, error: "Тур не найден" };
+      if (!tour) return { ok: false, error: "error.tourMissing" };
       const paid = bookings.some(
         (item) =>
           item.userId === current.id &&
@@ -324,12 +324,12 @@ export function TuroProvider({ children }: { children: ReactNode }) {
           item.status !== "cancelled",
       );
       if (!paid && current.id !== tour.organizerId) {
-        return { ok: false, error: "Чат откроется после оплаты" };
+        return { ok: false, error: "error.chatAfterPay" };
       }
       const travelerId =
         current.id === tour.organizerId ? current.id : current.id;
       if (current.id === tour.organizerId) {
-        return { ok: false, error: "Откройте чат из списка гостей" };
+        return { ok: false, error: "error.chatFromList" };
       }
       const existing = conversations.find(
         (item) =>
@@ -338,7 +338,7 @@ export function TuroProvider({ children }: { children: ReactNode }) {
           item.organizerId === tour.organizerId,
       );
       if (existing) return { ok: true, conversationId: existing.id };
-      return { ok: false, error: "Чат появится сразу после оплаты" };
+      return { ok: false, error: "error.chatAfterPay2" };
     },
     [bookings, conversations, persist.sessionUserId, tours, users],
   );

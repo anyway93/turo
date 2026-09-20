@@ -3,7 +3,7 @@ import "./create-tour.scss";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Wrapper } from "@/components/layout/wrapper";
 import {
@@ -22,9 +22,11 @@ import { continents, tourPath, tourStyles } from "@/data";
 import { coverPool } from "@/data/media/photos";
 import type { Continent, Difficulty, TourStyle } from "@/data";
 import { useTuro } from "@/lib/turo-store";
+import { useLocale } from "@/lib/locale";
 
 export function CreateTourForm() {
   const { user, createTour, ready } = useTuro();
+  const { t } = useLocale();
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
@@ -38,7 +40,7 @@ export function CreateTourForm() {
   const [seats, setSeats] = useState(8);
   const [start, setStart] = useState("2026-08-01");
   const [cover, setCover] = useState(coverPool[0]);
-  const [plan, setPlan] = useState("День 1: встреча\nДень 2: основной трек\nДень 3: свободный ритм");
+  const [plan, setPlan] = useState("");
 
   const slug = useMemo(
     () =>
@@ -50,15 +52,19 @@ export function CreateTourForm() {
     [title],
   );
 
-  if (!ready) return <Wrapper className="create-tour">Загрузка…</Wrapper>;
+  useEffect(() => {
+    setPlan((current) => current || t("create.defaultPlan"));
+  }, [t]);
+
+  if (!ready) return <Wrapper className="create-tour">{t("create.loading")}</Wrapper>;
 
   if (!user) {
     return (
       <Wrapper className="create-tour">
-        <h1>Нужен вход</h1>
-        <p>Опубликовать маршрут можно после входа. С того же аккаунта можно и покупать чужие туры.</p>
+        <h1>{t("create.needAuth")}</h1>
+        <p>{t("create.needAuthText")}</p>
         <Button asChild variant="cta">
-          <Link href="/register/?next=/create/">Создать аккаунт</Link>
+          <Link href="/register/?next=/create/">{t("create.createAccount")}</Link>
         </Button>
       </Wrapper>
     );
@@ -104,10 +110,10 @@ export function CreateTourForm() {
       cancellation: "Бесплатная отмена за 14 дней",
     });
     if (!result.ok || !result.tour) {
-      toast.error(result.error);
+      toast.error(t(result.error ?? "error.loginToPublish"));
       return;
     }
-    toast.success("Тур опубликован");
+    toast.success(t("create.published"));
     router.push(tourPath(result.tour));
   }
 
@@ -120,32 +126,29 @@ export function CreateTourForm() {
           onSubmit();
         }}
       >
-        <h1>Разместить тур</h1>
-        <p className="create-tour__lead">
-          Коротко: куда, когда, сколько стоит, сколько мест. После публикации люди смогут оплатить и
-          написать вам в чат — по этому маршруту отдельно.
-        </p>
+        <h1>{t("create.title")}</h1>
+        <p className="create-tour__lead">{t("create.lead")}</p>
         <Field>
-          <FieldLabel>Название</FieldLabel>
+          <FieldLabel>{t("create.name")}</FieldLabel>
           <Input value={title} onChange={(event) => setTitle(event.target.value)} required />
         </Field>
         <Field>
-          <FieldLabel>Коротко о маршруте</FieldLabel>
+          <FieldLabel>{t("create.about")}</FieldLabel>
           <Textarea value={subtitle} onChange={(event) => setSubtitle(event.target.value)} rows={3} />
         </Field>
         <div className="create-tour__grid">
           <Field>
-            <FieldLabel>Город</FieldLabel>
+            <FieldLabel>{t("create.city")}</FieldLabel>
             <Input value={city} onChange={(event) => setCity(event.target.value)} required />
           </Field>
           <Field>
-            <FieldLabel>Страна</FieldLabel>
+            <FieldLabel>{t("create.country")}</FieldLabel>
             <Input value={country} onChange={(event) => setCountry(event.target.value)} required />
           </Field>
         </div>
         <div className="create-tour__grid">
           <Field>
-            <FieldLabel>Регион</FieldLabel>
+            <FieldLabel>{t("create.region")}</FieldLabel>
             <Select value={continent} onValueChange={(value) => setContinent(value as Continent)}>
               <SelectTrigger>
                 <SelectValue />
@@ -153,14 +156,14 @@ export function CreateTourForm() {
               <SelectContent>
                 {continents.map((item) => (
                   <SelectItem key={item} value={item}>
-                    {item}
+                    {t(`continent.${item}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </Field>
           <Field>
-            <FieldLabel>Формат</FieldLabel>
+            <FieldLabel>{t("create.style")}</FieldLabel>
             <Select value={style} onValueChange={(value) => setStyle(value as TourStyle)}>
               <SelectTrigger>
                 <SelectValue />
@@ -168,50 +171,50 @@ export function CreateTourForm() {
               <SelectContent>
                 {tourStyles.map((item) => (
                   <SelectItem key={item} value={item}>
-                    {item}
+                    {t(`style.${item}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </Field>
           <Field>
-            <FieldLabel>Сложность</FieldLabel>
+            <FieldLabel>{t("create.difficulty")}</FieldLabel>
             <Select value={difficulty} onValueChange={(value) => setDifficulty(value as Difficulty)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="лёгкий">лёгкий</SelectItem>
-                <SelectItem value="средний">средний</SelectItem>
-                <SelectItem value="сложный">сложный</SelectItem>
+                <SelectItem value="лёгкий">{t("diff.лёгкий")}</SelectItem>
+                <SelectItem value="средний">{t("diff.средний")}</SelectItem>
+                <SelectItem value="сложный">{t("diff.сложный")}</SelectItem>
               </SelectContent>
             </Select>
           </Field>
         </div>
         <div className="create-tour__grid">
           <Field>
-            <FieldLabel>Дней</FieldLabel>
+            <FieldLabel>{t("create.days")}</FieldLabel>
             <Input type="number" min={2} max={21} value={days} onChange={(e) => setDays(Number(e.target.value))} />
           </Field>
           <Field>
-            <FieldLabel>Цена, ₽</FieldLabel>
+            <FieldLabel>{t("create.price")}</FieldLabel>
             <Input type="number" min={1000} value={price} onChange={(e) => setPrice(Number(e.target.value))} />
           </Field>
           <Field>
-            <FieldLabel>Мест</FieldLabel>
+            <FieldLabel>{t("create.seats")}</FieldLabel>
             <Input type="number" min={2} max={20} value={seats} onChange={(e) => setSeats(Number(e.target.value))} />
           </Field>
           <Field>
-            <FieldLabel>Старт</FieldLabel>
+            <FieldLabel>{t("create.start")}</FieldLabel>
             <Input type="date" value={start} onChange={(e) => setStart(e.target.value)} />
           </Field>
         </div>
         <Field>
-          <FieldLabel>Программа по дням (каждый день с новой строки)</FieldLabel>
+          <FieldLabel>{t("create.plan")}</FieldLabel>
           <Textarea rows={6} value={plan} onChange={(event) => setPlan(event.target.value)} />
         </Field>
         <fieldset className="create-tour__covers">
-          <legend>Обложка</legend>
+          <legend>{t("create.cover")}</legend>
           <div>
             {coverPool.slice(0, 12).map((src) => (
               <button
@@ -220,13 +223,13 @@ export function CreateTourForm() {
                 className={cover === src ? "is-on" : undefined}
                 onClick={() => setCover(src)}
                 style={{ backgroundImage: `url(${src})` }}
-                aria-label="Выбрать фото"
+                aria-label={t("create.pickPhoto")}
               />
             ))}
           </div>
         </fieldset>
         <Button type="submit" variant="cta" size="lg">
-          Опубликовать
+          {t("create.publish")}
         </Button>
       </form>
     </Wrapper>

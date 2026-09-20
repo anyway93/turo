@@ -7,26 +7,28 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Wrapper } from "@/components/layout/wrapper";
 import { Button, Field, FieldLabel, Input } from "@/components/ui";
-import { formatRange, money, seatsLeft, tourPath } from "@/data";
+import { seatsLeft, tourPath } from "@/data";
 import { useTuro } from "@/lib/turo-store";
+import { useLocale } from "@/lib/locale";
 
 export function Checkout({ slug }: { slug: string }) {
   const router = useRouter();
   const { tourBySlug, user, book, ready } = useTuro();
+  const { t, tx, money, range } = useLocale();
   const tour = tourBySlug(slug);
   const [guests, setGuests] = useState(1);
   const [card, setCard] = useState("4242424242424242");
   const [name, setName] = useState(user?.name ?? "");
   const [busy, setBusy] = useState(false);
 
-  if (!ready) return <Wrapper className="checkout">Загрузка…</Wrapper>;
+  if (!ready) return <Wrapper className="checkout">{t("checkout.loading")}</Wrapper>;
 
   if (!tour) {
     return (
       <Wrapper className="checkout">
-        <h1>Тур не найден</h1>
+        <h1>{t("checkout.missing")}</h1>
         <Button asChild>
-          <Link href="/tours/">В каталог</Link>
+          <Link href="/tours/">{t("checkout.catalog")}</Link>
         </Button>
       </Wrapper>
     );
@@ -38,14 +40,14 @@ export function Checkout({ slug }: { slug: string }) {
     const next = `/book/?slug=${tour.slug}`;
     return (
       <Wrapper className="checkout">
-        <h1>Сначала войдите</h1>
-        <p>Бронь и оплата доступны после входа. Это учебный платёж, карта не списывается.</p>
+        <h1>{t("checkout.loginTitle")}</h1>
+        <p>{t("checkout.loginText")}</p>
         <div className="checkout__row">
           <Button asChild variant="cta">
-            <Link href={`/login/?next=${encodeURIComponent(next)}`}>Войти</Link>
+            <Link href={`/login/?next=${encodeURIComponent(next)}`}>{t("checkout.login")}</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link href={`/register/?next=${encodeURIComponent(next)}`}>Регистрация</Link>
+            <Link href={`/register/?next=${encodeURIComponent(next)}`}>{t("checkout.register")}</Link>
           </Button>
         </div>
       </Wrapper>
@@ -61,10 +63,10 @@ export function Checkout({ slug }: { slug: string }) {
     const result = book({ tourSlug: tour.slug, guests, cardLast4: last4 || "0000" });
     setBusy(false);
     if (!result.ok) {
-      toast.error(result.error);
+      toast.error(t(result.error ?? "error.loginToPay"));
       return;
     }
-    toast.success("Оплачено. Чат с организатором открыт.");
+    toast.success(t("checkout.paid"));
     router.push(result.conversationId ? `/messages/?c=${result.conversationId}` : "/account/bookings/");
   }
 
@@ -78,17 +80,14 @@ export function Checkout({ slug }: { slug: string }) {
             onPay();
           }}
         >
-          <h1>Оплата тура</h1>
-          <p className="checkout__hint">
-            Учебный платёж: любые 16 цифр. Деньги не списываются. После «оплаты» откроется личный чат
-            с гидом.
-          </p>
+          <h1>{t("checkout.title")}</h1>
+          <p className="checkout__hint">{t("checkout.hint")}</p>
           <Field>
-            <FieldLabel>Имя как в паспорте</FieldLabel>
+            <FieldLabel>{t("checkout.passport")}</FieldLabel>
             <Input value={name} onChange={(event) => setName(event.target.value)} required />
           </Field>
           <Field>
-            <FieldLabel>Гостей</FieldLabel>
+            <FieldLabel>{t("checkout.guests")}</FieldLabel>
             <Input
               type="number"
               min={1}
@@ -98,7 +97,7 @@ export function Checkout({ slug }: { slug: string }) {
             />
           </Field>
           <Field>
-            <FieldLabel>Номер карты</FieldLabel>
+            <FieldLabel>{t("checkout.card")}</FieldLabel>
             <Input
               inputMode="numeric"
               autoComplete="cc-number"
@@ -109,34 +108,34 @@ export function Checkout({ slug }: { slug: string }) {
           </Field>
           <div className="checkout__split">
             <Field>
-              <FieldLabel>Срок</FieldLabel>
+              <FieldLabel>{t("checkout.exp")}</FieldLabel>
               <Input placeholder="12 / 28" defaultValue="12 / 28" />
             </Field>
             <Field>
-              <FieldLabel>CVC</FieldLabel>
+              <FieldLabel>{t("checkout.cvc")}</FieldLabel>
               <Input placeholder="123" defaultValue="123" />
             </Field>
           </div>
           <Button type="submit" variant="cta" size="lg" disabled={busy || left < 1}>
-            Оплатить {money(total)}
+            {t("checkout.pay", { sum: money(total) })}
           </Button>
           <p className="checkout__legal">
-            Нажимая кнопку, вы принимаете{" "}
-            <Link href="/terms/">пользовательское соглашение</Link>.
+            {t("checkout.legal")}{" "}
+            <Link href="/terms/">{t("checkout.terms")}</Link>.
           </p>
         </form>
         <aside>
-          <p className="checkout__kicker">Вы бронируете</p>
-          <h2>{tour.title}</h2>
+          <p className="checkout__kicker">{t("checkout.kicker")}</p>
+          <h2>{tx(tour.title)}</h2>
           <p>
-            {tour.city}, {tour.country}
+            {tx(tour.city)}, {tx(tour.country)}
           </p>
-          <p>{formatRange(tour.startDate, tour.endDate)}</p>
-          <p>{left > 0 ? `${left} мест свободно` : "Мест нет"}</p>
+          <p>{range(tour.startDate, tour.endDate)}</p>
+          <p>{left > 0 ? t("checkout.seats", { n: left }) : t("checkout.noSeats")}</p>
           <p className="checkout__sum">
-            {guests} × {money(tour.price)}
+            {t("checkout.times", { n: guests, price: money(tour.price) })}
           </p>
-          <Link href={tourPath(tour)}>Вернуться к описанию</Link>
+          <Link href={tourPath(tour)}>{t("checkout.back")}</Link>
         </aside>
       </div>
     </Wrapper>

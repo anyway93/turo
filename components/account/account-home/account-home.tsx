@@ -4,20 +4,21 @@ import "./account-home.scss";
 import Link from "next/link";
 import { Wrapper } from "@/components/layout/wrapper";
 import { Avatar, AvatarFallback, AvatarImage, Button } from "@/components/ui";
-import { formatRange, initials, money, tourPath } from "@/data";
+import { initials, tourPath } from "@/data";
 import { useTuro } from "@/lib/turo-store";
-
-const nav = [
-  { href: "/account/", label: "Профиль" },
-  { href: "/account/bookings/", label: "Мои брони" },
-  { href: "/account/tours/", label: "Мои туры" },
-  { href: "/messages/", label: "Сообщения" },
-];
+import { useLocale } from "@/lib/locale";
 
 export function AccountNav() {
+  const { t } = useLocale();
+  const items = [
+    { href: "/account/", label: t("account.profile") },
+    { href: "/account/bookings/", label: t("account.bookings") },
+    { href: "/account/tours/", label: t("account.tours") },
+    { href: "/messages/", label: t("account.messages") },
+  ];
   return (
-    <nav className="account-nav" aria-label="Кабинет">
-      {nav.map((item) => (
+    <nav className="account-nav" aria-label={t("account.nav")}>
+      {items.map((item) => (
         <Link key={item.href} href={item.href}>
           {item.label}
         </Link>
@@ -28,15 +29,16 @@ export function AccountNav() {
 
 export function AccountHome() {
   const { user, ready, logout, bookings, tours } = useTuro();
+  const { t, tx } = useLocale();
 
-  if (!ready) return <Wrapper className="account-home">Загрузка…</Wrapper>;
+  if (!ready) return <Wrapper className="account-home">{t("account.loading")}</Wrapper>;
   if (!user) {
     return (
       <Wrapper className="account-home">
-        <h1>Кабинет</h1>
-        <p>Войдите, чтобы видеть брони, свои туры и чаты.</p>
+        <h1>{t("account.title")}</h1>
+        <p>{t("account.lead")}</p>
         <Button asChild variant="cta">
-          <Link href="/login/?next=/account/">Войти</Link>
+          <Link href="/login/?next=/account/">{t("account.login")}</Link>
         </Button>
       </Wrapper>
     );
@@ -56,27 +58,27 @@ export function AccountHome() {
         <div>
           <h1>{user.name}</h1>
           <p>
-            {user.city} · {user.email}
+            {tx(user.city)} · {user.email}
           </p>
-          <p>{user.bio}</p>
+          <p>{tx(user.bio)}</p>
         </div>
       </header>
       <div className="account-home__stats">
         <article>
           <strong>{mine.length}</strong>
-          <span>броней</span>
+          <span>{t("account.bookingsCount")}</span>
         </article>
         <article>
           <strong>{hosted.length}</strong>
-          <span>опубликованных туров</span>
+          <span>{t("account.toursCount")}</span>
         </article>
         <article>
-          <strong>гость и гид</strong>
-          <span>профиль</span>
+          <strong>{t("account.both")}</strong>
+          <span>{t("account.profileKind")}</span>
         </article>
       </div>
       <Button variant="outline" onClick={logout}>
-        Выйти
+        {t("account.logout")}
       </Button>
     </Wrapper>
   );
@@ -84,12 +86,13 @@ export function AccountHome() {
 
 export function AccountBookings() {
   const { user, ready, bookings, tours } = useTuro();
+  const { t, tx, money, range } = useLocale();
   if (!ready) return null;
   if (!user) {
     return (
       <Wrapper className="account-home">
         <Button asChild>
-          <Link href="/login/?next=/account/bookings/">Войти</Link>
+          <Link href="/login/?next=/account/bookings/">{t("account.login")}</Link>
         </Button>
       </Wrapper>
     );
@@ -99,9 +102,9 @@ export function AccountBookings() {
   return (
     <Wrapper className="account-home">
       <AccountNav />
-      <h1>Мои брони</h1>
+      <h1>{t("account.bookings")}</h1>
       {mine.length === 0 ? (
-        <p>Пока пусто. Выберите тур в каталоге и оплатите — здесь появится запись.</p>
+        <p>{t("account.bookingsEmpty")}</p>
       ) : (
         <ul className="account-home__list">
           {mine.map((item) => {
@@ -109,14 +112,14 @@ export function AccountBookings() {
             return (
               <li key={item.id}>
                 <div>
-                  <strong>{tour?.title ?? item.tourSlug}</strong>
+                  <strong>{tour ? tx(tour.title) : item.tourSlug}</strong>
                   <span>
-                    {item.guests} чел. · {money(item.total)} · {item.status}
+                    {t("account.guests", { n: item.guests })} · {money(item.total)} · {t(`status.${item.status}`)}
                   </span>
-                  {tour ? <em>{formatRange(tour.startDate, tour.endDate)}</em> : null}
+                  {tour ? <em>{range(tour.startDate, tour.endDate)}</em> : null}
                 </div>
                 {tour ? (
-                  <Link href={tourPath(tour)}>Открыть</Link>
+                  <Link href={tourPath(tour)}>{t("account.open")}</Link>
                 ) : null}
               </li>
             );
@@ -129,12 +132,13 @@ export function AccountBookings() {
 
 export function AccountTours() {
   const { user, ready, tours } = useTuro();
+  const { t, tx } = useLocale();
   if (!ready) return null;
   if (!user) {
     return (
       <Wrapper className="account-home">
         <Button asChild>
-          <Link href="/login/?next=/account/tours/">Войти</Link>
+          <Link href="/login/?next=/account/tours/">{t("account.login")}</Link>
         </Button>
       </Wrapper>
     );
@@ -145,24 +149,24 @@ export function AccountTours() {
     <Wrapper className="account-home">
       <AccountNav />
       <div className="account-home__title-row">
-        <h1>Мои туры</h1>
+        <h1>{t("account.tours")}</h1>
         <Button asChild variant="cta" size="sm">
-          <Link href="/create/">Новый тур</Link>
+          <Link href="/create/">{t("account.newTour")}</Link>
         </Button>
       </div>
       {hosted.length === 0 ? (
-        <p>Вы ещё не публиковали маршруты.</p>
+        <p>{t("account.toursEmpty")}</p>
       ) : (
         <ul className="account-home__list">
           {hosted.map((tour) => (
             <li key={tour.slug}>
               <div>
-                <strong>{tour.title}</strong>
+                <strong>{tx(tour.title)}</strong>
                 <span>
-                  {tour.city} · {tour.seatsTaken}/{tour.seats} мест
+                  {tx(tour.city)} · {t("account.seats", { taken: tour.seatsTaken, total: tour.seats })}
                 </span>
               </div>
-              <Link href={tourPath(tour)}>Карточка</Link>
+              <Link href={tourPath(tour)}>{t("account.card")}</Link>
             </li>
           ))}
         </ul>

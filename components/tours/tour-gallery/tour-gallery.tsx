@@ -4,6 +4,7 @@ import "./tour-gallery.scss";
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { MediaImage } from "@/components/widgets/media-image";
 import { cx } from "@/lib/cx";
+import { useLocale } from "@/lib/locale";
 
 const INTERVAL = 6500;
 const FADE = 1200;
@@ -30,6 +31,7 @@ export function TourGallery({
   const indexRef = useRef(0);
   const pausedRef = useRef(false);
   const remaining = useRef(INTERVAL);
+  const { t } = useLocale();
 
   useEffect(() => {
     indexRef.current = index;
@@ -167,7 +169,7 @@ export function TourGallery({
             </p>
 
             <div className="tour-gallery__dock">
-              <div className="tour-gallery__thumbs" role="tablist" aria-label="Фото тура">
+              <div className="tour-gallery__thumbs" role="tablist" aria-label={t("gallery.photos")}>
                 {slides.map((src, slideIndex) => {
                   const on = slideIndex === index;
                   return (
@@ -175,7 +177,7 @@ export function TourGallery({
                       key={`${src}-${slideIndex}`}
                       type="button"
                       role="tab"
-                      aria-label={`Фото ${slideIndex + 1}`}
+                      aria-label={t("gallery.photo", { n: slideIndex + 1 })}
                       aria-selected={on}
                       className={cx("tour-gallery__thumb", on && "is-on")}
                       onClick={() => go(slideIndex)}

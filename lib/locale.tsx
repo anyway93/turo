@@ -9,92 +9,52 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import type { Locale } from "@/lib/i18n/helpers";
+import { flattenMessages, interpolate } from "@/lib/i18n/helpers";
+import { uiEn, uiRu } from "@/lib/i18n/ui";
+import { enLexicon } from "@/lib/i18n/lexicon";
+import { enDays } from "@/lib/i18n/lexicon-days";
+import { enCopy } from "@/lib/i18n/lexicon-copy";
+import { formatRange, money, PAID_MARK } from "@/lib/i18n/format";
 
-export type Locale = "ru" | "en";
+export type { Locale };
 
 const KEY = "turo-locale";
 
-const dict = {
-  ru: {
-    header: {
-      tours: "Туры",
-      create: "Создать тур",
-      how: "Как это работает",
-      login: "Войти",
-      account: "Кабинет",
-      bookings: "Мои брони",
-      messages: "Сообщения",
-      publish: "Разместить тур",
-      logout: "Выйти",
-      menu: "Основное меню",
-      openMenu: "Открыть меню",
-      closeMenu: "Закрыть меню",
-      lang: "Язык",
-    },
-    footer: {
-      lead: "Маршруты от гидов и путешественников. Вы выбираете. Или придумываете сами.",
-      platform: "Платформа",
-      catalog: "Каталог туров",
-      create: "Создать тур",
-      how: "Как это работает",
-      account: "Аккаунт",
-      login: "Войти",
-      register: "Регистрация",
-      bookings: "Мои брони",
-      docs: "Документы",
-      terms: "Пользовательское соглашение",
-      hours: "Пн–Вс, 10:00–21:00",
-    },
-  },
-  en: {
-    header: {
-      tours: "Tours",
-      create: "Create a tour",
-      how: "How it works",
-      login: "Sign in",
-      account: "Account",
-      bookings: "My trips",
-      messages: "Messages",
-      publish: "List a tour",
-      logout: "Log out",
-      menu: "Main menu",
-      openMenu: "Open menu",
-      closeMenu: "Close menu",
-      lang: "Language",
-    },
-    footer: {
-      lead: "Routes from guides and travellers. You choose. Or you invent your own.",
-      platform: "Platform",
-      catalog: "Tour catalog",
-      create: "Create a tour",
-      how: "How it works",
-      account: "Account",
-      login: "Sign in",
-      register: "Register",
-      bookings: "My trips",
-      docs: "Legal",
-      terms: "Terms of service",
-      hours: "Mon–Sun, 10:00–21:00",
-    },
-  },
-} as const;
+const tables: Record<Locale, Record<string, string>> = {
+  ru: flattenMessages(uiRu as unknown as Record<string, unknown>),
+  en: flattenMessages(uiEn as unknown as Record<string, unknown>),
+};
 
-function get(source: unknown, path: string): string {
-  return path.split(".").reduce<unknown>((node, key) => {
-    if (node && typeof node === "object" && key in node) {
-      return (node as Record<string, unknown>)[key];
-    }
-    return "";
-  }, source) as string;
-}
+const lexicon = new Map<string, string>([
+  ...Object.entries(enLexicon),
+  ...Object.entries(enDays),
+  ...Object.entries(enCopy),
+]);
+
+export type Translate = (key: string, vars?: Record<string, string | number>) => string;
 
 type LocaleApi = {
   locale: Locale;
   setLocale: (next: Locale) => void;
-  t: (path: string) => string;
+  t: Translate;
+  tx: (text: string) => string;
+  tag: string;
+  money: (value: number) => string;
+  range: (start: string, end: string) => string;
+  line: (text: string) => string;
 };
 
 const LocaleContext = createContext<LocaleApi | null>(null);
+
+function translatePhrase(text: string) {
+  const hit = lexicon.get(text);
+  if (hit) return hit;
+  if (/^День\s+\d+/.test(text)) {
+    return text.replace(/^День/, "Day").replace("в пути", "on the way");
+  }
+  return text;
+}
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("ru");
@@ -113,14 +73,28 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     setLocaleState(next);
   }, []);
 
-  const value = useMemo<LocaleApi>(
-    () => ({
+  const value = useMemo<LocaleApi>(() => {
+    const table = tables[locale];
+    const ruTable = tables.ru;
+    const t: Translate = (key, vars) => interpolate(table[key] || ruTable[key] || key, vars);
+    const tx = (text: string) => (locale === "en" ? translatePhrase(text) : text);
+    return {
       locale,
       setLocale,
-      t: (path) => get(dict[locale], path) || get(dict.ru, path),
-    }),
-    [locale, setLocale],
-  );
+      tag: locale === "en" ? "en-GB" : "ru-RU",
+      t,
+      tx,
+      money: (value) => money(value, locale),
+      range: (start, end) => formatRange(start, end, locale),
+      line: (text) => {
+        if (text.startsWith(`${PAID_MARK}|`)) {
+          const parts = text.split("|");
+          return t("messages.paidHello", { title: tx(parts[1] ?? ""), n: parts[2] ?? "" });
+        }
+        return tx(text);
+      },
+    };
+  }, [locale, setLocale]);
 
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
 }
