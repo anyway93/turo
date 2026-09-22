@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Wrapper } from "@/components/layout/wrapper";
 import { Button, Field, FieldLabel, Input } from "@/components/ui";
 import { leftover, nextOpenStart, takenMap, tourPath, tripEnd } from "@/data";
+import { canBook } from "@/lib/access";
 import { useTuro } from "@/lib/turo-store";
 import { useLocale } from "@/lib/locale";
 import { DeparturePicker } from "@/components/tours/departure-picker";
@@ -57,9 +58,21 @@ export function Checkout({ slug, date: dateQuery }: { slug: string; date?: strin
             <Link href={`/login/?next=${encodeURIComponent(next)}`}>{t("checkout.login")}</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link href={`/register/?next=${encodeURIComponent(next)}`}>{t("checkout.register")}</Link>
+            <Link href={`/register/?role=traveler&next=${encodeURIComponent(next)}`}>{t("checkout.register")}</Link>
           </Button>
         </div>
+      </Wrapper>
+    );
+  }
+
+  if (!canBook(user.role)) {
+    return (
+      <Wrapper className="checkout">
+        <h1>{t("checkout.wrongRole")}</h1>
+        <p>{t("checkout.wrongRoleText")}</p>
+        <Button asChild variant="cta">
+          <Link href="/account/">{t("checkout.toAccount")}</Link>
+        </Button>
       </Wrapper>
     );
   }

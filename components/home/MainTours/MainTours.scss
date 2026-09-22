@@ -22,6 +22,16 @@
     line-height: 1.55;
   }
 
+  &__empty {
+    margin-bottom: rem(28px);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(10px);
+  }
+
   &__grid {
     display: grid;
     gap: rem(16px);

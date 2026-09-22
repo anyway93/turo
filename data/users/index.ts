@@ -1,28 +1,26 @@
+import { admins } from "./admins";
 import { moreTravelers } from "./more-travelers";
 import { organizers } from "./organizers";
 import { travelers } from "./travelers";
 import type { User } from "../types";
 
-export const users: User[] = [...organizers, ...travelers, ...moreTravelers];
+export const users: User[] = [...admins, ...organizers, ...travelers, ...moreTravelers];
 
 export const demoAccounts = [
   {
     email: "anna@turo.travel",
     password: "turo123",
-    label: "Путешественница Анна",
-    hint: "Есть брони и чаты с гидами",
+    key: "demoAnna",
   },
   {
     email: "elena@turo.travel",
     password: "turo123",
-    label: "Организатор Елена",
-    hint: "Чаты разложены по её турам",
+    key: "demoElena",
   },
   {
-    email: "marco@turo.travel",
+    email: "admin@turo.travel",
     password: "turo123",
-    label: "Организатор Marco",
-    hint: "Итальянские маршруты и гости",
+    key: "demoAdmin",
   },
 ] as const;
 

@@ -1,0 +1,103 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.users-admin {
+  &__tools {
+    display: grid;
+    gap: rem(12px);
+    max-width: rem(720px);
+    margin-top: rem(20px);
+  }
+
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(8px);
+
+    button {
+      padding: rem(8px) rem(14px);
+      color: $muted;
+      background: transparent;
+      border: 1px solid $border;
+      transition:
+        color 0.45s $transition-timing-function,
+        border-color 0.45s $transition-timing-function,
+        background-color 0.45s $transition-timing-function;
+
+      &.is-on {
+        color: $ink;
+        background: $white;
+        border-color: $ink;
+      }
+
+      @include hover() {
+        color: $ink;
+        border-color: color-mix(in srgb, $ink 40%, $border);
+      }
+    }
+  }
+
+  display: grid;
+  gap: rem(16px);
+  margin-top: rem(24px);
+
+  @media #{media('>=', t)} {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  &__lead {
+    max-width: 36em;
+    margin-top: rem(8px);
+    color: $muted;
+    line-height: 1.55;
+  }
+
+  &__card {
+    display: grid;
+    gap: rem(12px);
+    padding: rem(18px);
+    background: $card;
+    border: 1px solid $border;
+    transition:
+      border-color 0.55s $transition-timing-function,
+      background-color 0.55s $transition-timing-function;
+
+    @include hover() {
+      border-color: color-mix(in srgb, $ink 28%, $border);
+      background: $white;
+    }
+
+    header {
+      display: flex;
+      gap: rem(12px);
+      align-items: center;
+    }
+
+    strong,
+    span,
+    em {
+      display: block;
+    }
+
+    span,
+    em {
+      margin-top: rem(2px);
+      color: $muted;
+      font-size: rem(13px);
+      font-style: normal;
+    }
+  }
+
+  &__locked {
+    margin: 0;
+    color: $muted;
+    font-size: rem(14px);
+    line-height: 1.5;
+  }
+
+  &__bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(8px);
+  }
+}

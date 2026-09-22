@@ -23,6 +23,7 @@ import { continents, tourPath, tourStyles } from "@/data";
 import { upcomingWeekdays, tripEnd } from "@/data/dates";
 import { coverPool } from "@/data/media/photos";
 import type { Continent, Difficulty, TourStyle } from "@/data";
+import { canHost } from "@/lib/access";
 import { useTuro } from "@/lib/turo-store";
 import { useLocale } from "@/lib/locale";
 import { cx } from "@/lib/cx";
@@ -130,7 +131,24 @@ export function CreateTourForm() {
             <h1>{t("create.needAuth")}</h1>
             <p>{t("create.needAuthText")}</p>
             <Button asChild variant="cta" size="lg">
-              <Link href="/register/?next=/create/">{t("create.createAccount")}</Link>
+              <Link href="/register/?role=organizer&next=/create/">{t("create.createAccount")}</Link>
+            </Button>
+          </div>
+        </Wrapper>
+      </div>
+    );
+  }
+
+  if (!canHost(user.role)) {
+    return (
+      <div className="create-tour">
+        <Wrapper>
+          <div className="create-tour__gate">
+            <Eyebrow>{t("create.kicker")}</Eyebrow>
+            <h1>{t("create.wrongRole")}</h1>
+            <p>{t("create.wrongRoleText")}</p>
+            <Button asChild variant="cta" size="lg">
+              <Link href="/tours/">{t("tour.toCatalog")}</Link>
             </Button>
           </div>
         </Wrapper>

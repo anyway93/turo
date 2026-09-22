@@ -187,7 +187,7 @@ export const organizers: User[] = [
     email: "leyla@turo.travel",
     password: "turo123",
     name: "Лейла Ахмедова",
-    role: "both",
+    role: "organizer",
     avatar: portraits[18],
     city: "Баку",
     country: "Азербайджан",

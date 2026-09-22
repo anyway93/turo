@@ -2,7 +2,7 @@
 import "./tour-detail.scss";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Wrapper } from "@/components/layout/wrapper";
 import {
   Avatar,
@@ -16,33 +16,19 @@ import {
   TabsTrigger,
 } from "@/components/ui";
 import { TourGallery } from "@/components/tours/tour-gallery";
-import { DeparturePicker } from "@/components/tours/departure-picker";
-import {
-  bookPath,
-  initials,
-  leftover,
-  nextOpenStart,
-  reviewsForTour,
-  takenMap,
-} from "@/data";
+import { TourAlbum, tourAlbum } from "@/components/tours/tour-album";
+import { ReviewCard } from "@/components/tours/review-card";
+import { bookPath, initials, leftover, reviewsForTour } from "@/data";
+import { canBook, canManageTour } from "@/lib/access";
+import { tourLetter } from "@/lib/tour-letter";
 import { useTuro } from "@/lib/turo-store";
 import { useLocale } from "@/lib/locale";
 
 export function TourDetail({ slug }: { slug: string }) {
   const { tourBySlug, userById, user, bookings, conversations } = useTuro();
-  const { t, tx, money } = useLocale();
+  const { t, tx, money, locale } = useLocale();
   const tour = tourBySlug(slug);
   const reviews = useMemo(() => (tour ? reviewsForTour(tour.slug) : []), [tour]);
-  const [date, setDate] = useState("");
-
-  useEffect(() => {
-    if (!tour) return;
-    setDate((current) =>
-      tour.departures.some((item) => item.start === current)
-        ? current
-        : (nextOpenStart(tour) ?? ""),
-    );
-  }, [tour]);
 
   if (!tour) {
     return (
@@ -57,7 +43,24 @@ export function TourDetail({ slug }: { slug: string }) {
   }
 
   const organizer = userById(tour.organizerId);
-  const left = leftover(tour, date);
+  const letter = tourLetter({
+    locale,
+    title: tx(tour.title),
+    subtitle: tx(tour.subtitle),
+    city: tx(tour.city),
+    country: tx(tour.country),
+    days: tour.durationDays,
+    seats: tour.seats,
+    style: t(`style.${tour.style}`),
+    styleKey: tour.style,
+    difficulty: t(`diff.${tour.difficulty}`),
+    meeting: tx(tour.meetingPoint),
+    cancellation: tx(tour.cancellation),
+    included: tour.included.map((item) => tx(item)),
+    excluded: tour.excluded.map((item) => tx(item)),
+    host: organizer?.name ?? "",
+  });
+  const open = leftover(tour) > 0;
   const mine = bookings.some(
     (item) =>
       user &&
@@ -103,9 +106,7 @@ export function TourDetail({ slug }: { slug: string }) {
             </div>
             <div>
               <dt>{t("tour.seats")}</dt>
-              <dd>
-                {left > 0 ? t("tour.seatsOpen", { n: left }) : t("tour.seatsClosed")} {t("tour.seatsOf", { n: tour.seats })}
-              </dd>
+              <dd>{open ? t("tour.group", { n: tour.seats }) : t("tour.seatsClosed")}</dd>
             </div>
             <div>
               <dt>{t("tour.rating")}</dt>
@@ -118,6 +119,17 @@ export function TourDetail({ slug }: { slug: string }) {
               <dd>{tx(tour.meetingPoint)}</dd>
             </div>
           </dl>
+
+          <section className="tour-detail__letter">
+            <p className="tour-detail__letter-kicker">{t("tour.letterKicker")}</p>
+            {letter.map((paragraph) => (
+              <p key={paragraph} className="tour-detail__script">
+                {paragraph}
+              </p>
+            ))}
+          </section>
+
+          <TourAlbum title={tx(tour.title)} images={tourAlbum(tour)} />
 
           <Tabs defaultValue="plan" className="tour-detail__tabs">
             <TabsList>
@@ -165,16 +177,14 @@ export function TourDetail({ slug }: { slug: string }) {
                   reviews.map((review) => {
                     const author = userById(review.userId);
                     return (
-                      <article key={review.id}>
-                        <header>
-                          <strong>{author?.name ?? t("tour.guest")}</strong>
-                          <span>
-                            {review.rating.toFixed(1)} · {review.date}
-                          </span>
-                        </header>
-                        <h3>{tx(review.title)}</h3>
-                        <p>{tx(review.text)}</p>
-                      </article>
+                      <ReviewCard
+                        key={review.id}
+                        author={author?.name ?? t("tour.guest")}
+                        rating={review.rating}
+                        date={review.date}
+                        title={tx(review.title)}
+                        text={tx(review.text)}
+                      />
                     );
                   })
                 )}
@@ -186,18 +196,6 @@ export function TourDetail({ slug }: { slug: string }) {
         <aside className="tour-detail__aside">
           <p className="tour-detail__price">{money(tour.price)}</p>
           <p className="tour-detail__per">{t("tour.perPerson")}</p>
-          <DeparturePicker
-            mode="pick"
-            durationDays={tour.durationDays}
-            dates={tour.departures.map((item) => item.start)}
-            value={date}
-            seats={tour.seats}
-            taken={takenMap(tour)}
-            onValueChange={setDate}
-          />
-          <p className="tour-detail__seats">
-            {left > 0 ? t("tour.seatsLine", { left, total: tour.seats }) : t("tour.seatsClosed")}
-          </p>
           {organizer ? (
             <Link href={`/guides/${organizer.id}/`} className="tour-detail__host">
               <Avatar>
@@ -212,17 +210,27 @@ export function TourDetail({ slug }: { slug: string }) {
               </span>
             </Link>
           ) : null}
-          {mine ? (
+          {canManageTour(user, tour.organizerId) ? (
             <Button asChild variant="cta" size="lg">
-              <Link href={chat ? `/messages/?c=${chat.id}` : "/messages/"}>{t("tour.write")}</Link>
+              <Link href={`/account/tours/${tour.slug}/`}>{t("tour.manage")}</Link>
             </Button>
+          ) : !user || canBook(user.role) ? (
+            mine ? (
+              <Button asChild variant="cta" size="lg">
+                <Link href={chat ? `/messages/?c=${chat.id}` : "/messages/"}>{t("tour.write")}</Link>
+              </Button>
+            ) : (
+              <Button asChild variant="cta" size="lg" disabled={!open}>
+                <Link href={bookPath(tour)}>{open ? t("tour.pay") : t("tour.seatsClosed")}</Link>
+              </Button>
+            )
           ) : (
-            <Button asChild variant="cta" size="lg" disabled={left === 0 || !date}>
-              <Link href={bookPath(tour, date)}>{t("tour.pay")}</Link>
-            </Button>
+            <p className="tour-detail__lock">{t("tour.hostNote")}</p>
           )}
           <Button asChild variant="outline">
-            <Link href="/tours/">{t("tour.other")}</Link>
+            <Link href={user && !canBook(user.role) ? "/account/tours/" : "/tours/"}>
+              {user?.role === "admin" ? t("tour.manageAll") : user?.role === "organizer" ? t("header.myTours") : t("tour.other")}
+            </Link>
           </Button>
         </aside>
       </Wrapper>

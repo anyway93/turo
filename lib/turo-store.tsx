@@ -26,8 +26,15 @@ import {
   type User,
 } from "@/data";
 import type { UserRole as Role } from "@/data/types";
+import { canBook, canHost, canManageTour, canModerate } from "@/lib/access";
 
 const KEY = "turo-live-v1";
+
+type TourPatch = Partial<
+  Pick<Tour, "title" | "subtitle" | "city" | "country" | "price" | "seats" | "meetingPoint">
+>;
+
+type UserPatch = Partial<Pick<User, "name" | "city" | "bio" | "role">>;
 
 type Persist = {
   sessionUserId: string | null;
@@ -37,6 +44,10 @@ type Persist = {
   extraConversations: Conversation[];
   extraMessages: ChatMessage[];
   seatTaken: Record<string, number>;
+  removedTourSlugs: string[];
+  tourPatches: Record<string, TourPatch>;
+  removedUserIds: string[];
+  userPatches: Record<string, UserPatch>;
 };
 
 const empty: Persist = {
@@ -47,6 +58,10 @@ const empty: Persist = {
   extraConversations: [],
   extraMessages: [],
   seatTaken: {},
+  removedTourSlugs: [],
+  tourPatches: {},
+  removedUserIds: [],
+  userPatches: {},
 };
 
 type RegisterInput = {
@@ -54,6 +69,7 @@ type RegisterInput = {
   email: string;
   password: string;
   city: string;
+  role: "traveler" | "organizer";
 };
 
 type BookInput = {
@@ -78,6 +94,10 @@ type StoreApi = {
   logout: () => void;
   book: (input: BookInput) => { ok: boolean; error?: string; conversationId?: string; bookingId?: string };
   createTour: (input: CreateTourInput) => { ok: boolean; error?: string; tour?: Tour };
+  updateTour: (slug: string, patch: TourPatch) => { ok: boolean; error?: string };
+  deleteTour: (slug: string) => { ok: boolean; error?: string };
+  updateUser: (id: string, patch: UserPatch) => { ok: boolean; error?: string };
+  deleteUser: (id: string) => { ok: boolean; error?: string };
   sendMessage: (conversationId: string, text: string) => void;
   userById: (id: string) => User | undefined;
   tourBySlug: (slug: string) => Tour | undefined;
@@ -91,7 +111,14 @@ function readPersist(): Persist {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return empty;
-    return { ...empty, ...JSON.parse(raw) };
+    const parsed = { ...empty, ...JSON.parse(raw) } as Persist;
+    return {
+      ...parsed,
+      removedTourSlugs: parsed.removedTourSlugs ?? [],
+      tourPatches: parsed.tourPatches ?? {},
+      removedUserIds: parsed.removedUserIds ?? [],
+      userPatches: parsed.userPatches ?? {},
+    };
   } catch {
     return empty;
   }
@@ -99,6 +126,15 @@ function readPersist(): Persist {
 
 function uid(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
+}
+
+function asRole(role: string): Role {
+  if (role === "traveler" || role === "organizer" || role === "admin") return role;
+  return "organizer";
+}
+
+function normalizeUser(user: User): User {
+  return { ...user, role: asRole(user.role) };
 }
 
 function applySeats(tour: Tour, seatTaken: Record<string, number>): Tour {
@@ -138,15 +174,19 @@ export function TuroProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(KEY, JSON.stringify(persist));
   }, [persist, ready]);
 
-  const users = useMemo(
-    () => [...seedUsers, ...persist.extraUsers],
-    [persist.extraUsers],
-  );
+  const users = useMemo(() => {
+    const removed = new Set(persist.removedUserIds);
+    return [...seedUsers, ...persist.extraUsers]
+      .filter((item) => !removed.has(item.id))
+      .map((item) => normalizeUser({ ...item, ...persist.userPatches[item.id] }));
+  }, [persist.extraUsers, persist.removedUserIds, persist.userPatches]);
 
-  const tours = useMemo(
-    () => [...seedTours, ...persist.extraTours].map((tour) => applySeats(tour, persist.seatTaken)),
-    [persist.extraTours, persist.seatTaken],
-  );
+  const tours = useMemo(() => {
+    const removed = new Set(persist.removedTourSlugs);
+    return [...seedTours, ...persist.extraTours]
+      .filter((tour) => !removed.has(tour.slug))
+      .map((tour) => applySeats({ ...tour, ...persist.tourPatches[tour.slug] }, persist.seatTaken));
+  }, [persist.extraTours, persist.removedTourSlugs, persist.seatTaken, persist.tourPatches]);
 
   const bookings = useMemo(
     () =>
@@ -208,7 +248,7 @@ export function TuroProvider({ children }: { children: ReactNode }) {
       email,
       password: input.password,
       name: input.name.trim(),
-      role: "both",
+      role: input.role === "organizer" ? "organizer" : "traveler",
       avatar: "",
       city: input.city.trim() || "—",
       country: "—",
@@ -233,6 +273,7 @@ export function TuroProvider({ children }: { children: ReactNode }) {
     (input: BookInput) => {
       const current = users.find((item) => item.id === persist.sessionUserId);
       if (!current) return { ok: false, error: "error.loginToPay" };
+      if (!canBook(current.role)) return { ok: false, error: "error.roleBook" };
       const tour = tours.find((item) => item.slug === input.tourSlug);
       if (!tour) return { ok: false, error: "error.tourMissing" };
       if (current.id === tour.organizerId) {
@@ -304,6 +345,7 @@ export function TuroProvider({ children }: { children: ReactNode }) {
     (input: CreateTourInput) => {
       const current = users.find((item) => item.id === persist.sessionUserId);
       if (!current) return { ok: false, error: "error.loginToPublish" };
+      if (!canHost(current.role)) return { ok: false, error: "error.roleHost" };
       const slug =
         input.slug.replace(/[^a-z0-9-]/gi, "-").toLowerCase() || uid("tour");
       if (tours.some((item) => item.slug === slug)) {
@@ -323,6 +365,132 @@ export function TuroProvider({ children }: { children: ReactNode }) {
         extraTours: [...prev.extraTours, tour],
       }));
       return { ok: true, tour };
+    },
+    [persist.sessionUserId, tours, users],
+  );
+
+  const updateTour = useCallback(
+    (slug: string, patch: TourPatch) => {
+      const current = users.find((item) => item.id === persist.sessionUserId);
+      const tour = tours.find((item) => item.slug === slug);
+      if (!current || !tour || !canManageTour(current, tour.organizerId)) {
+        return { ok: false, error: "error.forbidden" };
+      }
+      const next: TourPatch = {};
+      if (patch.title !== undefined) {
+        const title = patch.title.trim();
+        if (!title) return { ok: false, error: "error.badFields" };
+        next.title = title;
+      }
+      if (patch.subtitle !== undefined) next.subtitle = patch.subtitle.trim();
+      if (patch.city !== undefined) next.city = patch.city.trim() || tour.city;
+      if (patch.country !== undefined) next.country = patch.country.trim() || tour.country;
+      if (patch.meetingPoint !== undefined) next.meetingPoint = patch.meetingPoint.trim();
+      if (patch.price !== undefined) {
+        if (!Number.isFinite(patch.price) || patch.price < 1) {
+          return { ok: false, error: "error.badFields" };
+        }
+        next.price = Math.round(patch.price);
+      }
+      if (patch.seats !== undefined) {
+        const seats = Math.round(patch.seats);
+        if (seats < 1 || seats < tour.seatsTaken) {
+          return { ok: false, error: "error.seatsLow" };
+        }
+        next.seats = seats;
+      }
+      setPersist((prev) => ({
+        ...prev,
+        tourPatches: {
+          ...prev.tourPatches,
+          [slug]: { ...prev.tourPatches[slug], ...next },
+        },
+      }));
+      return { ok: true };
+    },
+    [persist.sessionUserId, tours, users],
+  );
+
+  const deleteTour = useCallback(
+    (slug: string) => {
+      const current = users.find((item) => item.id === persist.sessionUserId);
+      const tour = tours.find((item) => item.slug === slug);
+      if (!current || !tour || !canManageTour(current, tour.organizerId)) {
+        return { ok: false, error: "error.forbidden" };
+      }
+      setPersist((prev) => ({
+        ...prev,
+        removedTourSlugs: prev.removedTourSlugs.includes(slug)
+          ? prev.removedTourSlugs
+          : [...prev.removedTourSlugs, slug],
+        extraTours: prev.extraTours.filter((item) => item.slug !== slug),
+      }));
+      return { ok: true };
+    },
+    [persist.sessionUserId, tours, users],
+  );
+
+  const updateUser = useCallback(
+    (id: string, patch: UserPatch) => {
+      const current = users.find((item) => item.id === persist.sessionUserId);
+      const target = users.find((item) => item.id === id);
+      if (!current || !canModerate(current.role) || !target) {
+        return { ok: false, error: "error.forbidden" };
+      }
+      const next: UserPatch = {};
+      if (patch.name !== undefined) {
+        const name = patch.name.trim();
+        if (!name) return { ok: false, error: "error.badFields" };
+        next.name = name;
+      }
+      if (patch.city !== undefined) next.city = patch.city.trim() || "—";
+      if (patch.bio !== undefined) next.bio = patch.bio.trim();
+      if (patch.role !== undefined) {
+        if (patch.role !== "traveler" && patch.role !== "organizer" && patch.role !== "admin") {
+          return { ok: false, error: "error.forbidden" };
+        }
+        if (id === current.id && patch.role !== current.role) {
+          return { ok: false, error: "error.ownRole" };
+        }
+        const admins = users.filter((item) => item.role === "admin").length;
+        if (target.role === "admin" && patch.role !== "admin" && admins <= 1) {
+          return { ok: false, error: "error.lastAdmin" };
+        }
+        next.role = patch.role;
+      }
+      setPersist((prev) => ({
+        ...prev,
+        userPatches: {
+          ...prev.userPatches,
+          [id]: { ...prev.userPatches[id], ...next },
+        },
+      }));
+      return { ok: true };
+    },
+    [persist.sessionUserId, users],
+  );
+
+  const deleteUser = useCallback(
+    (id: string) => {
+      const current = users.find((item) => item.id === persist.sessionUserId);
+      const target = users.find((item) => item.id === id);
+      if (!current || !canModerate(current.role) || !target) {
+        return { ok: false, error: "error.forbidden" };
+      }
+      if (id === current.id) return { ok: false, error: "error.ownDelete" };
+      if (target.role === "admin" && users.filter((item) => item.role === "admin").length <= 1) {
+        return { ok: false, error: "error.lastAdmin" };
+      }
+      if (tours.some((item) => item.organizerId === id)) {
+        return { ok: false, error: "error.userHasTours" };
+      }
+      setPersist((prev) => ({
+        ...prev,
+        removedUserIds: prev.removedUserIds.includes(id) ? prev.removedUserIds : [...prev.removedUserIds, id],
+        extraUsers: prev.extraUsers.filter((item) => item.id !== id),
+        sessionUserId: prev.sessionUserId === id ? null : prev.sessionUserId,
+      }));
+      return { ok: true };
     },
     [persist.sessionUserId, tours, users],
   );
@@ -389,6 +557,10 @@ export function TuroProvider({ children }: { children: ReactNode }) {
       logout,
       book,
       createTour,
+      updateTour,
+      deleteTour,
+      updateUser,
+      deleteUser,
       sendMessage,
       userById,
       tourBySlug,
@@ -407,6 +579,10 @@ export function TuroProvider({ children }: { children: ReactNode }) {
       logout,
       book,
       createTour,
+      updateTour,
+      deleteTour,
+      updateUser,
+      deleteUser,
       sendMessage,
       userById,
       tourBySlug,

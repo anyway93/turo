@@ -41,12 +41,33 @@
   &__roles {
     display: grid;
     gap: rem(10px);
-    margin-top: rem(8px);
 
-    label {
-      display: flex;
-      gap: rem(10px);
-      align-items: center;
+    button {
+      display: grid;
+      gap: rem(4px);
+      width: 100%;
+      padding: rem(14px) rem(16px);
+      text-align: left;
+      background: $card;
+      border: 1px solid $border;
+      transition:
+        border-color 0.55s $transition-timing-function,
+        background-color 0.55s $transition-timing-function;
+
+      span {
+        color: $muted;
+        font-size: rem(13px);
+        line-height: 1.45;
+      }
+
+      &.is-on {
+        border-color: $ink;
+        background: $white;
+      }
+
+      @include hover() {
+        border-color: $ocean;
+      }
     }
   }
 

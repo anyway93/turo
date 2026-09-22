@@ -1,0 +1,88 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.review-card {
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: rem(12px);
+  }
+
+  strong {
+    font-size: rem(13px);
+    font-weight: 500;
+  }
+
+  h3 {
+    margin: rem(6px) 0;
+    font-size: rem(18px);
+    font-weight: 500;
+  }
+
+  &__meta {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: rem(10px);
+    color: $muted;
+    font-size: rem(13px);
+  }
+
+  &__stars {
+    display: inline-flex;
+    gap: rem(2px);
+  }
+
+  &__star {
+    position: relative;
+    width: rem(14px);
+    height: rem(14px);
+    color: color-mix(in srgb, $gold 28%, $border);
+
+    svg {
+      width: rem(14px);
+      height: rem(14px);
+      fill: currentColor;
+      stroke: currentColor;
+    }
+  }
+
+  &__star-fill {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    color: $gold;
+  }
+
+  &__text {
+    color: $muted;
+    font-size: rem(14px);
+    line-height: 1.55;
+  }
+
+  &__text_folded {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+  }
+
+  &__more {
+    height: auto;
+    margin-top: rem(10px);
+    padding: 0;
+  }
+}
+
+.review-card__dialog {
+  width: min(100% - rem(32px), rem(560px));
+
+  .dialog__description {
+    color: $ink;
+    font-size: rem(16px);
+    line-height: 1.6;
+  }
+}

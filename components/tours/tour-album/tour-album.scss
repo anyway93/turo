@@ -1,0 +1,305 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.tour-album {
+  margin-top: rem(28px);
+  --move: 0.9s;
+  --in-x: 5%;
+  --out-x: -4%;
+  @include rise(1s, 0.08s);
+
+  &[data-dir="-1"] {
+    --in-x: -5%;
+    --out-x: 4%;
+  }
+
+  &__kicker {
+    margin: 0 0 rem(14px);
+    color: $ocean;
+    font-size: rem(12px);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  &__layout {
+    --frame: #{rem(360px)};
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) rem(76px);
+    gap: rem(8px);
+    align-items: stretch;
+
+    @media #{media('>=', m)} {
+      --frame: #{rem(520px)};
+      grid-template-columns: minmax(0, 1fr) rem(116px);
+      gap: rem(12px);
+    }
+  }
+
+  &__stage {
+    position: relative;
+    height: var(--frame);
+    overflow: hidden;
+    background: $ink;
+    touch-action: pan-y;
+  }
+
+  &__frame {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0;
+    pointer-events: none;
+
+    &.is-on {
+      z-index: 2;
+      opacity: 1;
+    }
+
+    &.is-leaving {
+      z-index: 1;
+      opacity: 1;
+    }
+  }
+
+  &__photo {
+    position: absolute;
+    inset: -6% -8%;
+    transform: translate3d(0, 0, 0);
+
+    img,
+    .media-image-fallback {
+      max-width: none;
+      object-fit: cover;
+    }
+  }
+
+  &.is-moving:not(.is-reduce) &__frame.is-on {
+    animation: tour-album-fade-in var(--move) $transition-timing-function both;
+  }
+
+  &.is-moving:not(.is-reduce) &__frame.is-leaving {
+    animation: tour-album-fade-out var(--move) $transition-timing-function forwards;
+  }
+
+  &.is-moving:not(.is-reduce) &__frame.is-on &__photo {
+    animation: tour-album-in var(--move) $transition-timing-function both;
+  }
+
+  &.is-moving.is-play-b:not(.is-reduce) &__frame.is-on &__photo {
+    animation-name: tour-album-in-b;
+  }
+
+  &.is-moving:not(.is-reduce) &__frame.is-leaving &__photo {
+    animation: tour-album-out var(--move) $transition-timing-function forwards;
+  }
+
+  &.is-moving.is-play-b:not(.is-reduce) &__frame.is-leaving &__photo {
+    animation-name: tour-album-out-b;
+  }
+
+  &__nav {
+    position: absolute;
+    z-index: 3;
+    right: rem(12px);
+    bottom: rem(12px);
+    left: rem(12px);
+    display: flex;
+    align-items: center;
+    gap: rem(8px);
+
+    button {
+      display: grid;
+      width: rem(40px);
+      height: rem(40px);
+      place-items: center;
+      color: $white;
+      background: color-mix(in srgb, $ink 28%, transparent);
+      border: 1px solid color-mix(in srgb, $white 28%, transparent);
+      backdrop-filter: blur(16px);
+      transition:
+        background-color 0.55s $transition-timing-function,
+        border-color 0.55s $transition-timing-function,
+        color 0.55s $transition-timing-function;
+
+      svg {
+        width: rem(18px);
+        height: rem(18px);
+      }
+
+      @include hover() {
+        color: $sand;
+        background: color-mix(in srgb, $ink 52%, transparent);
+        border-color: color-mix(in srgb, $white 55%, transparent);
+      }
+    }
+
+    p {
+      margin: 0 0 0 auto;
+      padding: rem(6px) rem(10px);
+      color: $white;
+      font-size: rem(11px);
+      letter-spacing: 0.18em;
+      font-variant-numeric: tabular-nums;
+      background: color-mix(in srgb, $ink 28%, transparent);
+      border: 1px solid color-mix(in srgb, $white 22%, transparent);
+      backdrop-filter: blur(16px);
+
+      span {
+        margin: 0 0.35em;
+        opacity: 0.45;
+      }
+    }
+  }
+
+  &__rail {
+    position: relative;
+    height: var(--frame);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__track {
+    display: flex;
+    flex-direction: column;
+    gap: rem(8px);
+  }
+
+  &__thumb {
+    position: relative;
+    flex: 0 0 rem(72px);
+    height: rem(72px);
+    padding: 0;
+    overflow: hidden;
+    background: $sand;
+    border: 1px solid transparent;
+    transition:
+      border-color 0.55s $transition-timing-function,
+      opacity 0.55s $transition-timing-function;
+
+    @media #{media('>=', m)} {
+      flex-basis: rem(84px);
+      height: rem(84px);
+    }
+
+    img,
+    .media-image-fallback {
+      max-width: none;
+      object-fit: cover;
+    }
+
+    @include hover() {
+      border-color: color-mix(in srgb, $ink 45%, $border);
+
+      .tour-album__shade {
+        opacity: 0.08;
+      }
+    }
+
+    &.is-on {
+      border-color: $ink;
+
+      .tour-album__shade {
+        opacity: 0;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid $ocean;
+      outline-offset: 2px;
+    }
+  }
+
+  &__shade {
+    position: absolute;
+    inset: 0;
+    background: $ink;
+    opacity: 0.38;
+    pointer-events: none;
+    transition: opacity 0.55s $transition-timing-function;
+  }
+}
+
+@keyframes tour-album-fade-in {
+  from {
+    opacity: 0.35;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes tour-album-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes tour-album-in {
+  from {
+    transform: translate3d(var(--in-x), 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes tour-album-in-b {
+  from {
+    transform: translate3d(var(--in-x), 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes tour-album-out {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(var(--out-x), 0, 0);
+  }
+}
+
+@keyframes tour-album-out-b {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(var(--out-x), 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tour-album {
+    animation: none;
+  }
+
+  .tour-album__frame,
+  .tour-album__photo,
+  .tour-album__shade,
+  .tour-album__thumb,
+  .tour-album__nav button {
+    animation: none !important;
+    transition: none;
+  }
+
+  .tour-album__photo {
+    transform: translate3d(0, 0, 0);
+  }
+}

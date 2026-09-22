@@ -5,30 +5,39 @@ import Link from "next/link";
 import { Wrapper } from "@/components/layout/wrapper";
 import { Avatar, AvatarFallback, AvatarImage, Button } from "@/components/ui";
 import { initials, tourPath, tripEnd } from "@/data";
+import { accountNav, canHost, canModerate } from "@/lib/access";
 import { useTuro } from "@/lib/turo-store";
 import { useLocale } from "@/lib/locale";
 
 export function AccountNav() {
   const { t } = useLocale();
-  const items = [
-    { href: "/account/", label: t("account.profile") },
-    { href: "/account/bookings/", label: t("account.bookings") },
-    { href: "/account/tours/", label: t("account.tours") },
-    { href: "/messages/", label: t("account.messages") },
-  ];
+  const { user } = useTuro();
+  if (!user) return null;
+  const items = accountNav(user.role);
   return (
     <nav className="account-nav" aria-label={t("account.nav")}>
       {items.map((item) => (
         <Link key={item.href} href={item.href}>
-          {item.label}
+          {t(item.labelKey)}
         </Link>
       ))}
     </nav>
   );
 }
 
+function Denied() {
+  const { t } = useLocale();
+  return (
+    <Wrapper className="account-home">
+      <AccountNav />
+      <h1>{t("account.denied")}</h1>
+      <p>{t("account.deniedText")}</p>
+    </Wrapper>
+  );
+}
+
 export function AccountHome() {
-  const { user, ready, logout, bookings, tours } = useTuro();
+  const { user, ready, logout, bookings, tours, users } = useTuro();
   const { t, tx } = useLocale();
 
   if (!ready) return <Wrapper className="account-home">{t("account.loading")}</Wrapper>;
@@ -44,8 +53,14 @@ export function AccountHome() {
     );
   }
 
-  const mine = bookings.filter((item) => item.userId === user.id);
+  const mine = bookings.filter((item) => item.userId === user.id && item.status !== "cancelled");
   const hosted = tours.filter((item) => item.organizerId === user.id);
+  const guestSeats = bookings
+    .filter(
+      (item) =>
+        item.status !== "cancelled" && hosted.some((tour) => tour.slug === item.tourSlug),
+    )
+    .reduce((sum, item) => sum + item.guests, 0);
 
   return (
     <Wrapper className="account-home">
@@ -56,6 +71,7 @@ export function AccountHome() {
           <AvatarFallback>{initials(user.name)}</AvatarFallback>
         </Avatar>
         <div>
+          <p className="account-home__role">{t(`role.${user.role}`)}</p>
           <h1>{user.name}</h1>
           <p>
             {tx(user.city)} · {user.email}
@@ -64,28 +80,57 @@ export function AccountHome() {
         </div>
       </header>
       <div className="account-home__stats">
-        <article>
-          <strong>{mine.length}</strong>
-          <span>{t("account.bookingsCount")}</span>
-        </article>
-        <article>
-          <strong>{hosted.length}</strong>
-          <span>{t("account.toursCount")}</span>
-        </article>
-        <article>
-          <strong>{t("account.both")}</strong>
-          <span>{t("account.profileKind")}</span>
-        </article>
+        {user.role === "traveler" ? (
+          <article>
+            <strong>{mine.length}</strong>
+            <span>{t("account.bookingsCount")}</span>
+          </article>
+        ) : null}
+        {canHost(user.role) ? (
+          <article>
+            <strong>{user.role === "admin" ? tours.length : hosted.length}</strong>
+            <span>{t("account.toursCount")}</span>
+          </article>
+        ) : null}
+        {user.role === "organizer" ? (
+          <article>
+            <strong>{guestSeats}</strong>
+            <span>{t("account.guestCount")}</span>
+          </article>
+        ) : null}
+        {user.role === "admin" ? (
+          <article>
+            <strong>{users.length}</strong>
+            <span>{t("account.userCount")}</span>
+          </article>
+        ) : null}
       </div>
-      <Button variant="outline" onClick={logout}>
-        {t("account.logout")}
-      </Button>
+      <div className="account-home__actions">
+        {user.role === "traveler" ? (
+          <Button asChild variant="cta">
+            <Link href="/tours/">{t("home.toursAll")}</Link>
+          </Button>
+        ) : null}
+        {canHost(user.role) ? (
+          <Button asChild variant="cta">
+            <Link href="/create/">{t("account.newTour")}</Link>
+          </Button>
+        ) : null}
+        {canModerate(user.role) ? (
+          <Button asChild variant="outline">
+            <Link href="/account/users/">{t("account.users")}</Link>
+          </Button>
+        ) : null}
+        <Button variant="outline" onClick={logout}>
+          {t("account.logout")}
+        </Button>
+      </div>
     </Wrapper>
   );
 }
 
 export function AccountBookings() {
-  const { user, ready, bookings, tours } = useTuro();
+  const { user, ready, bookings, tours, userById } = useTuro();
   const { t, tx, money, range } = useLocale();
   if (!ready) return null;
   if (!user) {
@@ -97,32 +142,37 @@ export function AccountBookings() {
       </Wrapper>
     );
   }
-  const mine = bookings.filter((item) => item.userId === user.id);
+  if (user.role === "organizer") return <Denied />;
+
+  const rows =
+    user.role === "admin"
+      ? bookings
+      : bookings.filter((item) => item.userId === user.id);
 
   return (
     <Wrapper className="account-home">
       <AccountNav />
-      <h1>{t("account.bookings")}</h1>
-      {mine.length === 0 ? (
+      <h1>{user.role === "admin" ? t("account.allBookings") : t("account.bookings")}</h1>
+      {rows.length === 0 ? (
         <p>{t("account.bookingsEmpty")}</p>
       ) : (
         <ul className="account-home__list">
-          {mine.map((item) => {
+          {rows.map((item) => {
             const tour = tours.find((entry) => entry.slug === item.tourSlug);
+            const guest = userById(item.userId);
             return (
               <li key={item.id}>
                 <div>
                   <strong>{tour ? tx(tour.title) : item.tourSlug}</strong>
                   <span>
+                    {user.role === "admin" && guest ? `${guest.name} · ` : null}
                     {t("account.guests", { n: item.guests })} · {money(item.total)} · {t(`status.${item.status}`)}
                   </span>
                   {tour && item.departureStart ? (
                     <em>{range(item.departureStart, tripEnd(item.departureStart, tour.durationDays))}</em>
                   ) : null}
                 </div>
-                {tour ? (
-                  <Link href={tourPath(tour)}>{t("account.open")}</Link>
-                ) : null}
+                {tour ? <Link href={tourPath(tour)}>{t("account.open")}</Link> : null}
               </li>
             );
           })}
@@ -133,7 +183,7 @@ export function AccountBookings() {
 }
 
 export function AccountTours() {
-  const { user, ready, tours } = useTuro();
+  const { user, ready, tours, bookings, userById } = useTuro();
   const { t, tx } = useLocale();
   if (!ready) return null;
   if (!user) {
@@ -145,13 +195,15 @@ export function AccountTours() {
       </Wrapper>
     );
   }
-  const hosted = tours.filter((item) => item.organizerId === user.id);
+  if (!canHost(user.role)) return <Denied />;
+
+  const hosted = user.role === "admin" ? tours : tours.filter((item) => item.organizerId === user.id);
 
   return (
     <Wrapper className="account-home">
       <AccountNav />
       <div className="account-home__title-row">
-        <h1>{t("account.tours")}</h1>
+        <h1>{user.role === "admin" ? t("account.toursAll") : t("account.tours")}</h1>
         <Button asChild variant="cta" size="sm">
           <Link href="/create/">{t("account.newTour")}</Link>
         </Button>
@@ -160,17 +212,26 @@ export function AccountTours() {
         <p>{t("account.toursEmpty")}</p>
       ) : (
         <ul className="account-home__list">
-          {hosted.map((tour) => (
-            <li key={tour.slug}>
-              <div>
-                <strong>{tx(tour.title)}</strong>
-                <span>
-                  {tx(tour.city)} · {t("account.seats", { taken: tour.seatsTaken, total: tour.seats })}
-                </span>
-              </div>
-              <Link href={tourPath(tour)}>{t("account.card")}</Link>
-            </li>
-          ))}
+          {hosted.map((tour) => {
+            const guests = bookings
+              .filter((item) => item.tourSlug === tour.slug && item.status !== "cancelled")
+              .reduce((sum, item) => sum + item.guests, 0);
+            const host = userById(tour.organizerId);
+            return (
+              <li key={tour.slug}>
+                <Link href={`/account/tours/${tour.slug}/`} className="account-home__hit">
+                  <strong>{tx(tour.title)}</strong>
+                  <span>
+                    {user.role === "admin" && host ? `${host.name} · ` : null}
+                    {tx(tour.city)} · {t("account.seats", { taken: tour.seatsTaken, total: tour.seats })}
+                    {" · "}
+                    {t("account.guests", { n: guests })}
+                  </span>
+                </Link>
+                <Link href={tourPath(tour)}>{t("account.card")}</Link>
+              </li>
+            );
+          })}
         </ul>
       )}
     </Wrapper>

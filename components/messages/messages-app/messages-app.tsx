@@ -26,16 +26,18 @@ export function MessagesApp() {
 
   const mine = useMemo(() => {
     if (!user) return [];
+    if (user.role === "admin") return conversations;
     return conversations.filter(
       (item) => item.travelerId === user.id || item.organizerId === user.id,
     );
   }, [conversations, user]);
 
-  const isOrganizerView = !!user && mine.some((item) => item.organizerId === user.id);
+  const isOrganizerView = !!user && (user.role === "organizer" || user.role === "admin");
 
   const groups = useMemo(() => {
-    if (!user) return [];
-    const hostChats = mine.filter((item) => item.organizerId === user.id);
+    if (!user || !isOrganizerView) return [];
+    const hostChats =
+      user.role === "admin" ? mine : mine.filter((item) => item.organizerId === user.id);
     const map = new Map<string, typeof hostChats>();
     for (const chat of hostChats) {
       const list = map.get(chat.tourSlug) ?? [];
@@ -46,10 +48,10 @@ export function MessagesApp() {
       tour: tours.find((item) => item.slug === tourSlug),
       chats,
     }));
-  }, [mine, tours, user]);
+  }, [isOrganizerView, mine, tours, user]);
 
   const travelerChats = useMemo(() => {
-    if (!user) return [];
+    if (!user || user.role === "admin") return [];
     return mine.filter((item) => item.travelerId === user.id);
   }, [mine, user]);
 
@@ -77,11 +79,15 @@ export function MessagesApp() {
   }
 
   const peerId = active
-    ? active.travelerId === user.id
-      ? active.organizerId
-      : active.travelerId
+    ? user.role === "admin"
+      ? active.travelerId
+      : active.travelerId === user.id
+        ? active.organizerId
+        : active.travelerId
     : null;
   const peer = peerId ? userById(peerId) : undefined;
+  const hostName =
+    user.role === "admin" && active ? userById(active.organizerId)?.name : undefined;
   const activeTour = active ? tours.find((item) => item.slug === active.tourSlug) : undefined;
 
   function open(id: string) {
@@ -145,7 +151,13 @@ export function MessagesApp() {
         ) : null}
 
         {mine.length === 0 ? (
-          <p className="messages-app__empty">{t("messages.empty")}</p>
+          <p className="messages-app__empty">
+            {user.role === "admin"
+              ? t("messages.emptyAdmin")
+              : user.role === "organizer"
+                ? t("messages.emptyHost")
+                : t("messages.empty")}
+          </p>
         ) : null}
       </aside>
 
@@ -163,6 +175,7 @@ export function MessagesApp() {
               </Avatar>
               <div>
                 <strong>{peer?.name}</strong>
+                {hostName ? <span>{t("messages.withHost", { name: hostName })}</span> : null}
                 {activeTour ? (
                   <Link href={tourPath(activeTour)}>{tx(activeTour.title)}</Link>
                 ) : (

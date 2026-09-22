@@ -9,6 +9,7 @@ import { Button, IconButton, Pager } from "@/components/ui";
 import { Wrapper } from "@/components/layout/wrapper";
 import { cx } from "@/lib/cx";
 import { useLocale } from "@/lib/locale";
+import { useTuro } from "@/lib/turo-store";
 
 export const popularTours = [
   {
@@ -49,6 +50,8 @@ const EASE = "cubic-bezier(0.65, 0, 0.35, 1)";
 
 export function HeroSlider() {
   const { t, money } = useLocale();
+  const { user, ready } = useTuro();
+  const role = ready ? (user?.role ?? null) : null;
   const count = popularTours.length;
   const trackSlides = useMemo(
     () => [popularTours[count - 1], ...popularTours, popularTours[0]],
@@ -275,12 +278,34 @@ export function HeroSlider() {
               {t("hero.from", { price: money(slide.price) })}
             </p>
             <div className="hero__cta">
-              <Button asChild size="lg" variant="cta">
-                <Link href={`/tours/${slide.id}/`}>{t("hero.book")}</Link>
-              </Button>
-              <Button asChild size="lg" variant="glass">
-                <Link href="/tours/">{t("hero.all")}</Link>
-              </Button>
+              {role === "organizer" ? (
+                <>
+                  <Button asChild size="lg" variant="cta">
+                    <Link href="/create/">{t("hero.create")}</Link>
+                  </Button>
+                  <Button asChild size="lg" variant="glass">
+                    <Link href="/account/tours/">{t("hero.myTours")}</Link>
+                  </Button>
+                </>
+              ) : role === "admin" ? (
+                <>
+                  <Button asChild size="lg" variant="cta">
+                    <Link href="/account/tours/">{t("hero.manage")}</Link>
+                  </Button>
+                  <Button asChild size="lg" variant="glass">
+                    <Link href="/account/users/">{t("hero.users")}</Link>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button asChild size="lg" variant="cta">
+                    <Link href={`/tours/${slide.id}/`}>{t("hero.book")}</Link>
+                  </Button>
+                  <Button asChild size="lg" variant="glass">
+                    <Link href="/tours/">{t("hero.all")}</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -93,6 +93,26 @@
     }
   }
 
+  &__letter {
+    margin-top: rem(28px);
+  }
+
+  &__letter-kicker {
+    margin: 0;
+    color: $ocean;
+    font-size: rem(12px);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  &__script {
+    max-width: 38em;
+    margin: rem(12px) 0 0;
+    color: $ink;
+    font-size: rem(16px);
+    line-height: 1.6;
+  }
+
   &__tabs {
     margin-top: rem(36px);
   }
@@ -163,25 +183,6 @@
     display: grid;
     gap: rem(20px);
     padding-top: rem(20px);
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      gap: rem(12px);
-      font-size: rem(13px);
-      color: $muted;
-    }
-
-    h3 {
-      margin: rem(6px) 0;
-      font-size: rem(18px);
-      font-weight: 500;
-    }
-
-    p {
-      color: $muted;
-      line-height: 1.55;
-    }
   }
 
   &__aside {
@@ -194,19 +195,6 @@
     @media #{media('>=', t)} {
       position: sticky;
       top: rem(88px);
-    }
-
-    .dep-pick {
-      margin: rem(8px) 0 rem(4px);
-    }
-
-    .dep-pick__cell {
-      min-height: rem(36px);
-    }
-
-    .dep-pick__list {
-      max-height: rem(220px);
-      overflow: auto;
     }
   }
 
@@ -248,6 +236,13 @@
       font-style: normal;
       font-size: rem(13px);
     }
+  }
+
+  &__lock {
+    margin: 0;
+    color: $muted;
+    font-size: rem(14px);
+    line-height: 1.55;
   }
 }
 

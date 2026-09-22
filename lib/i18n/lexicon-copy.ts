@@ -150,8 +150,8 @@ export const enCopy: Record<string, string> = {
   "Не бегали за локациями. Ия утром — пустая. Это дорогого стоит.":
     "We didn’t chase locations. Oia in the morning was empty. That is worth a lot.",
   "Жарко, но красиво": "Hot, but beautiful",
-  "В июле пекло. Гид предупредил и сдвинул прогулку. Жильё скромное и чистое.":
-    "July was baking. The guide warned and moved the walk. Housing modest and clean.",
+  "В июле пекло. Гид предупредил и сдвинул прогулку на раннее утро, и это спасло день: к полудню камни уже не держали руку. Жильё скромное и чистое, с видом во двор, не на кальдеру — так и сказали заранее. Ужин был долгий, без программы «попробуйте всё». Единственное, чего не хватило, — тени в середине дня, но маршрут честный, и я бы поехала снова в сентябре.":
+    "July was baking. The guide warned and moved the walk to early morning, and that saved the day: by noon the stones were too hot to touch. The room was modest and clean, looking onto a courtyard, not the caldera — they said so in advance. Dinner was long, without a “try everything” programme. The only thing missing was shade in the middle of the day, but the route was honest, and I would go again in September.",
   "Тропы, не подъёмники": "Trails, not lifts",
   "Именно то, что обещали: ноги, озёра, ужины в деревне.":
     "Exactly what was promised: legs, lakes, village dinners.",

@@ -15,7 +15,7 @@ export function ToursCatalog({
 }: {
   destination?: string;
 }) {
-  const { tours } = useTuro();
+  const { tours, user } = useTuro();
   const { t, tx } = useLocale();
   const [query, setQuery] = useState("");
   const [continent, setContinent] = useState("all");
@@ -59,7 +59,17 @@ export function ToursCatalog({
 
   return (
     <>
-    <PageHero kicker={t("catalog.kicker")} title={t("catalog.title")} text={t("catalog.text")} />
+    <PageHero
+      kicker={t("catalog.kicker")}
+      title={t("catalog.title")}
+      text={
+        user?.role === "admin"
+          ? t("catalog.textAdmin")
+          : user?.role === "organizer"
+            ? t("catalog.textHost")
+            : t("catalog.text")
+      }
+    />
     <Wrapper className="tours-catalog">
       <div className="tours-catalog__filters">
         <Input

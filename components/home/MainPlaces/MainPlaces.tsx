@@ -4,9 +4,13 @@ import { Eyebrow } from "@/components/widgets/eyebrow";
 import { PlaceCard, PlaceCardGroup } from "@/components/widgets/place-card";
 import { places } from "@/components/home/content";
 import { useLocale } from "@/lib/locale";
+import { useTuro } from "@/lib/turo-store";
 
 export function MainPlaces() {
   const { t, tx } = useLocale();
+  const { user, ready } = useTuro();
+  const role = ready ? (user?.role ?? null) : null;
+  if (role === "organizer" || role === "admin") return null;
   return (
     <section className="main-places" id="places">
       <header className="main-places__head">

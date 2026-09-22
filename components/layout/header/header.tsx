@@ -21,6 +21,7 @@ import {
 import { Wrapper } from "@/components/layout/wrapper";
 import { LangSwitch } from "@/components/layout/lang-switch";
 import { initials } from "@/data";
+import { accountMenu, headerLinks } from "@/lib/access";
 import { cx } from "@/lib/cx";
 import { useLocale } from "@/lib/locale";
 import { useTuro } from "@/lib/turo-store";
@@ -34,11 +35,11 @@ export function Header() {
   const { t } = useLocale();
   const router = useRouter();
 
-  const links = [
-    { href: "/tours/", label: t("header.tours") },
-    { href: "/create/", label: t("header.create") },
-    { href: "/#how", label: t("header.how") },
-  ];
+  const links = headerLinks(ready ? (user?.role ?? null) : null).map((link) => ({
+    href: link.href,
+    label: t(link.labelKey),
+  }));
+  const menu = user ? accountMenu(user.role) : [];
 
   useEffect(() => {
     let ticking = false;
@@ -107,20 +108,18 @@ export function Header() {
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  <span className="site-header__who">
+                    <strong>{user.name}</strong>
+                    <em>{t(`role.${user.role}`)}</em>
+                  </span>
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onSelect={() => router.push("/account/")}>
-                  {t("header.account")}
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => router.push("/account/bookings/")}>
-                  {t("header.bookings")}
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => router.push("/messages/")}>
-                  {t("header.messages")}
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => router.push("/create/")}>
-                  {t("header.publish")}
-                </DropdownMenuItem>
+                {menu.map((item) => (
+                  <DropdownMenuItem key={item.href} onSelect={() => router.push(item.href)}>
+                    {t(item.labelKey)}
+                  </DropdownMenuItem>
+                ))}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onSelect={() => logout()}>{t("header.logout")}</DropdownMenuItem>
               </DropdownMenuContent>

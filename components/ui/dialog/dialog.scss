@@ -7,7 +7,7 @@
   z-index: 50;
   background: color-mix(in srgb, $ink 18%, transparent);
   backdrop-filter: blur(6px);
-  animation: fade-in 0.25s $transition-timing-function;
+  animation: fade-in 0.55s $transition-timing-function;
 }
 
 .dialog {
@@ -22,7 +22,8 @@
   border-radius: rem(24px);
   background: $card;
   box-shadow: 0 rem(24px) rem(60px) rem(-24px) color-mix(in srgb, $ink 40%, transparent);
-  animation: scale-in 0.28s $transition-timing-function;
+  transform: translate3d(-50%, -50%, 0);
+  animation: fade-in 0.55s $transition-timing-function;
   outline: none;
 
   &__header {

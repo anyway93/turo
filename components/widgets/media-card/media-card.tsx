@@ -4,6 +4,7 @@ import { MediaImage } from "@/components/widgets/media-image";
 import Link from "next/link";
 import { Button } from "@/components/ui";
 import { ArrowUpRight } from "lucide-react";
+import { cx } from "@/lib/cx";
 
 type MediaCardProps = {
   href: string;
@@ -53,6 +54,12 @@ export function MediaCard({
   );
 }
 
-export function MediaCardGroup({ children }: { children: ReactNode }) {
-  return <div className="media-card-group">{children}</div>;
+export function MediaCardGroup({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return <div className={cx("media-card-group", className)}>{children}</div>;
 }
