@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { bookings, conversations, destinations, messages, reviews, tours, users } from "../data";
 import { hydrateTour, nextOpenStart } from "../data/dates";
 
@@ -72,7 +72,7 @@ async function main() {
         gallery: tour.gallery,
         included: tour.included,
         excluded: tour.excluded,
-        itinerary: tour.itinerary,
+        itinerary: tour.itinerary as unknown as Prisma.InputJsonValue,
         meetingPoint: tour.meetingPoint,
         cancellation: tour.cancellation,
         rating: tour.rating,

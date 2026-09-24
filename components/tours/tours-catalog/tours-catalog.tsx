@@ -16,8 +16,11 @@ import { TourCard } from "@/components/tours/tour-card";
 import { useTuro } from "@/lib/turo-store";
 import { useLocale } from "@/lib/locale";
 import { PageHero } from "@/components/widgets/page-hero";
+import { api_tours } from "@/api/tours/requests";
 
 export function ToursCatalog({ destination }: { destination?: string }) {
+  const [stateTours, setStateTours] = useState();
+
   const { tours, user } = useTuro();
   const { t, tx } = useLocale();
   const [query, setQuery] = useState("");
@@ -59,6 +62,10 @@ export function ToursCatalog({ destination }: { destination?: string }) {
       return hay.includes(q);
     });
   }, [continent, difficulty, place, query, style, tours, tx]);
+
+  useEffect(() => {
+    api_tours().then((data) => setStateTours(data));
+  }, []);
 
   return (
     <>
@@ -136,7 +143,10 @@ export function ToursCatalog({ destination }: { destination?: string }) {
           {t("catalog.count", { n: filtered.length })}
         </p>
 
-        {/* {toursData} */}
+        {stateTours &&
+          stateTours.tours.map((item, index) => (
+            <div key={index}>{item.title}</div>
+          ))}
 
         {filtered.length === 0 ? (
           <p className="tours-catalog__empty">{t("catalog.empty")}</p>
