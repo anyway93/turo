@@ -6,7 +6,6 @@ const stylesDir = path.join(process.cwd(), "styles");
 const pagesBasePath = process.env.PAGES_BASE_PATH;
 
 const nextConfig: NextConfig = {
-  output: "export",
   trailingSlash: true,
   allowedDevOrigins: ["192.168.0.248", "192.168.*.*", "10.*.*.*", "172.*.*.*"],
   ...(pagesBasePath ? { basePath: pagesBasePath } : {}),

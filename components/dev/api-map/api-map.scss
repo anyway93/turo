@@ -1,0 +1,259 @@
+@use "global/config" as *;
+@use "global/mixins" as *;
+
+.api-map {
+  padding-bottom: rem(80px);
+
+  &__intro {
+    padding-top: rem(112px);
+    @include rise(0.9s);
+
+    @media #{media(">=", m)} {
+      padding-top: rem(128px);
+    }
+
+    h1 {
+      margin-top: rem(8px);
+      font-size: rem(40px);
+      font-weight: 500;
+      letter-spacing: -0.045em;
+      line-height: 1.1;
+    }
+  }
+
+  &__eyebrow {
+    color: $ocean;
+    font-size: rem(13px);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  &__lead {
+    max-width: 40em;
+    margin-top: rem(16px);
+    color: $muted;
+    font-size: rem(16px);
+    line-height: 1.6;
+
+    code {
+      color: $ink;
+    }
+  }
+
+  &__accounts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(8px);
+    margin-top: rem(20px);
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: rem(8px);
+      padding: rem(8px) rem(12px);
+      border: 1px solid $border;
+      border-radius: rem(999px);
+      background: $card;
+      color: $muted;
+      font-size: rem(13px);
+    }
+
+    code {
+      color: $ink;
+    }
+  }
+
+  &__tools {
+    display: grid;
+    gap: rem(14px);
+    margin-top: rem(32px);
+  }
+
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(8px);
+  }
+
+  &__filter {
+    height: rem(36px);
+    padding: 0 rem(14px);
+    border: 1px solid $border;
+    border-radius: rem(999px);
+    background: transparent;
+    color: $ink;
+    font: 500 rem(14px) $font;
+    transition:
+      background-color 0.45s $transition-timing-function,
+      border-color 0.45s $transition-timing-function,
+      color 0.45s $transition-timing-function;
+
+    &[data-active="true"] {
+      border-color: $ink;
+      background: $ink;
+      color: $sand;
+    }
+
+    @include hover() {
+      border-color: $ocean;
+      color: $ocean;
+    }
+
+    &[data-active="true"] {
+      @include hover() {
+        border-color: $ink;
+        color: $sand;
+      }
+    }
+  }
+
+  &__list {
+    display: grid;
+    gap: rem(14px);
+    margin-top: rem(22px);
+  }
+
+  &__card {
+    position: relative;
+    padding: rem(20px);
+    border: 1px solid $border;
+    border-radius: rem(20px);
+    background: $card;
+    @include rise(0.7s);
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: $ocean;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s $transition-timing-function;
+    }
+
+    @include hover() {
+      border-color: rgba($ocean, 0.45);
+
+      &::after {
+        opacity: 0.04;
+      }
+    }
+  }
+
+  &__card-head {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: rem(12px);
+
+    h2 {
+      margin-top: rem(8px);
+      font-size: rem(22px);
+      font-weight: 500;
+      letter-spacing: -0.03em;
+    }
+  }
+
+  &__method {
+    display: inline-flex;
+    align-items: center;
+    height: rem(24px);
+    padding: 0 rem(8px);
+    border-radius: rem(999px);
+    background: $ink;
+    color: $sand;
+    font-size: rem(12px);
+    font-weight: 650;
+    letter-spacing: 0.04em;
+
+    &[data-method="GET"] {
+      background: $ocean;
+    }
+
+    &[data-method="POST"] {
+      background: $sunset;
+    }
+
+    &[data-method="PATCH"] {
+      background: $gold;
+      color: $ink;
+    }
+
+    &[data-method="DELETE"] {
+      background: $danger;
+    }
+  }
+
+  &__path {
+    position: relative;
+    z-index: 1;
+    margin-top: rem(6px);
+
+    code {
+      font-size: rem(13px);
+      line-height: 1.45;
+      word-break: break-all;
+    }
+  }
+
+  &__access,
+  &__note,
+  &__errors {
+    position: relative;
+    z-index: 1;
+    margin-top: rem(10px);
+    font-size: rem(14px);
+    line-height: 1.5;
+  }
+
+  &__access {
+    color: $ocean;
+    font-weight: 550;
+  }
+
+  &__note,
+  &__errors {
+    color: $muted;
+  }
+
+  pre {
+    position: relative;
+    z-index: 1;
+    margin-top: rem(12px);
+    padding: rem(14px) rem(14px) rem(12px);
+    overflow: auto;
+    border-radius: rem(14px);
+    background: $ink;
+    color: $sand;
+    font-size: rem(13px);
+    line-height: 1.5;
+    white-space: pre-wrap;
+
+    span {
+      display: block;
+      margin-bottom: rem(6px);
+      color: rgba($sand, 0.55);
+      font-family: $font;
+      font-size: rem(11px);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+  }
+
+  &__empty {
+    color: $muted;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .api-map__intro,
+  .api-map__card {
+    animation: none;
+  }
+}

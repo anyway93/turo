@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String
+  avatar       String   @default("")
+  city         String
+  country      String
+  bio          String
+  languages    String[]
+  rating       Float    @default(0)
+  reviewsCount Int      @default(0)
+  yearsGuiding Int?
+  createdAt    DateTime @default(now())
+
+  tours         Tour[]
+  reviews       Review[]
+  bookings      Booking[]
+  sessions      Session[]
+  travelerChats Conversation[] @relation("TravelerChats")
+  organizerChats Conversation[] @relation("OrganizerChats")
+  sentMessages  ChatMessage[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Destination {
+  slug       String @id
+  name       String
+  country    String
+  continent  String
+  image      String
+  blurb      String
+}
+
+model Tour {
+  slug             String    @id
+  title            String
+  subtitle         String
+  country          String
+  city             String
+  continent        String
+  destinationSlug  String
+  organizerId      String
+  durationDays     Int
+  price            Int
+  seats            Int
+  difficulty       String
+  style            String
+  tags             String[]
+  cover            String
+  gallery          String[]
+  included         String[]
+  excluded         String[]
+  itinerary        Json
+  meetingPoint     String
+  cancellation     String
+  rating           Float     @default(5)
+  reviewsCount     Int       @default(0)
+  source           String    @default("user")
+  deletedAt        DateTime?
+  createdAt        DateTime  @default(now())
+
+  organizer    User           @relation(fields: [organizerId], references: [id])
+  departures   Departure[]
+  reviews      Review[]
+  bookings     Booking[]
+  conversations Conversation[]
+
+  @@index([continent, style, difficulty])
+  @@index([organizerId])
+  @@index([destinationSlug])
+}
+
+model Departure {
+  id       String @id @default(cuid())
+  tourSlug String
+  start    String
+  taken    Int    @default(0)
+  tour     Tour   @relation(fields: [tourSlug], references: [slug], onDelete: Cascade)
+
+  @@unique([tourSlug, start])
+}
+
+model Review {
+  id        String   @id
+  tourSlug  String
+  userId    String
+  rating    Int
+  title     String
+  text      String
+  date      String
+  createdAt DateTime @default(now())
+
+  tour Tour @relation(fields: [tourSlug], references: [slug], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tourSlug, userId])
+  @@index([tourSlug])
+}
+
+model Booking {
+  id             String   @id
+  tourSlug       String
+  userId         String
+  guests         Int
+  total          Int
+  status         String
+  paidAt         DateTime
+  cardLast4      String
+  departureStart String
+  createdAt      DateTime @default(now())
+
+  tour Tour @relation(fields: [tourSlug], references: [slug])
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([tourSlug])
+}
+
+model Conversation {
+  id          String   @id
+  tourSlug    String
+  travelerId  String
+  organizerId String
+  createdAt   DateTime @default(now())
+
+  tour      Tour          @relation(fields: [tourSlug], references: [slug])
+  traveler  User          @relation("TravelerChats", fields: [travelerId], references: [id])
+  organizer User          @relation("OrganizerChats", fields: [organizerId], references: [id])
+  messages  ChatMessage[]
+
+  @@unique([tourSlug, travelerId, organizerId])
+  @@index([travelerId])
+  @@index([organizerId])
+}
+
+model ChatMessage {
+  id             String   @id
+  conversationId String
+  senderId       String
+  text           String
+  createdAt      DateTime
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation(fields: [senderId], references: [id])
+
+  @@index([conversationId, createdAt])
+}
