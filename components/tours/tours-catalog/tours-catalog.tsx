@@ -4,6 +4,7 @@ import "./tours-catalog.scss";
 import { useEffect, useMemo, useState } from "react";
 import { Wrapper } from "@/components/layout/wrapper";
 import {
+  Button,
   Input,
   Select,
   SelectContent,
@@ -16,10 +17,10 @@ import { TourCard } from "@/components/tours/tour-card";
 import { useTuro } from "@/lib/turo-store";
 import { useLocale } from "@/lib/locale";
 import { PageHero } from "@/components/widgets/page-hero";
-import { api_tours } from "@/api/tours/requests";
+import { createTour, getTours, type IResponseTours } from "@/api/tours";
 
 export function ToursCatalog({ destination }: { destination?: string }) {
-  const [stateTours, setStateTours] = useState();
+  const [stateTours, setStateTours] = useState<IResponseTours>();
 
   const { tours, user } = useTuro();
   const { t, tx } = useLocale();
@@ -64,8 +65,41 @@ export function ToursCatalog({ destination }: { destination?: string }) {
   }, [continent, difficulty, place, query, style, tours, tx]);
 
   useEffect(() => {
-    api_tours().then((data) => setStateTours(data));
+    getTours().then(setStateTours);
   }, []);
+
+  function buttonPostHandler() {
+    createTour({
+      slug: "altai-bez-speshki",
+      title: "Алтай без спешки111111111",
+      subtitle: "Неделя по рекам",
+      country: "Россия",
+      city: "Чемал",
+      continent: "Азия",
+      destinationSlug: "chemal",
+      durationDays: 7,
+      price: 59000,
+      seats: 8,
+      startDate: "2026-07-04",
+      departures: [{ start: "2026-07-04" }],
+      difficulty: "лёгкий",
+      style: "природа",
+      tags: ["природа", "реки"],
+      cover: "/uploads/cover.jpg",
+      gallery: [],
+      included: ["Проживание", "Завтраки"],
+      excluded: ["Авиабилеты"],
+      itinerary: [
+        {
+          day: 1,
+          title: "Чемал",
+          text: "Сбор группы и выход к Катуни",
+        },
+      ],
+      meetingPoint: "Чемал, площадь у моста",
+      cancellation: "Бесплатная отмена за 14 дней",
+    }).then((data) => console.log(data));
+  }
 
   return (
     <>
@@ -142,6 +176,8 @@ export function ToursCatalog({ destination }: { destination?: string }) {
         <p className="tours-catalog__count">
           {t("catalog.count", { n: filtered.length })}
         </p>
+
+        <Button onClick={() => buttonPostHandler()}>Создать тур</Button>
 
         {stateTours &&
           stateTours.tours.map((item, index) => (
